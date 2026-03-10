@@ -2346,7 +2346,10 @@
                 const hojeAsaas = new Date();
                 const asaasAnoMes = `${hojeAsaas.getFullYear()}-${String(hojeAsaas.getMonth() + 1).padStart(2, '0')}`;
                 const asaasInicio = `${asaasAnoMes}-01`;
-                const resp = await fetch(`/.netlify/functions/asaas-vendas?inicio=${asaasInicio}&_t=${Date.now()}`);
+                const asaasAmanha = new Date(hojeAsaas);
+                asaasAmanha.setDate(asaasAmanha.getDate() + 2);
+                const asaasFim = `${asaasAmanha.getFullYear()}-${String(asaasAmanha.getMonth() + 1).padStart(2, '0')}-${String(asaasAmanha.getDate()).padStart(2, '0')}`;
+                const resp = await fetch(`/.netlify/functions/asaas-vendas?inicio=${asaasInicio}&fim=${asaasFim}&_t=${Date.now()}`);
                 if (!resp.ok) throw new Error('Erro ao buscar dados');
                 const result = await resp.json();
 
@@ -2528,7 +2531,10 @@
                 const hoje = new Date();
                 const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
                 const inicio = `${anoMes}-01`;
-                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}&_t=${Date.now()}`);
+                const amanha = new Date(hoje);
+                amanha.setDate(amanha.getDate() + 2);
+                const fim = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
+                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}&fim=${fim}&_t=${Date.now()}`);
                 if (!resp.ok) throw new Error('Erro ao buscar dados');
                 const result = await resp.json();
 
