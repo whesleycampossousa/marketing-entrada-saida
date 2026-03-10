@@ -25,7 +25,10 @@ export async function handler(event) {
   const hoje = new Date();
   const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
   const dataInicio = params.inicio || `${anoMes}-01`;
-  const dataFim = params.fim || `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+  // end_date +1 dia para incluir vendas de hoje (API pode ser exclusiva no fim)
+  const amanha = new Date(hoje);
+  amanha.setDate(amanha.getDate() + 1);
+  const dataFim = params.fim || `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
 
   try {
     // 1. Autenticar via OAuth2
@@ -53,25 +56,69 @@ export async function handler(event) {
       "x-kiwify-account-id": ACCOUNT_ID,
     };
 
-    // 2. Buscar vendas por status
+    // 2. Buscar TODAS as vendas (sem filtro de status) para capturar todos os registros
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     let todasVendas = [];
+    const idsVistos = new Set();
 
-    for (const status of ["paid", "waiting_payment", "refunded"]) {
-      await sleep(300);
-      try {
-        const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&status=${status}&page_size=100`;
-        const resp = await fetch(url, { headers: HEADERS });
-        if (resp.ok) {
-          const data = await resp.json();
-          if (data.data) {
-            todasVendas = todasVendas.concat(
-              data.data.map((s) => ({ ...s, _status: status }))
-            );
+    // Primeiro: buscar sem filtro de status para pegar tudo
+    try {
+      const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&page_size=100`;
+      const resp = await fetch(url, { headers: HEADERS });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.data) {
+          for (const s of data.data) {
+            idsVistos.add(s.id);
+            todasVendas.push({ ...s, _status: s.status || "paid" });
           }
         }
-      } catch (e) {
-        // Skip status errors
+        // Paginação
+        let nextPage = data.next_page_url || null;
+        while (nextPage) {
+          await sleep(300);
+          const pageResp = await fetch(nextPage, { headers: HEADERS });
+          if (pageResp.ok) {
+            const pageData = await pageResp.json();
+            if (pageData.data) {
+              for (const s of pageData.data) {
+                if (!idsVistos.has(s.id)) {
+                  idsVistos.add(s.id);
+                  todasVendas.push({ ...s, _status: s.status || "paid" });
+                }
+              }
+            }
+            nextPage = pageData.next_page_url || null;
+          } else {
+            nextPage = null;
+          }
+        }
+      }
+    } catch (e) {
+      // Fallback: buscar por status individual
+    }
+
+    // Fallback: se nada veio sem filtro, buscar por status
+    if (todasVendas.length === 0) {
+      for (const status of ["paid", "waiting_payment", "refunded", "chargedback"]) {
+        await sleep(300);
+        try {
+          const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&status=${status}&page_size=100`;
+          const resp = await fetch(url, { headers: HEADERS });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.data) {
+              for (const s of data.data) {
+                if (!idsVistos.has(s.id)) {
+                  idsVistos.add(s.id);
+                  todasVendas.push({ ...s, _status: status });
+                }
+              }
+            }
+          }
+        } catch (e) {
+          // Skip
+        }
       }
     }
 
@@ -92,30 +139,13 @@ export async function handler(event) {
       }
     }
 
-    // 4. Deduplicar por email do cliente - manter melhor status
-    const prioridade = { paid: 1, waiting_payment: 2, refunded: 3 };
-    const porCliente = {};
-
-    for (const s of todasVendas) {
-      const email = (s.customer?.email || "").toLowerCase().trim();
-      if (!email) continue;
-      const pri = prioridade[s._status] || 9;
-
-      if (!porCliente[email]) {
-        porCliente[email] = s;
-      } else {
-        const atualPri = prioridade[porCliente[email]._status] || 9;
-        if (pri < atualPri) {
-          porCliente[email] = s;
-        }
-      }
-    }
-
-    // 5. Montar lista final
+    // 4. Montar lista final (sem deduplicação - cada venda individual conta)
     const statusPt = {
       paid: "Pago",
       waiting_payment: "Pendente",
       refunded: "Estornado",
+      chargedback: "Estornado",
+      refused: "Recusado",
     };
 
     const formas = {
@@ -125,19 +155,19 @@ export async function handler(event) {
     };
 
     const vendas = [];
-    for (const [email, s] of Object.entries(porCliente)) {
+    for (const s of todasVendas) {
       const detail = detailCache[s.id] || {};
       const customer = detail.customer || s.customer || {};
       const payment = detail.payment || {};
 
-      const valorBruto = (payment.product_base_price || s.net_amount || 0) / 100;
+      const valorBruto = (payment.total_amount || payment.product_base_price || s.total_amount || s.net_amount || 0) / 100;
       const valorLiquido = (payment.net_amount || s.net_amount || 0) / 100;
       const taxas = (payment.fee || 0) / 100;
 
       vendas.push({
         nome: customer.name || "N/A",
         telefone: customer.mobile || "",
-        email: customer.email || email,
+        email: customer.email || "",
         valor: valorBruto,
         valorLiquido,
         taxas,
@@ -154,16 +184,19 @@ export async function handler(event) {
     const pagos = vendas.filter((v) => v.status === "Pago");
     const pendentes = vendas.filter((v) => v.status === "Pendente");
     const estornados = vendas.filter((v) => v.status === "Estornado");
+    const recusados = vendas.filter((v) => v.status === "Recusado");
 
     const resumo = {
-      totalAlunos: vendas.length,
+      totalAlunos: pagos.length + pendentes.length + estornados.length,
       totalPagos: pagos.length,
       totalPendentes: pendentes.length,
       totalEstornados: estornados.length,
+      totalRecusados: recusados.length,
       valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
       valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
       valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
       valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
+      valorRecusado: recusados.reduce((s, v) => s + v.valor, 0),
       periodo: { inicio: dataInicio, fim: dataFim },
       atualizadoEm: new Date().toISOString(),
     };
@@ -172,7 +205,7 @@ export async function handler(event) {
       statusCode: 200,
       headers: {
         ...corsHeaders,
-        "Cache-Control": "public, max-age=18000", // 5 horas
+        "Cache-Control": "no-store",
       },
       body: JSON.stringify({ resumo, vendas }),
     };

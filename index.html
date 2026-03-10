@@ -808,6 +808,13 @@
             box-shadow: 0 4px 20px rgba(0, 184, 148, 0.3);
         }
 
+        .page-tab.active-resumo {
+            background: linear-gradient(135deg, #e84393, #fd79a8);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(232, 67, 147, 0.3);
+        }
+
         .page-tab .tab-badge {
             background: rgba(255,255,255,0.2);
             padding: 2px 8px;
@@ -973,6 +980,7 @@
         .status-pill.pendente { background: rgba(255,165,2,0.15); color: #ffa502; }
         .status-pill.vencido { background: rgba(255,71,87,0.15); color: #ff4757; }
         .status-pill.estornado { background: rgba(255,71,87,0.25); color: #ff6b81; }
+        .status-pill.recusado { background: rgba(165,94,234,0.25); color: #a55eea; }
 
         .asaas-table .valor-cell { font-weight: 700; color: #2ed573; }
         .asaas-table .tel-cell { color: var(--text-secondary); font-size: 0.82rem; }
@@ -1033,6 +1041,224 @@
             border-top-color: #00b894 !important;
         }
 
+        /* ===== RESUMO SECTION ===== */
+        .resumo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .resumo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resumo-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+        }
+
+        .resumo-card.card-asaas::before { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .resumo-card.card-kiwify::before { background: linear-gradient(90deg, #00b894, #55efc4); }
+        .resumo-card.card-total::before { background: linear-gradient(90deg, #a855f7, #3742fa); }
+        .resumo-card.card-despesas::before { background: linear-gradient(90deg, #ff4757, #ff6b81); }
+        .resumo-card.card-lucro-final::before { background: linear-gradient(90deg, #2ed573, #7bed9f); }
+
+        .resumo-card .rc-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .resumo-card .rc-label { color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .resumo-card .rc-value { font-size: 1.8rem; font-weight: 800; }
+        .resumo-card .rc-sub { color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; }
+
+        .resumo-card-full {
+            grid-column: 1 / -1;
+        }
+
+        .resumo-despesas-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .resumo-despesas-input input {
+            width: 200px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .resumo-despesas-input input:focus {
+            border-color: #ff4757;
+            box-shadow: 0 0 0 3px rgba(255,71,87,0.2);
+        }
+
+        .resumo-despesas-input button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .resumo-despesas-input button:hover {
+            box-shadow: 0 4px 15px rgba(255,71,87,0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Distribuicao de lucros */
+        .distribuicao-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+
+        .distribuicao-section .section-title {
+            margin-bottom: 24px;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .slider-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .slider-label.whesley { color: #e84393; }
+        .slider-label.amanda { color: #00b894; }
+
+        .slider-wrap {
+            position: relative;
+            height: 12px;
+            margin: 16px 0;
+        }
+
+        .slider-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .slider-track-left {
+            background: linear-gradient(90deg, #e84393, #fd79a8);
+            transition: width 0.2s;
+        }
+
+        .slider-track-right {
+            background: linear-gradient(90deg, #00b894, #55efc4);
+            flex: 1;
+        }
+
+        .slider-wrap input[type="range"] {
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .slider-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: grab;
+        }
+
+        .slider-wrap input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: grab;
+            border: none;
+        }
+
+        .dist-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .dist-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dist-card .dist-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dist-card .dist-percent {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .dist-card .dist-valor {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .dist-card.whesley .dist-percent { color: #e84393; }
+        .dist-card.whesley .dist-valor { color: #fd79a8; }
+        .dist-card.amanda .dist-percent { color: #00b894; }
+        .dist-card.amanda .dist-valor { color: #55efc4; }
+
+        @media (max-width: 640px) {
+            .resumo-grid { grid-template-columns: 1fr; }
+            .dist-values { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 1024px) {
             .asaas-cards { grid-template-columns: repeat(2, 1fr); }
         }
@@ -1063,6 +1289,9 @@
             <button class="page-tab" id="tabPageKiwify" onclick="switchPage('kiwify')">
                 &#127808; Kiwify <span class="tab-badge" id="kiwifyBadge">0</span>
             </button>
+            <button class="page-tab" id="tabPageResumo" onclick="switchPage('resumo')">
+                &#128200; Resumo
+            </button>
         </div>
 
         <!-- ====== PAGE: ASAAS ====== -->
@@ -1078,7 +1307,7 @@
             <div class="asaas-cards">
                 <div class="asaas-card card-recebido">
                     <div class="ac-icon">&#128176;</div>
-                    <div class="ac-label">Total Recebido</div>
+                    <div class="ac-label">Total Liquido</div>
                     <div class="ac-value" id="asaasTotalRecebido" style="color: #2ed573;">R$ 0,00</div>
                     <div class="ac-sub" id="asaasTotalPagos">0 pagos</div>
                 </div>
@@ -1135,7 +1364,7 @@
             <div class="asaas-cards">
                 <div class="asaas-card kiwify-card card-recebido">
                     <div class="ac-icon">&#127808;</div>
-                    <div class="ac-label">Total Recebido</div>
+                    <div class="ac-label">Total Liquido</div>
                     <div class="ac-value" id="kiwifyTotalRecebido" style="color: #00b894;">R$ 0,00</div>
                     <div class="ac-sub" id="kiwifyTotalPagos">0 pagos</div>
                 </div>
@@ -1169,11 +1398,91 @@
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pago', this)">Pagos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pendente', this)">Pendentes</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('estornado', this)">Estornados</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('recusado', this)">Recusados</button>
                 </div>
                 <div id="kiwifyTableBody">
                     <div class="asaas-loading kiwify-loading">
                         <div class="spinner"></div>
                         <p>Carregando dados do Kiwify...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== PAGE: RESUMO ====== -->
+        <div class="page-content" id="pageResumo">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #e84393, #fd79a8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Resumo Financeiro</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Visao geral de todas as plataformas</p>
+            </div>
+
+            <!-- Resumo Cards -->
+            <div class="resumo-grid">
+                <div class="resumo-card card-asaas">
+                    <div class="rc-icon">&#128176;</div>
+                    <div class="rc-label">Receita Liquida Asaas</div>
+                    <div class="rc-value" id="resumoAsaasValor" style="color: #f39c12;">R$ 0,00</div>
+                    <div class="rc-sub" id="resumoAsaasSub">0 pagos</div>
+                </div>
+                <div class="resumo-card card-kiwify">
+                    <div class="rc-icon">&#127808;</div>
+                    <div class="rc-label">Receita Liquida Kiwify</div>
+                    <div class="rc-value" id="resumoKiwifyValor" style="color: #00b894;">R$ 0,00</div>
+                    <div class="rc-sub" id="resumoKiwifySub">0 pagos</div>
+                </div>
+                <div class="resumo-card card-total">
+                    <div class="rc-icon">&#128178;</div>
+                    <div class="rc-label">Total Liquido (Asaas + Kiwify)</div>
+                    <div class="rc-value" id="resumoTotalBruto" style="color: #a855f7;">R$ 0,00</div>
+                    <div class="rc-sub" id="resumoTotalSub">Soma de todas as plataformas</div>
+                </div>
+                <div class="resumo-card card-despesas">
+                    <div class="rc-icon">&#128184;</div>
+                    <div class="rc-label">Despesas do Curso</div>
+                    <div class="rc-value" id="resumoDespesasValor" style="color: #ff4757;">R$ 0,00</div>
+                    <div class="resumo-despesas-input">
+                        <input type="number" id="inputDespesas" placeholder="Valor das despesas" step="0.01" min="0">
+                        <button onclick="salvarDespesas()">Salvar</button>
+                    </div>
+                </div>
+                <div class="resumo-card card-lucro-final resumo-card-full">
+                    <div class="rc-icon">&#127942;</div>
+                    <div class="rc-label">Lucro Final</div>
+                    <div class="rc-value" id="resumoLucroFinal" style="color: #2ed573; font-size: 2.2rem;">R$ 0,00</div>
+                    <div class="rc-sub" id="resumoLucroFinalSub">Total Liquido - Despesas</div>
+                </div>
+            </div>
+
+            <!-- Distribuicao de Lucros -->
+            <div class="distribuicao-section">
+                <div class="section-title">
+                    <span>&#9878;&#65039;</span> Distribuicao de Lucros
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-labels">
+                        <span class="slider-label whesley">Whesley</span>
+                        <span class="slider-label amanda">Amanda / Santiago</span>
+                    </div>
+                    <div class="slider-wrap">
+                        <div class="slider-track">
+                            <div class="slider-track-left" id="sliderTrackLeft" style="width: 50%;"></div>
+                            <div class="slider-track-right"></div>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" id="distSlider" oninput="updateDistribuicao()">
+                    </div>
+                </div>
+
+                <div class="dist-values">
+                    <div class="dist-card whesley">
+                        <div class="dist-name">Whesley</div>
+                        <div class="dist-percent" id="distWesleyPercent">50%</div>
+                        <div class="dist-valor" id="distWesleyValor">R$ 0,00</div>
+                    </div>
+                    <div class="dist-card amanda">
+                        <div class="dist-name">Amanda / Santiago</div>
+                        <div class="dist-percent" id="distAmandaPercent">50%</div>
+                        <div class="dist-valor" id="distAmandaValor">R$ 0,00</div>
                     </div>
                 </div>
             </div>
@@ -1309,6 +1618,8 @@
         // DATA MANAGEMENT
         // ============================================
         const STORAGE_KEY = 'marketing_tracker_data';
+        const CLOUD_API = '/.netlify/functions/marketing-data';
+        let cloudSaveTimeout = null;
 
         let data = loadData();
         let currentTab = 'gasto';
@@ -1325,7 +1636,69 @@
 
         function saveData() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            // Sincronizar com nuvem (debounce 2s para evitar muitas chamadas)
+            clearTimeout(cloudSaveTimeout);
+            cloudSaveTimeout = setTimeout(() => {
+                fetch(CLOUD_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data })
+                }).catch(() => {});
+            }, 2000);
         }
+
+        // Carregar dados da nuvem e sincronizar (merge aditivo - nunca apaga dados locais)
+        async function syncFromCloud() {
+            try {
+                const resp = await fetch(CLOUD_API);
+                if (!resp.ok) return;
+                const result = await resp.json();
+                if (result.data && Object.keys(result.data).length > 0) {
+                    const cloudData = result.data;
+                    let changed = false;
+
+                    // Merge aditivo: adicionar da nuvem o que nao existe localmente
+                    for (const [dateStr, cloudDay] of Object.entries(cloudData)) {
+                        if (!data[dateStr]) {
+                            data[dateStr] = { gastos: cloudDay.gastos || [], entradas: cloudDay.entradas || [] };
+                            changed = true;
+                        } else {
+                            const localGastoIds = new Set(data[dateStr].gastos.map(e => e.id));
+                            const localEntradaIds = new Set(data[dateStr].entradas.map(e => e.id));
+
+                            for (const g of (cloudDay.gastos || [])) {
+                                if (!localGastoIds.has(g.id)) {
+                                    data[dateStr].gastos.push(g);
+                                    changed = true;
+                                }
+                            }
+                            for (const e of (cloudDay.entradas || [])) {
+                                if (!localEntradaIds.has(e.id)) {
+                                    data[dateStr].entradas.push(e);
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (changed) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                        // Re-enviar para nuvem com dados completos
+                        fetch(CLOUD_API, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ data })
+                        }).catch(() => {});
+                        render();
+                    }
+                }
+            } catch (e) {
+                // Offline - usar dados locais
+            }
+        }
+
+        // Auto-sync a cada 5 minutos para pegar atualizacoes de outros dispositivos
+        setInterval(syncFromCloud, 5 * 60 * 1000);
 
         function getDayData(dateStr) {
             if (!data[dateStr]) {
@@ -1893,40 +2266,39 @@
 
             render();
 
-            // Pre-load Asaas data (from cache or fetch)
+            // Sincronizar dados do Marketing com a nuvem
+            syncFromCloud();
+
+            // Pre-load Asaas and Kiwify data (from cache or fetch)
             refreshAsaasData(false);
+            refreshKiwifyData(false);
         }
 
         // ============================================
         // PAGE SWITCHING (Marketing / Asaas)
         // ============================================
         function switchPage(page) {
-            const pageMarketing = document.getElementById('pageMarketing');
-            const pageAsaas = document.getElementById('pageAsaas');
-            const pageKiwify = document.getElementById('pageKiwify');
-            const tabMarketing = document.getElementById('tabPageMarketing');
-            const tabAsaas = document.getElementById('tabPageAsaas');
-            const tabKiwify = document.getElementById('tabPageKiwify');
-
-            // Hide all
-            pageMarketing.classList.remove('active');
-            pageAsaas.classList.remove('active');
-            pageKiwify.classList.remove('active');
-            tabMarketing.className = 'page-tab';
-            tabAsaas.className = 'page-tab';
-            tabKiwify.className = 'page-tab';
+            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Resumo'];
+            pages.forEach(p => {
+                document.getElementById('page' + p).classList.remove('active');
+                document.getElementById('tabPage' + p).className = 'page-tab';
+            });
 
             if (page === 'marketing') {
-                pageMarketing.classList.add('active');
-                tabMarketing.className = 'page-tab active-marketing';
+                document.getElementById('pageMarketing').classList.add('active');
+                document.getElementById('tabPageMarketing').className = 'page-tab active-marketing';
             } else if (page === 'asaas') {
-                pageAsaas.classList.add('active');
-                tabAsaas.className = 'page-tab active-asaas';
+                document.getElementById('pageAsaas').classList.add('active');
+                document.getElementById('tabPageAsaas').className = 'page-tab active-asaas';
                 refreshAsaasData(false);
             } else if (page === 'kiwify') {
-                pageKiwify.classList.add('active');
-                tabKiwify.className = 'page-tab active-kiwify';
+                document.getElementById('pageKiwify').classList.add('active');
+                document.getElementById('tabPageKiwify').className = 'page-tab active-kiwify';
                 refreshKiwifyData(false);
+            } else if (page === 'resumo') {
+                document.getElementById('pageResumo').classList.add('active');
+                document.getElementById('tabPageResumo').className = 'page-tab active-resumo';
+                renderResumo();
             }
         }
 
@@ -1971,7 +2343,10 @@
             if (btn) btn.disabled = true;
 
             try {
-                const resp = await fetch('/.netlify/functions/asaas-vendas?inicio=2026-03-01');
+                const hojeAsaas = new Date();
+                const asaasAnoMes = `${hojeAsaas.getFullYear()}-${String(hojeAsaas.getMonth() + 1).padStart(2, '0')}`;
+                const asaasInicio = `${asaasAnoMes}-01`;
+                const resp = await fetch(`/.netlify/functions/asaas-vendas?inicio=${asaasInicio}&_t=${Date.now()}`);
                 if (!resp.ok) throw new Error('Erro ao buscar dados');
                 const result = await resp.json();
 
@@ -2000,8 +2375,9 @@
             const { resumo, vendas } = result;
 
             // Update cards
-            document.getElementById('asaasTotalRecebido').textContent = formatCurrency(resumo.valorBruto);
-            document.getElementById('asaasTotalPagos').textContent = `${resumo.totalPagos} pagos`;
+            const asaasLiquido = resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto;
+            document.getElementById('asaasTotalRecebido').textContent = formatCurrency(asaasLiquido);
+            document.getElementById('asaasTotalPagos').textContent = `${resumo.totalPagos} pagos (liquido)`;
             document.getElementById('asaasTotalAlunos').textContent = resumo.totalAlunos;
 
             // Format periodo
@@ -2059,12 +2435,13 @@
             }
 
             let html = '<table class="asaas-table"><thead><tr>';
-            html += '<th>Nome</th><th>Telefone</th><th>Valor</th><th>Status</th><th>Forma</th><th>Data</th>';
+            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Data</th>';
             html += '</tr></thead><tbody>';
 
             filtered.forEach(v => {
                 const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
                 const telFormatted = v.telefone || '-';
+                const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
 
                 // Format date DD/MM
                 let dataFormatted = v.data;
@@ -2076,7 +2453,7 @@
                 html += `<tr>
                     <td>${escapeHtml(v.nome)}</td>
                     <td class="tel-cell">${escapeHtml(telFormatted)}</td>
-                    <td class="valor-cell">${formatCurrency(v.valor)}</td>
+                    <td class="valor-cell">${formatCurrency(valorExibir)}</td>
                     <td><span class="status-pill ${statusClass}">${v.status}</span></td>
                     <td>${escapeHtml(v.forma)}</td>
                     <td>${dataFormatted}</td>
@@ -2151,7 +2528,7 @@
                 const hoje = new Date();
                 const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
                 const inicio = `${anoMes}-01`;
-                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}`);
+                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}&_t=${Date.now()}`);
                 if (!resp.ok) throw new Error('Erro ao buscar dados');
                 const result = await resp.json();
 
@@ -2180,8 +2557,9 @@
             const { resumo, vendas } = result;
 
             // Update cards
-            document.getElementById('kiwifyTotalRecebido').textContent = formatCurrency(resumo.valorBruto);
-            document.getElementById('kiwifyTotalPagos').textContent = `${resumo.totalPagos} pagos`;
+            const kiwifyLiquido = resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto;
+            document.getElementById('kiwifyTotalRecebido').textContent = formatCurrency(kiwifyLiquido);
+            document.getElementById('kiwifyTotalPagos').textContent = `${resumo.totalPagos} pagos (liquido)`;
             document.getElementById('kiwifyTotalAlunos').textContent = resumo.totalAlunos;
 
             // Format periodo
@@ -2225,6 +2603,8 @@
                 filtered = vendas.filter(v => v.status === 'Pendente');
             } else if (filter === 'estornado') {
                 filtered = vendas.filter(v => v.status === 'Estornado');
+            } else if (filter === 'recusado') {
+                filtered = vendas.filter(v => v.status === 'Recusado');
             }
 
             if (filtered.length === 0) {
@@ -2237,12 +2617,13 @@
             }
 
             let html = '<table class="asaas-table"><thead><tr>';
-            html += '<th>Nome</th><th>Telefone</th><th>Valor</th><th>Status</th><th>Forma</th><th>Data</th>';
+            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Data</th>';
             html += '</tr></thead><tbody>';
 
             filtered.forEach(v => {
                 const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
                 const telFormatted = v.telefone || '-';
+                const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
 
                 // Format date DD/MM
                 let dataFormatted = v.data;
@@ -2254,7 +2635,7 @@
                 html += `<tr>
                     <td>${escapeHtml(v.nome)}</td>
                     <td class="tel-cell">${escapeHtml(telFormatted)}</td>
-                    <td class="valor-cell">${formatCurrency(v.valor)}</td>
+                    <td class="valor-cell">${formatCurrency(valorExibir)}</td>
                     <td><span class="status-pill ${statusClass}">${v.status}</span></td>
                     <td>${escapeHtml(v.forma)}</td>
                     <td>${dataFormatted}</td>
@@ -2284,6 +2665,107 @@
         setInterval(() => {
             refreshKiwifyData(true);
         }, KIWIFY_CACHE_TTL);
+
+        // ============================================
+        // RESUMO (Summary tab)
+        // ============================================
+        const DESPESAS_KEY = 'resumo_despesas';
+        const DIST_KEY = 'resumo_distribuicao';
+
+        function getResumoAsaas() {
+            try {
+                const cached = localStorage.getItem(ASAAS_CACHE_KEY);
+                if (cached) {
+                    const result = JSON.parse(cached);
+                    const valor = result.resumo.valorLiquido != null ? result.resumo.valorLiquido : result.resumo.valorBruto;
+                    return { valor, pagos: result.resumo.totalPagos };
+                }
+            } catch(e) {}
+            return { valor: 0, pagos: 0 };
+        }
+
+        function getResumoKiwify() {
+            try {
+                const cached = localStorage.getItem(KIWIFY_CACHE_KEY);
+                if (cached) {
+                    const result = JSON.parse(cached);
+                    const valor = result.resumo.valorLiquido != null ? result.resumo.valorLiquido : result.resumo.valorBruto;
+                    return { valor, pagos: result.resumo.totalPagos };
+                }
+            } catch(e) {}
+            return { valor: 0, pagos: 0 };
+        }
+
+        function getDespesas() {
+            return parseFloat(localStorage.getItem(DESPESAS_KEY)) || 0;
+        }
+
+        function getDistPercent() {
+            return parseInt(localStorage.getItem(DIST_KEY)) || 50;
+        }
+
+        function salvarDespesas() {
+            const input = document.getElementById('inputDespesas');
+            const valor = parseFloat(input.value);
+            if (isNaN(valor) || valor < 0) {
+                showToast('\u26A0\uFE0F', 'Digite um valor valido');
+                return;
+            }
+            localStorage.setItem(DESPESAS_KEY, String(valor));
+            renderResumo();
+            showToast('\u2705', 'Despesas atualizadas!');
+        }
+
+        function updateDistribuicao() {
+            const slider = document.getElementById('distSlider');
+            const percent = parseInt(slider.value);
+            localStorage.setItem(DIST_KEY, String(percent));
+            renderDistribuicao(percent);
+        }
+
+        function renderDistribuicao(percent) {
+            const asaas = getResumoAsaas();
+            const kiwify = getResumoKiwify();
+            const despesas = getDespesas();
+            const totalBruto = asaas.valor + kiwify.valor;
+            const lucroFinal = totalBruto - despesas;
+
+            document.getElementById('sliderTrackLeft').style.width = percent + '%';
+            document.getElementById('distWesleyPercent').textContent = percent + '%';
+            document.getElementById('distAmandaPercent').textContent = (100 - percent) + '%';
+
+            const valorWesley = lucroFinal > 0 ? lucroFinal * percent / 100 : 0;
+            const valorAmanda = lucroFinal > 0 ? lucroFinal * (100 - percent) / 100 : 0;
+
+            document.getElementById('distWesleyValor').textContent = formatCurrency(valorWesley);
+            document.getElementById('distAmandaValor').textContent = formatCurrency(valorAmanda);
+        }
+
+        function renderResumo() {
+            const asaas = getResumoAsaas();
+            const kiwify = getResumoKiwify();
+            const despesas = getDespesas();
+            const totalBruto = asaas.valor + kiwify.valor;
+            const lucroFinal = totalBruto - despesas;
+
+            document.getElementById('resumoAsaasValor').textContent = formatCurrency(asaas.valor);
+            document.getElementById('resumoAsaasSub').textContent = `${asaas.pagos} pagos`;
+            document.getElementById('resumoKiwifyValor').textContent = formatCurrency(kiwify.valor);
+            document.getElementById('resumoKiwifySub').textContent = `${kiwify.pagos} pagos`;
+            document.getElementById('resumoTotalBruto').textContent = formatCurrency(totalBruto);
+            document.getElementById('resumoTotalSub').textContent = `Asaas (${formatCurrency(asaas.valor)}) + Kiwify (${formatCurrency(kiwify.valor)})`;
+            document.getElementById('resumoDespesasValor').textContent = formatCurrency(despesas);
+            document.getElementById('inputDespesas').value = despesas > 0 ? despesas : '';
+
+            document.getElementById('resumoLucroFinal').textContent = formatCurrency(lucroFinal);
+            document.getElementById('resumoLucroFinal').style.color = lucroFinal >= 0 ? '#2ed573' : '#ff4757';
+            document.getElementById('resumoLucroFinalSub').textContent = `${formatCurrency(totalBruto)} - ${formatCurrency(despesas)} de despesas`;
+
+            // Distribuicao
+            const percent = getDistPercent();
+            document.getElementById('distSlider').value = percent;
+            renderDistribuicao(percent);
+        }
 
         init();
     </script>

@@ -22,7 +22,11 @@ export async function handler(event) {
   const hoje = new Date();
   const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
   const dataInicio = params.inicio || `${anoMes}-01`;
-  const dataFim = params.fim || `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+
+  // Usar amanha como dataFim para incluir vendas de hoje (filtro [le] pode excluir por horario)
+  const amanha = new Date(hoje);
+  amanha.setDate(amanha.getDate() + 1);
+  const dataFim = params.fim || `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
 
   try {
     // 1. Buscar todos os pagamentos no periodo
@@ -94,21 +98,29 @@ export async function handler(event) {
     for (const [cid, p] of Object.entries(porCliente)) {
       const c = clientesCache[cid] || {};
 
-      // Calcular valor (installments agrupados)
+      // Calcular valor bruto e liquido (installments agrupados)
       let valor = p.value;
+      let valorLiquido = p.netValue || p.value;
       const inst = p.installment;
       if (inst) {
         const parcelas = todosPagamentos.filter(
           (x) => x.installment === inst && (x.status === "RECEIVED" || x.status === "CONFIRMED")
         );
-        if (parcelas.length > 0) valor = parcelas.reduce((s, x) => s + x.value, 0);
+        if (parcelas.length > 0) {
+          valor = parcelas.reduce((s, x) => s + x.value, 0);
+          valorLiquido = parcelas.reduce((s, x) => s + (x.netValue || x.value), 0);
+        }
       }
+
+      const taxas = valor - valorLiquido;
 
       vendas.push({
         nome: c.name || "N/A",
         telefone: c.mobilePhone || c.phone || "",
         email: c.email || "",
         valor,
+        valorLiquido,
+        taxas,
         status: statusPt[p.status] || p.status,
         forma: formas[p.billingType] || p.billingType || "",
         data: (p.dateCreated || "").substring(0, 10),
@@ -129,6 +141,7 @@ export async function handler(event) {
       totalPendentes: pendentes.length,
       totalEstornados: estornados.length,
       valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
+      valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
       valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
       valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
       periodo: { inicio: dataInicio, fim: dataFim },
@@ -140,7 +153,7 @@ export async function handler(event) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "public, max-age=18000", // 5 horas
+        "Cache-Control": "no-store",
       },
       body: JSON.stringify({ resumo, vendas }),
     };
