@@ -2530,15 +2530,67 @@
             try {
                 const hoje = new Date();
                 const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
-                const inicio = `${anoMes}-01`;
-                const amanha = new Date(hoje);
-                amanha.setDate(amanha.getDate() + 2);
-                const fim = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
-                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}&fim=${fim}&_t=${Date.now()}`);
-                if (!resp.ok) throw new Error('Erro ao buscar dados');
-                const result = await resp.json();
 
-                if (result.error) throw new Error(result.error);
+                // Buscar em pedacos de 5 dias para evitar timeout do Kiwify
+                const mesInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+                const chunks = [];
+                let chunkStart = new Date(mesInicio);
+                while (chunkStart <= hoje) {
+                    const chunkEnd = new Date(chunkStart);
+                    chunkEnd.setDate(chunkEnd.getDate() + 5);
+                    const fmtD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+                    chunks.push({ inicio: fmtD(chunkStart), fim: fmtD(chunkEnd) });
+                    chunkStart = new Date(chunkEnd);
+                }
+
+                // Buscar todos os pedacos em paralelo
+                const responses = await Promise.all(
+                    chunks.map(c =>
+                        fetch(`/.netlify/functions/kiwify-vendas?inicio=${c.inicio}&fim=${c.fim}&_t=${Date.now()}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .catch(() => null)
+                    )
+                );
+
+                // Juntar todas as vendas (dedup por nome+data+valor)
+                const seen = new Set();
+                let todasVendas = [];
+                for (const r of responses) {
+                    if (!r || !r.vendas) continue;
+                    for (const v of r.vendas) {
+                        const key = `${v.nome}|${v.data}|${v.valorLiquido}`;
+                        if (!seen.has(key)) {
+                            seen.add(key);
+                            todasVendas.push(v);
+                        }
+                    }
+                }
+
+                todasVendas.sort((a, b) => b.data.localeCompare(a.data));
+
+                // Recalcular resumo
+                const pagos = todasVendas.filter(v => v.status === 'Pago');
+                const pendentes = todasVendas.filter(v => v.status === 'Pendente');
+                const estornados = todasVendas.filter(v => v.status === 'Estornado');
+                const recusados = todasVendas.filter(v => v.status === 'Recusado');
+
+                const result = {
+                    resumo: {
+                        totalAlunos: pagos.length + pendentes.length + estornados.length,
+                        totalPagos: pagos.length,
+                        totalPendentes: pendentes.length,
+                        totalEstornados: estornados.length,
+                        totalRecusados: recusados.length,
+                        valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
+                        valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
+                        valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
+                        valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
+                        valorRecusado: recusados.reduce((s, v) => s + v.valor, 0),
+                        periodo: { inicio: `${anoMes}-01`, fim: chunks[chunks.length-1].fim },
+                        atualizadoEm: new Date().toISOString(),
+                    },
+                    vendas: todasVendas,
+                };
 
                 // Save to cache
                 localStorage.setItem(KIWIFY_CACHE_KEY, JSON.stringify(result));
