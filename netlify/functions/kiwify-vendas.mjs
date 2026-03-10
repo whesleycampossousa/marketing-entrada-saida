@@ -1,5 +1,6 @@
 // Netlify Function - Proxy para API do Kiwify
 // Busca pagamentos via OAuth2, retorna JSON limpo
+// Otimizado para Netlify (max 30s timeout)
 
 export async function handler(event) {
   const CLIENT_ID = process.env.KIWIFY_CLIENT_ID;
@@ -20,14 +21,12 @@ export async function handler(event) {
     };
   }
 
-  // Pegar datas do query string (default: mes atual)
   const params = event.queryStringParameters || {};
   const hoje = new Date();
   const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
   const dataInicio = params.inicio || `${anoMes}-01`;
-  // end_date +1 dia para incluir vendas de hoje (API pode ser exclusiva no fim)
   const amanha = new Date(hoje);
-  amanha.setDate(amanha.getDate() + 1);
+  amanha.setDate(amanha.getDate() + 2);
   const dataFim = params.fim || `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
 
   try {
@@ -56,92 +55,37 @@ export async function handler(event) {
       "x-kiwify-account-id": ACCOUNT_ID,
     };
 
-    // 2. Buscar TODAS as vendas (sem filtro de status) para capturar todos os registros
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    let todasVendas = [];
-    const idsVistos = new Set();
+    // 2. Buscar vendas - uma unica request, sem paginacao extra, sem detalhes individuais
+    const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&page_size=100`;
+    const resp = await fetch(url, { headers: HEADERS });
 
-    // Primeiro: buscar sem filtro de status para pegar tudo
-    try {
-      const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&page_size=100`;
-      const resp = await fetch(url, { headers: HEADERS });
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.data) {
-          for (const s of data.data) {
-            idsVistos.add(s.id);
-            todasVendas.push({ ...s, _status: s.status || "paid" });
-          }
-        }
-        // Paginação
-        let nextPage = data.next_page_url || null;
-        while (nextPage) {
-          await sleep(300);
-          const pageResp = await fetch(nextPage, { headers: HEADERS });
-          if (pageResp.ok) {
-            const pageData = await pageResp.json();
-            if (pageData.data) {
-              for (const s of pageData.data) {
-                if (!idsVistos.has(s.id)) {
-                  idsVistos.add(s.id);
+    let todasVendas = [];
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.data) {
+        todasVendas = data.data.map((s) => ({ ...s, _status: s.status || "paid" }));
+      }
+
+      // Apenas 1 pagina extra se necessario (evitar timeout)
+      if (data.next_page_url) {
+        try {
+          const page2 = await fetch(data.next_page_url, { headers: HEADERS });
+          if (page2.ok) {
+            const p2 = await page2.json();
+            if (p2.data) {
+              const ids = new Set(todasVendas.map((s) => s.id));
+              for (const s of p2.data) {
+                if (!ids.has(s.id)) {
                   todasVendas.push({ ...s, _status: s.status || "paid" });
                 }
               }
             }
-            nextPage = pageData.next_page_url || null;
-          } else {
-            nextPage = null;
           }
-        }
-      }
-    } catch (e) {
-      // Fallback: buscar por status individual
-    }
-
-    // Fallback: se nada veio sem filtro, buscar por status
-    if (todasVendas.length === 0) {
-      for (const status of ["paid", "waiting_payment", "refunded", "chargedback"]) {
-        await sleep(300);
-        try {
-          const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&status=${status}&page_size=100`;
-          const resp = await fetch(url, { headers: HEADERS });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.data) {
-              for (const s of data.data) {
-                if (!idsVistos.has(s.id)) {
-                  idsVistos.add(s.id);
-                  todasVendas.push({ ...s, _status: status });
-                }
-              }
-            }
-          }
-        } catch (e) {
-          // Skip
-        }
+        } catch (e) { /* skip */ }
       }
     }
 
-    // 3. Buscar detalhes apenas se poucos resultados (evitar timeout no Netlify - 30s max)
-    const detailCache = {};
-    if (todasVendas.length <= 10) {
-      for (let i = 0; i < todasVendas.length; i++) {
-        const s = todasVendas[i];
-        const sid = s.id;
-        if (detailCache[sid]) continue;
-        await sleep(300);
-        try {
-          const resp = await fetch(`${BASE}/v1/sales/${sid}`, { headers: HEADERS });
-          if (resp.ok) {
-            detailCache[sid] = await resp.json();
-          }
-        } catch (e) {
-          // Skip
-        }
-      }
-    }
-
-    // 4. Montar lista final (sem deduplicação - cada venda individual conta)
+    // 3. Montar lista final direto dos dados da listagem (sem fetch individual)
     const statusPt = {
       paid: "Pago",
       waiting_payment: "Pendente",
@@ -158,13 +102,11 @@ export async function handler(event) {
 
     const vendas = [];
     for (const s of todasVendas) {
-      const detail = detailCache[s.id] || {};
-      const customer = detail.customer || s.customer || {};
-      const payment = detail.payment || {};
+      const customer = s.customer || {};
 
-      const valorBruto = (payment.total_amount || payment.product_base_price || s.total_amount || s.net_amount || 0) / 100;
-      const valorLiquido = (payment.net_amount || s.net_amount || 0) / 100;
-      const taxas = (payment.fee || 0) / 100;
+      const valorBruto = (s.total_amount || s.net_amount || 0) / 100;
+      const valorLiquido = (s.net_amount || 0) / 100;
+      const taxas = valorBruto - valorLiquido;
 
       vendas.push({
         nome: customer.name || "N/A",
@@ -174,15 +116,13 @@ export async function handler(event) {
         valorLiquido,
         taxas,
         status: statusPt[s._status] || s._status,
-        forma: formas[s.payment_method || detail.payment_method] || s.payment_method || "",
+        forma: formas[s.payment_method] || s.payment_method || "",
         data: (s.created_at || "").substring(0, 10),
       });
     }
 
-    // Ordenar por data (mais recente primeiro)
     vendas.sort((a, b) => b.data.localeCompare(a.data));
 
-    // 6. Calcular resumo
     const pagos = vendas.filter((v) => v.status === "Pago");
     const pendentes = vendas.filter((v) => v.status === "Pendente");
     const estornados = vendas.filter((v) => v.status === "Estornado");
@@ -205,10 +145,7 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
-      headers: {
-        ...corsHeaders,
-        "Cache-Control": "no-store",
-      },
+      headers: { ...corsHeaders, "Cache-Control": "no-store" },
       body: JSON.stringify({ resumo, vendas }),
     };
   } catch (error) {
