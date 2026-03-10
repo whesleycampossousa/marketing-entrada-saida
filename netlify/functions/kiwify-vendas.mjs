@@ -122,20 +122,22 @@ export async function handler(event) {
       }
     }
 
-    // 3. Buscar detalhes (telefone, CPF) para cada venda
+    // 3. Buscar detalhes apenas se poucos resultados (evitar timeout no Netlify - 30s max)
     const detailCache = {};
-    for (let i = 0; i < todasVendas.length; i++) {
-      const s = todasVendas[i];
-      const sid = s.id;
-      if (detailCache[sid]) continue;
-      await sleep(500);
-      try {
-        const resp = await fetch(`${BASE}/v1/sales/${sid}`, { headers: HEADERS });
-        if (resp.ok) {
-          detailCache[sid] = await resp.json();
+    if (todasVendas.length <= 10) {
+      for (let i = 0; i < todasVendas.length; i++) {
+        const s = todasVendas[i];
+        const sid = s.id;
+        if (detailCache[sid]) continue;
+        await sleep(300);
+        try {
+          const resp = await fetch(`${BASE}/v1/sales/${sid}`, { headers: HEADERS });
+          if (resp.ok) {
+            detailCache[sid] = await resp.json();
+          }
+        } catch (e) {
+          // Skip
         }
-      } catch (e) {
-        // Skip
       }
     }
 
