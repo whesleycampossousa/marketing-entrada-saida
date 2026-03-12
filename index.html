@@ -2531,39 +2531,44 @@
                 const hoje = new Date();
                 const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
 
-                // Buscar em pedacos de 5 dias para evitar timeout do Kiwify
+                // Buscar em pedacos de 5 dias SEQUENCIALMENTE para evitar timeout
                 const mesInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
                 const chunks = [];
                 let chunkStart = new Date(mesInicio);
+                const fmtD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                 while (chunkStart <= hoje) {
                     const chunkEnd = new Date(chunkStart);
                     chunkEnd.setDate(chunkEnd.getDate() + 5);
-                    const fmtD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                     chunks.push({ inicio: fmtD(chunkStart), fim: fmtD(chunkEnd) });
                     chunkStart = new Date(chunkEnd);
                 }
 
-                // Buscar todos os pedacos em paralelo
-                const responses = await Promise.all(
-                    chunks.map(c =>
-                        fetch(`/.netlify/functions/kiwify-vendas?inicio=${c.inicio}&fim=${c.fim}&_t=${Date.now()}`)
-                            .then(r => r.ok ? r.json() : null)
-                            .catch(() => null)
-                    )
-                );
-
-                // Juntar todas as vendas (dedup por nome+data+valor)
+                // Buscar sequencialmente (um de cada vez) e mostrar progresso
                 const seen = new Set();
                 let todasVendas = [];
-                for (const r of responses) {
-                    if (!r || !r.vendas) continue;
-                    for (const v of r.vendas) {
-                        const key = `${v.nome}|${v.data}|${v.valorLiquido}`;
-                        if (!seen.has(key)) {
-                            seen.add(key);
-                            todasVendas.push(v);
+                for (let i = 0; i < chunks.length; i++) {
+                    const c = chunks[i];
+                    document.getElementById('kiwifyTableBody').innerHTML = `
+                        <div class="asaas-loading kiwify-loading">
+                            <div class="spinner"></div>
+                            <p>Carregando Kiwify... (${i + 1}/${chunks.length})</p>
+                        </div>
+                    `;
+                    try {
+                        const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${c.inicio}&fim=${c.fim}&_t=${Date.now()}`);
+                        if (resp.ok) {
+                            const data = await resp.json();
+                            if (data && data.vendas) {
+                                for (const v of data.vendas) {
+                                    const key = `${v.nome}|${v.data}|${v.valorLiquido}`;
+                                    if (!seen.has(key)) {
+                                        seen.add(key);
+                                        todasVendas.push(v);
+                                    }
+                                }
+                            }
                         }
-                    }
+                    } catch (e) { /* skip chunk */ }
                 }
 
                 todasVendas.sort((a, b) => b.data.localeCompare(a.data));
