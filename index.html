@@ -2453,7 +2453,10 @@
                     dataFormatted = `${d}/${m}`;
                 }
 
-                html += `<tr>
+                const isCancelado = v.status === 'Estornado' || v.status === 'Recusado';
+                const rowStyle = isCancelado ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
+
+                html += `<tr${rowStyle}>
                     <td>${escapeHtml(v.nome)}</td>
                     <td class="tel-cell">${escapeHtml(telFormatted)}</td>
                     <td class="valor-cell">${formatCurrency(valorExibir)}</td>
@@ -2695,7 +2698,10 @@
                     dataFormatted = `${d}/${m}`;
                 }
 
-                html += `<tr>
+                const isCancelado = v.status === 'Estornado' || v.status === 'Recusado';
+                const rowStyle = isCancelado ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
+
+                html += `<tr${rowStyle}>
                     <td>${escapeHtml(v.nome)}</td>
                     <td class="tel-cell">${escapeHtml(telFormatted)}</td>
                     <td class="valor-cell">${formatCurrency(valorExibir)}</td>
