@@ -815,6 +815,123 @@
             box-shadow: 0 4px 20px rgba(232, 67, 147, 0.3);
         }
 
+        .page-tab.active-despesas {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        /* ===== DESPESAS SECTION ===== */
+        .despesas-total-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .despesas-total-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #ff4757, #ff6b81);
+        }
+        .despesas-total-card .dt-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .despesas-total-card .dt-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ff4757;
+        }
+        .despesas-total-card .dt-sub {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .despesas-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .despesas-form input {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+        }
+        .despesas-form input:focus {
+            outline: none;
+            border-color: #ff4757;
+        }
+        .despesas-form button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .despesas-form button:hover { opacity: 0.9; }
+
+        .despesas-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .despesas-table th {
+            background: rgba(255, 71, 87, 0.1);
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .despesas-table td {
+            padding: 14px 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .despesas-table tr:hover td {
+            background: rgba(255, 71, 87, 0.05);
+        }
+        .despesas-table .btn-delete {
+            background: none;
+            border: none;
+            color: #ff4757;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            opacity: 0.6;
+        }
+        .despesas-table .btn-delete:hover { opacity: 1; }
+
         .page-tab .tab-badge {
             background: rgba(255,255,255,0.2);
             padding: 2px 8px;
@@ -1289,9 +1406,42 @@
             <button class="page-tab" id="tabPageKiwify" onclick="switchPage('kiwify')">
                 &#127808; Kiwify <span class="tab-badge" id="kiwifyBadge">0</span>
             </button>
+            <button class="page-tab" id="tabPageDespesas" onclick="switchPage('despesas')">
+                &#128184; Despesas <span class="tab-badge" id="despesasBadge">0</span>
+            </button>
             <button class="page-tab" id="tabPageResumo" onclick="switchPage('resumo')">
                 &#128200; Resumo
             </button>
+        </div>
+
+        <!-- ====== PAGE: DESPESAS ====== -->
+        <div class="page-content" id="pageDespesas">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #ff4757, #ff6b81); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Despesas do Curso</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Adicione cada despesa detalhadamente</p>
+            </div>
+
+            <!-- Total Card -->
+            <div class="despesas-total-card">
+                <div class="dt-label">Total de Despesas</div>
+                <div class="dt-value" id="despesasTotalValor">R$ 0,00</div>
+                <div class="dt-sub" id="despesasTotalSub">0 despesas cadastradas</div>
+            </div>
+
+            <!-- Add Form -->
+            <div class="despesas-form">
+                <input type="text" id="inputDespesaNome" placeholder="Descricao (ex: Salario professor)">
+                <input type="number" id="inputDespesaValor" placeholder="Valor (R$)" step="0.01" min="0">
+                <button onclick="addDespesa()">+ Adicionar Despesa</button>
+            </div>
+
+            <!-- Table -->
+            <div id="despesasTableContainer">
+                <table class="despesas-table">
+                    <thead><tr><th>Descricao</th><th>Valor</th><th>Data</th><th></th></tr></thead>
+                    <tbody id="despesasTableBody"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- ====== PAGE: ASAAS ====== -->
@@ -1436,14 +1586,11 @@
                     <div class="rc-value" id="resumoTotalBruto" style="color: #a855f7;">R$ 0,00</div>
                     <div class="rc-sub" id="resumoTotalSub">Soma de todas as plataformas</div>
                 </div>
-                <div class="resumo-card card-despesas">
+                <div class="resumo-card card-despesas" style="cursor: pointer;" onclick="switchPage('despesas')">
                     <div class="rc-icon">&#128184;</div>
                     <div class="rc-label">Despesas do Curso</div>
                     <div class="rc-value" id="resumoDespesasValor" style="color: #ff4757;">R$ 0,00</div>
-                    <div class="resumo-despesas-input">
-                        <input type="number" id="inputDespesas" placeholder="Valor das despesas" step="0.01" min="0">
-                        <button onclick="salvarDespesas()">Salvar</button>
-                    </div>
+                    <div class="rc-sub" id="resumoDespesasSub" style="color: var(--text-secondary);">Clique para detalhar</div>
                 </div>
                 <div class="resumo-card card-lucro-final resumo-card-full">
                     <div class="rc-icon">&#127942;</div>
@@ -2272,13 +2419,23 @@
             // Pre-load Asaas and Kiwify data (from cache or fetch)
             refreshAsaasData(false);
             refreshKiwifyData(false);
+
+            // Migrar valor antigo de despesas para lista detalhada (se existir)
+            const oldDespesas = parseFloat(localStorage.getItem('resumo_despesas')) || 0;
+            const despList = getDespesasList();
+            if (oldDespesas > 0 && despList.length === 0) {
+                saveDespesasList([{ id: Date.now(), nome: 'Despesas do curso (migrado)', valor: oldDespesas, data: todayStr }]);
+            }
+
+            // Render despesas badge
+            renderDespesas();
         }
 
         // ============================================
         // PAGE SWITCHING (Marketing / Asaas)
         // ============================================
         function switchPage(page) {
-            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Resumo'];
+            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Despesas', 'Resumo'];
             pages.forEach(p => {
                 document.getElementById('page' + p).classList.remove('active');
                 document.getElementById('tabPage' + p).className = 'page-tab';
@@ -2295,6 +2452,10 @@
                 document.getElementById('pageKiwify').classList.add('active');
                 document.getElementById('tabPageKiwify').className = 'page-tab active-kiwify';
                 refreshKiwifyData(false);
+            } else if (page === 'despesas') {
+                document.getElementById('pageDespesas').classList.add('active');
+                document.getElementById('tabPageDespesas').className = 'page-tab active-despesas';
+                renderDespesas();
             } else if (page === 'resumo') {
                 document.getElementById('pageResumo').classList.add('active');
                 document.getElementById('tabPageResumo').className = 'page-tab active-resumo';
@@ -2736,6 +2897,94 @@
         }, KIWIFY_CACHE_TTL);
 
         // ============================================
+        // DESPESAS DO CURSO (detailed expenses tab)
+        // ============================================
+        const DESPESAS_LIST_KEY = 'despesas_curso_lista';
+
+        function getDespesasList() {
+            try {
+                const raw = localStorage.getItem(DESPESAS_LIST_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch(e) {}
+            return [];
+        }
+
+        function saveDespesasList(list) {
+            localStorage.setItem(DESPESAS_LIST_KEY, JSON.stringify(list));
+        }
+
+        function addDespesa() {
+            const nomeInput = document.getElementById('inputDespesaNome');
+            const valorInput = document.getElementById('inputDespesaValor');
+            const nome = nomeInput.value.trim();
+            const valor = parseFloat(valorInput.value);
+
+            if (!nome) {
+                showToast('\u26A0\uFE0F', 'Digite uma descricao');
+                nomeInput.focus();
+                return;
+            }
+            if (isNaN(valor) || valor <= 0) {
+                showToast('\u26A0\uFE0F', 'Digite um valor valido');
+                valorInput.focus();
+                return;
+            }
+
+            const list = getDespesasList();
+            const hoje = new Date();
+            const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+            list.push({ id: Date.now(), nome, valor, data: dataStr });
+            saveDespesasList(list);
+
+            nomeInput.value = '';
+            valorInput.value = '';
+            renderDespesas();
+            showToast('\u2705', `Despesa "${nome}" adicionada!`);
+        }
+
+        function removeDespesa(id) {
+            let list = getDespesasList();
+            list = list.filter(d => d.id !== id);
+            saveDespesasList(list);
+            renderDespesas();
+            showToast('\u2705', 'Despesa removida');
+        }
+
+        function renderDespesas() {
+            const list = getDespesasList();
+            const total = list.reduce((s, d) => s + d.valor, 0);
+
+            document.getElementById('despesasTotalValor').textContent = formatCurrency(total);
+            document.getElementById('despesasTotalSub').textContent = `${list.length} despesa${list.length !== 1 ? 's' : ''} cadastrada${list.length !== 1 ? 's' : ''}`;
+            document.getElementById('despesasBadge').textContent = list.length;
+
+            // Also update the old single-value despesas key so Resumo keeps working
+            localStorage.setItem('resumo_despesas', String(total));
+
+            const tbody = document.getElementById('despesasTableBody');
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-secondary); padding: 32px;">Nenhuma despesa cadastrada ainda</td></tr>';
+                return;
+            }
+
+            let html = '';
+            list.forEach(d => {
+                let dataFormatted = d.data;
+                if (d.data && d.data.length === 10) {
+                    const [y, m, day] = d.data.split('-');
+                    dataFormatted = `${day}/${m}/${y}`;
+                }
+                html += `<tr>
+                    <td>${escapeHtml(d.nome)}</td>
+                    <td style="color: #ff4757; font-weight: 600;">${formatCurrency(d.valor)}</td>
+                    <td style="color: var(--text-secondary);">${dataFormatted}</td>
+                    <td><button class="btn-delete" onclick="removeDespesa(${d.id})" title="Remover">\u2716</button></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // ============================================
         // RESUMO (Summary tab)
         // ============================================
         const DESPESAS_KEY = 'resumo_despesas';
@@ -2766,6 +3015,12 @@
         }
 
         function getDespesas() {
+            // Puxar da lista detalhada (aba Despesas)
+            const list = getDespesasList();
+            if (list.length > 0) {
+                return list.reduce((s, d) => s + d.valor, 0);
+            }
+            // Fallback: valor antigo simples
             return parseFloat(localStorage.getItem(DESPESAS_KEY)) || 0;
         }
 
@@ -2824,7 +3079,8 @@
             document.getElementById('resumoTotalBruto').textContent = formatCurrency(totalBruto);
             document.getElementById('resumoTotalSub').textContent = `Asaas (${formatCurrency(asaas.valor)}) + Kiwify (${formatCurrency(kiwify.valor)})`;
             document.getElementById('resumoDespesasValor').textContent = formatCurrency(despesas);
-            document.getElementById('inputDespesas').value = despesas > 0 ? despesas : '';
+            const despList = getDespesasList();
+            document.getElementById('resumoDespesasSub').textContent = despList.length > 0 ? `${despList.length} despesa${despList.length !== 1 ? 's' : ''} - clique para detalhar` : 'Clique para detalhar';
 
             document.getElementById('resumoLucroFinal').textContent = formatCurrency(lucroFinal);
             document.getElementById('resumoLucroFinal').style.color = lucroFinal >= 0 ? '#2ed573' : '#ff4757';
