@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "netlify-dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/whesl/AppData/Roaming/npm/node_modules/netlify-cli/bin/run.js", "dev"],
+      "port": 8888,
+      "autoPort": true
+    }
+  ]
+}
