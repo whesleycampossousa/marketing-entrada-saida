@@ -822,6 +822,13 @@
             box-shadow: 0 4px 20px rgba(255, 71, 87, 0.3);
         }
 
+        .page-tab.active-renovacao {
+            background: linear-gradient(135deg, #f39c12, #fab1a0);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(243, 156, 18, 0.3);
+        }
+
         /* ===== DESPESAS SECTION ===== */
         .despesas-total-card {
             background: var(--bg-card);
@@ -1007,11 +1014,23 @@
         .asaas-card.card-alunos::before { background: linear-gradient(90deg, #3742fa, #70a1ff); }
         .asaas-card.card-pendente::before { background: linear-gradient(90deg, #ffa502, #eccc68); }
         .asaas-card.card-estorno::before { background: linear-gradient(90deg, #ff4757, #ff6b81); }
+        .asaas-card.card-cobrar::before { background: linear-gradient(90deg, #1e90ff, #70a1ff); }
+        .asaas-card.card-tentado::before { background: linear-gradient(90deg, #a55eea, #d980fa); }
+        .asaas-card.card-sem-whatsapp::before { background: linear-gradient(90deg, #57606f, #a4b0be); }
+        .asaas-card.card-pagou-depois::before { background: linear-gradient(90deg, #2ed573, #7bed9f); }
+        .asaas-card.card-retro::before { background: linear-gradient(90deg, #747d8c, #ced6e0); }
 
         .asaas-card .ac-icon { font-size: 1.5rem; margin-bottom: 8px; }
         .asaas-card .ac-label { color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         .asaas-card .ac-value { font-size: 1.5rem; font-weight: 800; }
         .asaas-card .ac-sub { color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; }
+        .followup-cards {
+            grid-template-columns: repeat(5, 1fr);
+            margin-top: -6px;
+        }
+        .followup-cards .ac-value {
+            font-size: 1.25rem;
+        }
 
         /* Asaas Table */
         .asaas-table-wrap {
@@ -1037,6 +1056,16 @@
             gap: 8px;
             border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
+        }
+        .asaas-followup-filters {
+            background: rgba(255,255,255,0.01);
+        }
+        .asaas-filter-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding-right: 6px;
+            align-self: center;
         }
 
         .asaas-filter-btn {
@@ -1101,6 +1130,91 @@
 
         .asaas-table .valor-cell { font-weight: 700; color: #2ed573; }
         .asaas-table .tel-cell { color: var(--text-secondary); font-size: 0.82rem; }
+        .asaas-table .last-paid-cell { color: var(--text-secondary); font-size: 0.82rem; white-space: nowrap; }
+        .asaas-table .action-head,
+        .asaas-table .action-cell {
+            width: 220px;
+            position: sticky;
+            right: 0;
+            z-index: 2;
+            background: #1b2446;
+        }
+        .asaas-table .action-head {
+            z-index: 3;
+        }
+        .followup-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .followup-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .followup-badge.new { background: rgba(30,144,255,0.16); color: #70a1ff; }
+        .followup-badge.attempted { background: rgba(165,94,234,0.18); color: #d980fa; }
+        .followup-badge.urgent { background: rgba(255,71,87,0.16); color: #ff6b81; }
+        .followup-badge.no-whatsapp { background: rgba(116,125,140,0.22); color: #ced6e0; }
+        .followup-badge.paid-after { background: rgba(46,213,115,0.18); color: #7bed9f; }
+        .followup-badge.closed { background: rgba(255,71,87,0.18); color: #ff6b81; }
+        .followup-badge.retro { background: rgba(116,125,140,0.22); color: #dfe4ea; }
+        .followup-action-btn {
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .followup-action-btn.primary {
+            background: rgba(30,144,255,0.16);
+            color: #70a1ff;
+            border-color: rgba(30,144,255,0.28);
+        }
+        .followup-action-btn.primary:hover {
+            background: rgba(30,144,255,0.22);
+        }
+        .followup-action-btn.secondary {
+            background: rgba(165,94,234,0.16);
+            color: #d980fa;
+            border-color: rgba(165,94,234,0.26);
+        }
+        .followup-action-btn.secondary:hover {
+            background: rgba(165,94,234,0.22);
+        }
+        .followup-action-btn.whatsapp {
+            background: rgba(46,213,115,0.16);
+            color: #7bed9f;
+            border-color: rgba(46,213,115,0.28);
+        }
+        .followup-action-btn.whatsapp:hover {
+            background: rgba(46,213,115,0.22);
+        }
+        .followup-action-btn.urgent {
+            background: rgba(255,71,87,0.16);
+            color: #ff6b81;
+            border-color: rgba(255,71,87,0.28);
+        }
+        .followup-action-btn.urgent:hover {
+            background: rgba(255,71,87,0.22);
+        }
+        .followup-action-btn.disabled,
+        .followup-action-btn:disabled {
+            background: rgba(116,125,140,0.12);
+            color: #a4b0be;
+            border-color: rgba(116,125,140,0.22);
+            cursor: not-allowed;
+        }
 
         .asaas-loading {
             text-align: center;
@@ -1406,12 +1520,82 @@
             <button class="page-tab" id="tabPageKiwify" onclick="switchPage('kiwify')">
                 &#127808; Kiwify <span class="tab-badge" id="kiwifyBadge">0</span>
             </button>
+            <button class="page-tab" id="tabPageRenovacao" onclick="switchPage('renovacao')">
+                &#128276; Nao Renovados <span class="tab-badge" id="renovacaoBadge">0</span>
+            </button>
             <button class="page-tab" id="tabPageDespesas" onclick="switchPage('despesas')">
                 &#128184; Despesas <span class="tab-badge" id="despesasBadge">0</span>
             </button>
             <button class="page-tab" id="tabPageResumo" onclick="switchPage('resumo')">
                 &#128200; Resumo
             </button>
+        </div>
+
+        <!-- ====== PAGE: NAO RENOVADOS ====== -->
+        <div class="page-content" id="pageRenovacao">
+            <div class="asaas-header">
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #f39c12, #e67e22); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Alunos sem Renovacao</h2>
+                    <div class="last-update" id="renovacaoLastUpdate">Pagamentos pontuais que venceram e nao houve nova compra</div>
+                </div>
+                <button class="btn-refresh" id="btnRefreshRenovacao" onclick="refreshRenovacao(true)">&#128260; Atualizar</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+                <label style="color: var(--text-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                    Considerar vencido apos
+                    <input type="number" id="renovacaoDiasInput" min="1" max="730" value="30" style="width: 70px; padding: 6px 8px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px;" onchange="renderRenovacaoData()">
+                    dias do ultimo pagamento
+                </label>
+                <label style="color: var(--text-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="renovacaoIncluirAtivosInput" onchange="renderRenovacaoData()">
+                    Mostrar tambem quem ja esta com cobranca em aberto
+                </label>
+            </div>
+
+            <div class="asaas-cards">
+                <div class="asaas-card card-pendente">
+                    <div class="ac-icon">&#128276;</div>
+                    <div class="ac-label">Sem renovar</div>
+                    <div class="ac-value" id="renovacaoTotalQtd" style="color: #f39c12;">0</div>
+                    <div class="ac-sub" id="renovacaoTotalSub">0 alunos</div>
+                </div>
+                <div class="asaas-card card-estorno">
+                    <div class="ac-icon">&#128184;</div>
+                    <div class="ac-label">Receita perdida</div>
+                    <div class="ac-value" id="renovacaoTotalValor" style="color: #ff6b81;">R$ 0,00</div>
+                    <div class="ac-sub">soma do ultimo pagamento</div>
+                </div>
+                <div class="asaas-card card-recebido">
+                    <div class="ac-icon">&#128276;</div>
+                    <div class="ac-label">Ja contatados</div>
+                    <div class="ac-value" id="renovacaoContatadosQtd" style="color: #2ed573;">0</div>
+                    <div class="ac-sub">marcados como contato feito</div>
+                </div>
+                <div class="asaas-card card-alunos">
+                    <div class="ac-icon">&#128270;</div>
+                    <div class="ac-label">Periodo do historico</div>
+                    <div class="ac-value" id="renovacaoLookback" style="color: #70a1ff;">12 meses</div>
+                    <div class="ac-sub">ultimos pagamentos considerados</div>
+                </div>
+            </div>
+
+            <div class="asaas-table-wrap">
+                <div class="asaas-table-title">
+                    <h3>Lista de alunos sem renovacao</h3>
+                    <div class="asaas-filters">
+                        <button class="asaas-filter-btn active" id="renovacaoFilterPendente" onclick="setRenovacaoFilter('pendente', this)">A contatar</button>
+                        <button class="asaas-filter-btn" id="renovacaoFilterContatado" onclick="setRenovacaoFilter('contatado', this)">Contatados</button>
+                        <button class="asaas-filter-btn" id="renovacaoFilterTodos" onclick="setRenovacaoFilter('todos', this)">Todos</button>
+                    </div>
+                </div>
+                <div id="renovacaoTableBody">
+                    <div class="asaas-loading">
+                        <div class="spinner"></div>
+                        <p>Carregando historico de pagamentos...</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ====== PAGE: DESPESAS ====== -->
@@ -1481,16 +1665,58 @@
                 </div>
             </div>
 
+            <div class="asaas-cards followup-cards">
+                <div class="asaas-card card-cobrar">
+                    <div class="ac-icon">&#128172;</div>
+                    <div class="ac-label">Cobrar Agora</div>
+                    <div class="ac-value" id="asaasFollowupCobrar" style="color: #70a1ff;">0</div>
+                    <div class="ac-sub" id="asaasFollowupCobrarSub">Pendentes sem contato</div>
+                </div>
+                <div class="asaas-card card-tentado">
+                    <div class="ac-icon">&#9200;</div>
+                    <div class="ac-label">Tentado</div>
+                    <div class="ac-value" id="asaasFollowupTentado" style="color: #d980fa;">0</div>
+                    <div class="ac-sub" id="asaasFollowupTentadoSub">Pendentes com tentativa</div>
+                </div>
+                <div class="asaas-card card-sem-whatsapp">
+                    <div class="ac-icon">&#128241;</div>
+                    <div class="ac-label">Sem WhatsApp</div>
+                    <div class="ac-value" id="asaasFollowupSemWhatsapp" style="color: #ced6e0;">0</div>
+                    <div class="ac-sub" id="asaasFollowupSemWhatsappSub">Telefone invalido</div>
+                </div>
+                <div class="asaas-card card-pagou-depois">
+                    <div class="ac-icon">&#9989;</div>
+                    <div class="ac-label">Pagaram Depois</div>
+                    <div class="ac-value" id="asaasFollowupPagouDepois" style="color: #7bed9f;">0</div>
+                    <div class="ac-sub" id="asaasFollowupPagouDepoisSub">Confirmados apos pendencia</div>
+                </div>
+                <div class="asaas-card card-retro">
+                    <div class="ac-icon">&#128467;</div>
+                    <div class="ac-label">Inferencia Abril</div>
+                    <div class="ac-value" id="asaasFollowupRetro" style="color: #dfe4ea;">0</div>
+                    <div class="ac-sub" id="asaasFollowupRetroSub">Retroativo nao confiavel</div>
+                </div>
+            </div>
+
             <!-- Asaas Table -->
             <div class="asaas-table-wrap">
                 <div class="asaas-table-title">
                     &#128203; Movimentacoes Asaas
                 </div>
-                <div class="asaas-filters">
+                <div class="asaas-filters" id="asaasStatusFilters">
                     <button class="asaas-filter-btn active" onclick="setAsaasFilter('todos', this)">Todos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('pago', this)">Pagos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('pendente', this)">Pendentes</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFilter('vencido', this)">Vencidos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('estornado', this)">Estornados</button>
+                </div>
+                <div class="asaas-filters asaas-followup-filters" id="asaasFollowupFilters">
+                    <span class="asaas-filter-label">Follow-up</span>
+                    <button class="asaas-filter-btn active" onclick="setAsaasFollowupFilter('todos', this)">Todos</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFollowupFilter('cobrar', this)">Cobrar agora</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFollowupFilter('tentado', this)">Tentado</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFollowupFilter('sem-whatsapp', this)">Sem WhatsApp</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFollowupFilter('pagou-depois', this)">Pagaram depois</button>
                 </div>
                 <div id="asaasTableBody">
                     <div class="asaas-loading">
@@ -1538,17 +1764,58 @@
                 </div>
             </div>
 
+            <div class="asaas-cards followup-cards">
+                <div class="asaas-card kiwify-card card-cobrar">
+                    <div class="ac-icon">&#128172;</div>
+                    <div class="ac-label">Cobrar Agora</div>
+                    <div class="ac-value" id="kiwifyFollowupCobrar" style="color: #74b9ff;">0</div>
+                    <div class="ac-sub" id="kiwifyFollowupCobrarSub">Pendentes sem contato</div>
+                </div>
+                <div class="asaas-card kiwify-card card-tentado">
+                    <div class="ac-icon">&#9200;</div>
+                    <div class="ac-label">Tentado</div>
+                    <div class="ac-value" id="kiwifyFollowupTentado" style="color: #d980fa;">0</div>
+                    <div class="ac-sub" id="kiwifyFollowupTentadoSub">Pendentes com tentativa</div>
+                </div>
+                <div class="asaas-card kiwify-card card-sem-whatsapp">
+                    <div class="ac-icon">&#128241;</div>
+                    <div class="ac-label">Sem WhatsApp</div>
+                    <div class="ac-value" id="kiwifyFollowupSemWhatsapp" style="color: #ced6e0;">0</div>
+                    <div class="ac-sub" id="kiwifyFollowupSemWhatsappSub">Telefone invalido</div>
+                </div>
+                <div class="asaas-card kiwify-card card-pagou-depois">
+                    <div class="ac-icon">&#9989;</div>
+                    <div class="ac-label">Pagaram Depois</div>
+                    <div class="ac-value" id="kiwifyFollowupPagouDepois" style="color: #55efc4;">0</div>
+                    <div class="ac-sub" id="kiwifyFollowupPagouDepoisSub">Confirmados apos pendencia</div>
+                </div>
+                <div class="asaas-card kiwify-card card-retro">
+                    <div class="ac-icon">&#128467;</div>
+                    <div class="ac-label">Inferencia Abril</div>
+                    <div class="ac-value" id="kiwifyFollowupRetro" style="color: #dfe4ea;">0</div>
+                    <div class="ac-sub" id="kiwifyFollowupRetroSub">Retroativo nao confiavel</div>
+                </div>
+            </div>
+
             <!-- Kiwify Table -->
             <div class="asaas-table-wrap">
                 <div class="asaas-table-title">
                     &#127808; Movimentacoes Kiwify
                 </div>
-                <div class="asaas-filters">
+                <div class="asaas-filters" id="kiwifyStatusFilters">
                     <button class="asaas-filter-btn kiwify-filter-btn active" onclick="setKiwifyFilter('todos', this)">Todos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pago', this)">Pagos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pendente', this)">Pendentes</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('estornado', this)">Estornados</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('recusado', this)">Recusados</button>
+                </div>
+                <div class="asaas-filters asaas-followup-filters" id="kiwifyFollowupFilters">
+                    <span class="asaas-filter-label">Follow-up</span>
+                    <button class="asaas-filter-btn kiwify-filter-btn active" onclick="setKiwifyFollowupFilter('todos', this)">Todos</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFollowupFilter('cobrar', this)">Cobrar agora</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFollowupFilter('tentado', this)">Tentado</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFollowupFilter('sem-whatsapp', this)">Sem WhatsApp</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFollowupFilter('pagou-depois', this)">Pagaram depois</button>
                 </div>
                 <div id="kiwifyTableBody">
                     <div class="asaas-loading kiwify-loading">
@@ -1775,6 +2042,17 @@
         let currentMonthIndex = new Date().getMonth();
         let chart = null;
         let moveEntryInfo = null;
+        let currentPage = 'marketing';
+
+        const TEMPLATE_PRIMEIRO = (nome) =>
+            `Oi ${getFirstName(nome)}! Aqui é o Prof. Whesley do Everyday Conversation. ` +
+            `Vi que sua matricula ficou pendente de pagamento - quer que eu te ajude ` +
+            `a finalizar? Qualquer duvida e so me chamar por aqui.`;
+
+        const TEMPLATE_VENCIDO = (nome) =>
+            `Oi ${getFirstName(nome)}, tudo bem? Passando pra lembrar que sua cobranca ` +
+            `ficou em aberto. Se precisar de um novo link ou quiser trocar a forma de ` +
+            `pagamento, me avisa que te envio agora.`;
 
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -2397,10 +2675,565 @@
         }
 
         // ============================================
-        // INIT
+        // FOLLOW-UP / SALES STATE
         // ============================================
-        function init() {
-            // Set default date to today
+        const FOLLOWUP_API = '/.netlify/functions/followup-data';
+        const FOLLOWUP_POLL_TTL = 30 * 1000;
+        const FOLLOWUP_RETRO_VERSION = 'apr-2026-v1';
+        const LAST_PAYMENT_CACHE_KEY = 'sales_last_payment_history_v2';
+        const LAST_PAYMENT_CACHE_TIME_KEY = 'sales_last_payment_history_time_v2';
+        const LAST_PAYMENT_CACHE_TTL = 24 * 60 * 60 * 1000;
+        const LAST_PAYMENT_LOOKBACK_MONTHS = 12;
+        let followupRows = {};
+        let followupMeta = {};
+        let followupLoaded = false;
+        let followupSeedInProgress = false;
+        const followupSyncInFlight = new Set();
+        let lastPaymentIndex = {};
+        let lastPaymentHistoryLoaded = false;
+        let lastPaymentHistoryPromise = null;
+
+        function getFirstName(nome) {
+            return (nome || '').trim().split(/\s+/)[0] || 'tudo bem';
+        }
+
+        function safeDate(value) {
+            if (!value) return null;
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+
+        function formatDayMonth(value) {
+            const date = safeDate(value);
+            if (!date) return '-';
+            return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function formatDateCell(value) {
+            if (!value) return '-';
+            if (String(value).length === 10) {
+                const [y, m, d] = String(value).split('-');
+                return `${d}/${m}`;
+            }
+            return formatDayMonth(value);
+        }
+
+        function normalizeWaPhone(raw) {
+            const digits = String(raw || '').replace(/\D/g, '');
+            if (!digits || digits.length < 10) return null;
+            if (digits.startsWith('55') && (digits.length === 12 || digits.length === 13)) return digits;
+            if (digits.length === 10 || digits.length === 11) return `55${digits}`;
+            if (digits.length >= 11 && digits.length <= 15) return digits;
+            return null;
+        }
+
+        function normalizeDocument(raw) {
+            const digits = String(raw || '').replace(/\D/g, '');
+            if (digits.length === 11 || digits.length === 14) return digits;
+            return null;
+        }
+
+        function getVendaDocument(venda) {
+            return normalizeDocument(venda?.document);
+        }
+
+        // Chaves de identidade da pessoa - usadas para evitar cobrar quem ja pagou em outra cobranca/plataforma
+        // Ordem de prioridade: CPF/CNPJ (mais confiavel) > email > telefone
+        function normalizeEmailKey(raw) {
+            const e = String(raw || '').toLowerCase().trim();
+            return e && e.includes('@') ? e : null;
+        }
+        function normalizePhoneKey(raw) {
+            const digits = String(raw || '').replace(/\D/g, '');
+            if (digits.length < 10) return null;
+            return digits.slice(-11); // ultimos 11 (DDD + numero)
+        }
+        function getVendaPersonKeys(venda) {
+            return {
+                document: getVendaDocument(venda),
+                email: normalizeEmailKey(venda?.email),
+                phone: normalizePhoneKey(venda?.telefone),
+            };
+        }
+        function vendasMatchSamePerson(a, b) {
+            const ka = getVendaPersonKeys(a);
+            const kb = getVendaPersonKeys(b);
+            if (ka.document && ka.document === kb.document) return true;
+            if (ka.email && ka.email === kb.email) return true;
+            if (ka.phone && ka.phone === kb.phone) return true;
+            return false;
+        }
+        function getVendaPrimaryKey(venda) {
+            const k = getVendaPersonKeys(venda);
+            if (k.document) return 'D:' + k.document;
+            if (k.email) return 'E:' + k.email;
+            if (k.phone) return 'P:' + k.phone;
+            return null;
+        }
+
+        function getVendaOpenDate(venda) {
+            return safeDate(venda?.createdAt || venda?.data);
+        }
+
+        function getVendaActivityDate(venda) {
+            return safeDate(venda?.updatedAt || venda?.paymentDate || venda?.approvedAt || venda?.createdAt || venda?.data);
+        }
+
+        function getVendaPaidDate(venda) {
+            return safeDate(venda?.paymentDate || venda?.approvedAt || venda?.updatedAt || venda?.createdAt || venda?.data);
+        }
+
+        function getStatusPriority(status) {
+            if (status === 'Vencido') return 5;
+            if (status === 'Pendente') return 4;
+            if (status === 'Pago' || status === 'Confirmado') return 3;
+            if (status === 'Estornado' || status === 'Recusado') return 2;
+            return 1;
+        }
+
+        function shouldReplaceDuplicateVenda(candidate, current) {
+            const candidateOpen = getVendaOpenDate(candidate)?.getTime() || 0;
+            const currentOpen = getVendaOpenDate(current)?.getTime() || 0;
+            if (candidateOpen !== currentOpen) return candidateOpen > currentOpen;
+
+            const candidateActivity = getVendaActivityDate(candidate)?.getTime() || 0;
+            const currentActivity = getVendaActivityDate(current)?.getTime() || 0;
+            if (candidateActivity !== currentActivity) return candidateActivity > currentActivity;
+
+            const candidatePriority = getStatusPriority(candidate?.status);
+            const currentPriority = getStatusPriority(current?.status);
+            if (candidatePriority !== currentPriority) return candidatePriority > currentPriority;
+
+            const candidateValue = candidate?.valorLiquido != null ? candidate.valorLiquido : (candidate?.valor || 0);
+            const currentValue = current?.valorLiquido != null ? current.valorLiquido : (current?.valor || 0);
+            return candidateValue >= currentValue;
+        }
+
+        function getLatestPaidInfo(venda) {
+            const keys = getVendaPersonKeys(venda);
+            const lookupKeys = [];
+            if (keys.document) lookupKeys.push('D:' + keys.document);
+            if (keys.email) lookupKeys.push('E:' + keys.email);
+            if (keys.phone) lookupKeys.push('P:' + keys.phone);
+            // Compat: indice antigo era keyed direto pelo CPF (sem prefixo)
+            if (keys.document) lookupKeys.push(keys.document);
+            if (lookupKeys.length === 0) return null;
+
+            // Tenta lookup no indice (mais rapido que varrer todas vendas)
+            let bestFromIndex = null;
+            for (const k of lookupKeys) {
+                const info = lastPaymentIndex[k];
+                if (info?.date) {
+                    const d = safeDate(info.date);
+                    if (d && (!bestFromIndex || d.getTime() > safeDate(bestFromIndex.date).getTime())) {
+                        bestFromIndex = info;
+                    }
+                }
+            }
+            if (bestFromIndex) {
+                return {
+                    date: safeDate(bestFromIndex.date),
+                    value: bestFromIndex.value,
+                    rowKey: bestFromIndex.rowKey,
+                };
+            }
+
+            // Fallback: varrer cache atual procurando matches por qualquer chave de pessoa
+            let latestPaidVenda = null;
+            let latestPaidDate = null;
+
+            getAllCachedSales().forEach((otherVenda) => {
+                if (!otherVenda || !isPaidStatus(otherVenda.status)) return;
+                if (!vendasMatchSamePerson(venda, otherVenda)) return;
+
+                const paidDate = getVendaPaidDate(otherVenda);
+                if (!paidDate) return;
+
+                if (!latestPaidDate || paidDate.getTime() > latestPaidDate.getTime()) {
+                    latestPaidVenda = otherVenda;
+                    latestPaidDate = paidDate;
+                }
+            });
+
+            if (!latestPaidVenda || !latestPaidDate) return null;
+
+            return {
+                date: latestPaidDate,
+                value: latestPaidVenda.valorLiquido != null ? latestPaidVenda.valorLiquido : latestPaidVenda.valor,
+                rowKey: latestPaidVenda.rowKey,
+            };
+        }
+
+        function getMonthBoundary(date, type) {
+            const d = new Date(date.getFullYear(), date.getMonth(), type === 'start' ? 1 : 1);
+            if (type === 'end') {
+                d.setMonth(d.getMonth() + 1);
+                d.setDate(0);
+            }
+            return d;
+        }
+
+        function shiftMonth(date, delta) {
+            return new Date(date.getFullYear(), date.getMonth() + delta, 1);
+        }
+
+        function formatIsoDate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function getHistoryMonthRanges(monthCount) {
+            const ranges = [];
+            const now = new Date();
+
+            for (let offset = 0; offset < monthCount; offset += 1) {
+                const base = shiftMonth(now, -offset);
+                ranges.push({
+                    inicio: formatIsoDate(getMonthBoundary(base, 'start')),
+                    fim: formatIsoDate(getMonthBoundary(base, 'end')),
+                });
+            }
+
+            return ranges;
+        }
+
+        function mergeLastPaymentEntry(index, venda) {
+            if (!venda || !isPaidStatus(venda.status)) return;
+
+            const paidDate = getVendaPaidDate(venda);
+            if (!paidDate) return;
+
+            const keys = getVendaPersonKeys(venda);
+            const indexKeys = [];
+            if (keys.document) indexKeys.push('D:' + keys.document);
+            if (keys.email) indexKeys.push('E:' + keys.email);
+            if (keys.phone) indexKeys.push('P:' + keys.phone);
+            if (indexKeys.length === 0) return;
+
+            const entry = {
+                date: paidDate.toISOString(),
+                value: venda.valorLiquido != null ? venda.valorLiquido : venda.valor,
+                rowKey: venda.rowKey,
+                nome: venda.nome || '',
+                telefone: venda.telefone || '',
+                email: venda.email || '',
+                document: venda.document || '',
+                provedor: venda.provedor || '',
+            };
+
+            for (const key of indexKeys) {
+                const current = index[key];
+                if (!current || paidDate.getTime() > safeDate(current.date).getTime()) {
+                    index[key] = entry;
+                }
+            }
+        }
+
+        function buildLastPaymentIndexFromSales(vendas, seedIndex) {
+            const nextIndex = { ...(seedIndex || {}) };
+            (vendas || []).forEach((venda) => mergeLastPaymentEntry(nextIndex, venda));
+            return nextIndex;
+        }
+
+        function loadCachedLastPaymentHistory() {
+            try {
+                const raw = localStorage.getItem(LAST_PAYMENT_CACHE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function persistLastPaymentHistory(index) {
+            localStorage.setItem(LAST_PAYMENT_CACHE_KEY, JSON.stringify(index));
+            localStorage.setItem(LAST_PAYMENT_CACHE_TIME_KEY, String(Date.now()));
+        }
+
+        async function fetchSalesHistory(url) {
+            try {
+                const resp = await fetch(url, { cache: 'no-store' });
+                if (!resp.ok) return null;
+                const result = await resp.json();
+                return result?.error ? null : result;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function loadLastPaymentHistory(forceRefresh) {
+            if (lastPaymentHistoryPromise) return lastPaymentHistoryPromise;
+
+            if (!forceRefresh) {
+                const cached = loadCachedLastPaymentHistory();
+                const cachedTime = localStorage.getItem(LAST_PAYMENT_CACHE_TIME_KEY);
+                if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < LAST_PAYMENT_CACHE_TTL) {
+                    lastPaymentIndex = cached;
+                    lastPaymentHistoryLoaded = true;
+                    rerenderSalesViews();
+                    return cached;
+                }
+            }
+
+            lastPaymentHistoryPromise = (async () => {
+                const ranges = getHistoryMonthRanges(LAST_PAYMENT_LOOKBACK_MONTHS);
+                const urls = ranges.flatMap((range) => ([
+                    `/.netlify/functions/asaas-vendas?inicio=${range.inicio}&fim=${range.fim}&_hist=1`,
+                    `/.netlify/functions/kiwify-vendas?inicio=${range.inicio}&fim=${range.fim}&_hist=1`,
+                ]));
+
+                const results = await Promise.all(urls.map((url) => fetchSalesHistory(url)));
+                let nextIndex = {};
+                results.forEach((result) => {
+                    if (result?.vendas) nextIndex = buildLastPaymentIndexFromSales(result.vendas, nextIndex);
+                });
+
+                if (Object.keys(nextIndex).length > 0) {
+                    lastPaymentIndex = nextIndex;
+                    persistLastPaymentHistory(nextIndex);
+                } else if (!lastPaymentHistoryLoaded) {
+                    lastPaymentIndex = {};
+                }
+
+                lastPaymentHistoryLoaded = true;
+                rerenderSalesViews();
+                return lastPaymentIndex;
+            })().finally(() => {
+                lastPaymentHistoryPromise = null;
+            });
+
+            return lastPaymentHistoryPromise;
+        }
+
+        function buildDisplaySalesRows(vendas) {
+            // Dedup por pessoa: CPF > email > telefone (em ordem de prioridade)
+            const dedupedByKey = new Map();
+            const rowsWithoutKey = [];
+
+            vendas.forEach((venda) => {
+                const primaryKey = getVendaPrimaryKey(venda);
+                if (!primaryKey) {
+                    rowsWithoutKey.push(venda);
+                    return;
+                }
+
+                const current = dedupedByKey.get(primaryKey);
+                if (!current || shouldReplaceDuplicateVenda(venda, current)) {
+                    dedupedByKey.set(primaryKey, venda);
+                }
+            });
+
+            const displayRows = [...dedupedByKey.values(), ...rowsWithoutKey];
+            displayRows.sort((a, b) => {
+                const timeA = getVendaOpenDate(a)?.getTime() || 0;
+                const timeB = getVendaOpenDate(b)?.getTime() || 0;
+                if (timeA !== timeB) return timeB - timeA;
+                return (b.data || '').localeCompare(a.data || '');
+            });
+
+            return displayRows.map((venda) => ({
+                ...venda,
+                lastPaidInfo: getLatestPaidInfo(venda),
+            }));
+        }
+
+        function getCrossPaidMatch(venda) {
+            if (!venda || isPaidStatus(venda.status) || isClosedStatus(venda.status)) return null;
+
+            const currentKeys = getVendaPersonKeys(venda);
+            const hasAnyKey = currentKeys.document || currentKeys.email || currentKeys.phone;
+            const currentOpenDate = getVendaOpenDate(venda);
+            if (!hasAnyKey || !currentOpenDate) return null;
+
+            let latestMatch = null;
+
+            getAllCachedSales().forEach((otherVenda) => {
+                if (!otherVenda || otherVenda.rowKey === venda.rowKey || !isPaidStatus(otherVenda.status)) return;
+                if (!vendasMatchSamePerson(venda, otherVenda)) return;
+
+                const paidDate = getVendaPaidDate(otherVenda);
+                if (!paidDate || paidDate.getTime() < currentOpenDate.getTime()) return;
+
+                if (!latestMatch || paidDate.getTime() > latestMatch.paidDate.getTime()) {
+                    latestMatch = { venda: otherVenda, paidDate };
+                }
+            });
+
+            return latestMatch;
+        }
+
+        function getDefaultWhatsAppAction(phoneNormalized) {
+            if (phoneNormalized) {
+                return {
+                    actionLabel: 'WhatsApp',
+                    actionClass: 'whatsapp',
+                    showButton: true,
+                    disabled: false,
+                    phoneNormalized,
+                };
+            }
+
+            return {
+                actionLabel: 'Sem numero',
+                actionClass: 'disabled',
+                showButton: true,
+                disabled: true,
+                phoneNormalized: null,
+            };
+        }
+
+        function isPaidStatus(status) {
+            return status === 'Pago' || status === 'Confirmado';
+        }
+
+        function isClosedStatus(status) {
+            return status === 'Estornado' || status === 'Recusado';
+        }
+
+        function getCachedSalesResult(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function hasFollowupKeys(result) {
+            return !!(result?.vendas || []).every((venda) =>
+                venda &&
+                venda.rowKey &&
+                venda.provedor &&
+                Object.prototype.hasOwnProperty.call(venda, 'document')
+            );
+        }
+
+        function getCachedAsaasResult() {
+            return getCachedSalesResult(ASAAS_CACHE_KEY);
+        }
+
+        function getCachedKiwifyResult() {
+            return getCachedSalesResult(KIWIFY_CACHE_KEY);
+        }
+
+        function getAllCachedSales() {
+            const vendas = [];
+            const asaas = getCachedAsaasResult();
+            const kiwify = getCachedKiwifyResult();
+            if (asaas?.vendas) vendas.push(...asaas.vendas);
+            if (kiwify?.vendas) vendas.push(...kiwify.vendas);
+            return vendas;
+        }
+
+        function getFollowupRecord(rowKey) {
+            return followupRows[rowKey] || null;
+        }
+
+        function cloneRecord(record) {
+            return record ? JSON.parse(JSON.stringify(record)) : null;
+        }
+
+        function applyLocalFollowupPatch(rowKey, patch, appendContactLog) {
+            const current = followupRows[rowKey] || {};
+            const next = { ...current, ...(patch || {}) };
+            const currentLog = Array.isArray(current.contactLog) ? current.contactLog : [];
+
+            if (appendContactLog) {
+                next.contactLog = [...currentLog, appendContactLog];
+            } else if (Array.isArray(current.contactLog) && !Array.isArray(next.contactLog)) {
+                next.contactLog = currentLog;
+            }
+
+            followupRows = { ...followupRows, [rowKey]: next };
+            return next;
+        }
+
+        async function postFollowupPayload(payload) {
+            const resp = await fetch(FOLLOWUP_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            if (!resp.ok) {
+                let errorMsg = 'Erro ao salvar follow-up';
+                try {
+                    const errorData = await resp.json();
+                    if (errorData?.error) errorMsg = errorData.error;
+                } catch (e) {}
+                throw new Error(errorMsg);
+            }
+
+            return resp.json();
+        }
+
+        async function saveFollowupPatch(rowKey, patch, appendContactLog, options = {}) {
+            const { optimistic = false, rollbackOnError = false, silent = false } = options;
+            const previous = cloneRecord(getFollowupRecord(rowKey));
+
+            if (optimistic) {
+                applyLocalFollowupPatch(rowKey, patch, appendContactLog);
+                rerenderSalesViews();
+            }
+
+            try {
+                const result = await postFollowupPayload({ rowKey, patch, appendContactLog });
+                if (!optimistic) {
+                    applyLocalFollowupPatch(rowKey, patch, appendContactLog);
+                } else if (result?.row) {
+                    followupRows = { ...followupRows, [rowKey]: result.row };
+                }
+                rerenderSalesViews();
+                return result?.row || getFollowupRecord(rowKey);
+            } catch (error) {
+                if (optimistic && rollbackOnError) {
+                    if (previous) {
+                        followupRows = { ...followupRows, [rowKey]: previous };
+                    } else {
+                        const nextRows = { ...followupRows };
+                        delete nextRows[rowKey];
+                        followupRows = nextRows;
+                    }
+                    rerenderSalesViews();
+                }
+                if (!silent) showToast('&#9888;&#65039;', error.message);
+                throw error;
+            }
+        }
+
+        async function saveFollowupMetaPatch(metaPatch, options = {}) {
+            const { silent = false } = options;
+            try {
+                const result = await postFollowupPayload({ metaPatch });
+                followupMeta = { ...followupMeta, ...(result?.meta || metaPatch) };
+                return followupMeta;
+            } catch (error) {
+                if (!silent) showToast('&#9888;&#65039;', error.message);
+                throw error;
+            }
+        }
+
+        async function loadFollowupData(silent) {
+            try {
+                const resp = await fetch(FOLLOWUP_API, { cache: 'no-store' });
+                if (!resp.ok) throw new Error('Erro ao carregar follow-up');
+                const result = await resp.json();
+                followupRows = result.rows || {};
+                followupMeta = result.meta || {};
+                followupLoaded = true;
+                rerenderSalesViews();
+                await maybeSeedRetroApril2026();
+            } catch (error) {
+                if (!silent) showToast('&#9888;&#65039;', error.message);
+            }
+        }
+
+        function rerenderSalesViews() {
+            const asaas = getCachedAsaasResult();
+            const kiwify = getCachedKiwifyResult();
+            if (asaas?.vendas) renderAsaasData(asaas);
+            if (kiwify?.vendas) renderKiwifyData(kiwify);
+        }
+
+        async function init() {
             const today = new Date();
             const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             document.getElementById('inputDate').value = todayStr;
@@ -2408,26 +3241,21 @@
             currentYear = today.getFullYear();
             currentMonthIndex = today.getMonth();
 
-            // Seed initial data on first run
             seedInitialData();
-
             render();
-
-            // Sincronizar dados do Marketing com a nuvem
             syncFromCloud();
 
-            // Pre-load Asaas and Kiwify data (from cache or fetch)
-            refreshAsaasData(false);
-            refreshKiwifyData(false);
+            await loadFollowupData(true);
+            await refreshAsaasData(false);
+            await refreshKiwifyData(false);
+            loadLastPaymentHistory(false);
 
-            // Migrar valor antigo de despesas para lista detalhada (se existir)
             const oldDespesas = parseFloat(localStorage.getItem('resumo_despesas')) || 0;
             const despList = getDespesasList();
             if (oldDespesas > 0 && despList.length === 0) {
                 saveDespesasList([{ id: Date.now(), nome: 'Despesas do curso (migrado)', valor: oldDespesas, data: todayStr }]);
             }
 
-            // Render despesas badge
             renderDespesas();
         }
 
@@ -2435,10 +3263,13 @@
         // PAGE SWITCHING (Marketing / Asaas)
         // ============================================
         function switchPage(page) {
-            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Despesas', 'Resumo'];
+            currentPage = page;
+            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Renovacao', 'Despesas', 'Resumo'];
             pages.forEach(p => {
-                document.getElementById('page' + p).classList.remove('active');
-                document.getElementById('tabPage' + p).className = 'page-tab';
+                const el = document.getElementById('page' + p);
+                if (el) el.classList.remove('active');
+                const tab = document.getElementById('tabPage' + p);
+                if (tab) tab.className = 'page-tab';
             });
 
             if (page === 'marketing') {
@@ -2447,11 +3278,24 @@
             } else if (page === 'asaas') {
                 document.getElementById('pageAsaas').classList.add('active');
                 document.getElementById('tabPageAsaas').className = 'page-tab active-asaas';
+                loadFollowupData(true);
+                loadLastPaymentHistory(false);
                 refreshAsaasData(false);
             } else if (page === 'kiwify') {
                 document.getElementById('pageKiwify').classList.add('active');
                 document.getElementById('tabPageKiwify').className = 'page-tab active-kiwify';
+                loadFollowupData(true);
+                loadLastPaymentHistory(false);
                 refreshKiwifyData(false);
+            } else if (page === 'renovacao') {
+                document.getElementById('pageRenovacao').classList.add('active');
+                document.getElementById('tabPageRenovacao').className = 'page-tab active-renovacao';
+                // Aplica valor salvo do input de dias
+                const stored = parseInt(localStorage.getItem(RENOVACAO_DIAS_KEY), 10);
+                if (Number.isFinite(stored) && stored > 0) {
+                    document.getElementById('renovacaoDiasInput').value = String(stored);
+                }
+                refreshRenovacao(false);
             } else if (page === 'despesas') {
                 document.getElementById('pageDespesas').classList.add('active');
                 document.getElementById('tabPageDespesas').className = 'page-tab active-despesas';
@@ -2468,32 +3312,391 @@
         // ============================================
         const ASAAS_CACHE_KEY = 'asaas_vendas_data';
         const ASAAS_CACHE_TIME_KEY = 'asaas_vendas_time';
-        const ASAAS_CACHE_TTL = 5 * 60 * 60 * 1000; // 5 horas em ms
-
+        const ASAAS_CACHE_TTL = 5 * 60 * 60 * 1000;
         let asaasCurrentFilter = 'todos';
+        let asaasCurrentFollowupFilter = 'todos';
         let asaasDataLoaded = false;
+
+        function isAsaasUrgent(venda) {
+            return venda.provedor === 'asaas' && venda.status === 'Vencido';
+        }
+
+        function isKiwifyUrgent(venda) {
+            if (venda.provedor !== 'kiwify' || venda.status !== 'Pendente') return false;
+            const createdAt = safeDate(venda.createdAt || venda.data);
+            if (!createdAt) return false;
+            return (Date.now() - createdAt.getTime()) >= (3 * 24 * 60 * 60 * 1000);
+        }
+
+        function isUrgentVenda(venda) {
+            return isAsaasUrgent(venda) || isKiwifyUrgent(venda);
+        }
+
+        function maybeQueueFollowupSync(rowKey, patch) {
+            if (!patch || Object.keys(patch).length === 0 || followupSyncInFlight.has(rowKey)) return;
+            const previous = cloneRecord(getFollowupRecord(rowKey));
+            applyLocalFollowupPatch(rowKey, patch, null);
+            followupSyncInFlight.add(rowKey);
+            saveFollowupPatch(rowKey, patch, null, { silent: true })
+                .catch(() => {
+                    if (previous) {
+                        followupRows = { ...followupRows, [rowKey]: previous };
+                    } else {
+                        const nextRows = { ...followupRows };
+                        delete nextRows[rowKey];
+                        followupRows = nextRows;
+                    }
+                    rerenderSalesViews();
+                })
+                .finally(() => followupSyncInFlight.delete(rowKey));
+        }
+
+        function syncFollowupWithSales(vendas) {
+            const nowIso = new Date().toISOString();
+
+            vendas.forEach((venda) => {
+                if (!venda?.rowKey) return;
+                const record = getFollowupRecord(venda.rowKey);
+                const patch = {};
+                const hadPendingHistory = !!record?.firstPendingSeenAt || record?.lastSeenStatus === 'Pendente' || record?.lastSeenStatus === 'Vencido';
+                const isOpen = venda.status === 'Pendente' || venda.status === 'Vencido';
+
+                if (record?.lastSeenStatus !== venda.status) {
+                    patch.lastSeenStatus = venda.status;
+                    patch.lastSeenAt = nowIso;
+                } else if (!record?.lastSeenAt) {
+                    patch.lastSeenAt = nowIso;
+                }
+
+                if (isOpen && !record?.firstPendingSeenAt) {
+                    patch.firstPendingSeenAt = nowIso;
+                    if (record?.retroInference) patch.retroInference = null;
+                }
+
+                if (isPaidStatus(venda.status)) {
+                    if (!record?.resolvedAt || record?.resolvedAs !== venda.status) {
+                        patch.resolvedAt = nowIso;
+                        patch.resolvedAs = venda.status;
+                    }
+                    if (hadPendingHistory && record?.paidAfterPending !== true) {
+                        patch.paidAfterPending = true;
+                    }
+                } else if (isClosedStatus(venda.status)) {
+                    if (!record?.resolvedAt || record?.resolvedAs !== venda.status) {
+                        patch.resolvedAt = nowIso;
+                        patch.resolvedAs = venda.status;
+                    }
+                    if (record?.paidAfterPending) patch.paidAfterPending = false;
+                } else if (record?.resolvedAt || record?.resolvedAs) {
+                    patch.resolvedAt = null;
+                    patch.resolvedAs = null;
+                    if (record?.paidAfterPending) patch.paidAfterPending = false;
+                }
+
+                maybeQueueFollowupSync(venda.rowKey, patch);
+            });
+        }
+
+        function inferRetroAsaas(venda) {
+            const paymentDate = safeDate(venda.paymentDate);
+            const dueDate = safeDate(venda.dueDate);
+            const createdAt = safeDate(venda.createdAt);
+
+            if (paymentDate && dueDate && paymentDate.getTime() > dueDate.getTime()) return 'provavel';
+            if (paymentDate && createdAt && (paymentDate.getTime() - createdAt.getTime()) >= (2 * 24 * 60 * 60 * 1000)) return 'provavel';
+            return 'inconclusivo';
+        }
+
+        function inferRetroKiwify(venda) {
+            const approvedAt = safeDate(venda.approvedAt);
+            const createdAt = safeDate(venda.createdAt);
+            if (approvedAt && createdAt && (approvedAt.getTime() - createdAt.getTime()) >= (2 * 24 * 60 * 60 * 1000)) return 'provavel';
+            return 'inconclusivo';
+        }
+
+        function isApril2026Venda(venda) {
+            const baseDate = venda.createdAt || venda.data || '';
+            return String(baseDate).startsWith('2026-04');
+        }
+
+        async function maybeSeedRetroApril2026() {
+            if (!followupLoaded || followupSeedInProgress || followupMeta.retroSeedVersion === FOLLOWUP_RETRO_VERSION) return;
+
+            const vendas = getAllCachedSales().filter(isApril2026Venda);
+            if (vendas.length === 0) return;
+
+            followupSeedInProgress = true;
+            try {
+                for (const venda of vendas) {
+                    if (!venda?.rowKey) continue;
+                    if (getFollowupRecord(venda.rowKey)) continue;
+
+                    const patch = {
+                        lastSeenStatus: venda.status,
+                        lastSeenAt: new Date().toISOString(),
+                        retroInference: venda.provedor === 'asaas' ? inferRetroAsaas(venda) : inferRetroKiwify(venda),
+                    };
+
+                    if (isPaidStatus(venda.status) || isClosedStatus(venda.status)) {
+                        patch.resolvedAt = new Date().toISOString();
+                        patch.resolvedAs = venda.status;
+                    }
+
+                    await saveFollowupPatch(venda.rowKey, patch, null, { silent: true });
+                }
+
+                await saveFollowupMetaPatch({ retroSeedVersion: FOLLOWUP_RETRO_VERSION }, { silent: true });
+            } finally {
+                followupSeedInProgress = false;
+                rerenderSalesViews();
+            }
+        }
+
+        function getFollowupState(venda) {
+            const record = getFollowupRecord(venda.rowKey) || {};
+            const phoneNormalized = normalizeWaPhone(venda.telefone);
+            const retroInference = record.retroInference || null;
+            const crossPaidMatch = getCrossPaidMatch(venda);
+            const defaultAction = getDefaultWhatsAppAction(phoneNormalized);
+
+            if (record.paidAfterPending && !retroInference && isPaidStatus(venda.status)) {
+                return {
+                    bucket: 'pagou-depois',
+                    badgeText: 'Pagou depois &#10003;',
+                    badgeClass: 'paid-after',
+                    retroInference,
+                    ...defaultAction,
+                };
+            }
+
+            if (crossPaidMatch) {
+                return {
+                    bucket: 'pagou-depois',
+                    badgeText: `Pago em outra cobranca (${formatDayMonth(crossPaidMatch.paidDate)})`,
+                    badgeClass: 'paid-after',
+                    retroInference,
+                    matchedByDocument: true,
+                    ...defaultAction,
+                };
+            }
+
+            if (isClosedStatus(venda.status)) {
+                return {
+                    bucket: 'encerrado',
+                    badgeText: 'Encerrado',
+                    badgeClass: 'closed',
+                    retroInference,
+                    ...defaultAction,
+                };
+            }
+
+            if ((venda.status === 'Pendente' || venda.status === 'Vencido') && !phoneNormalized) {
+                return {
+                    bucket: 'sem-whatsapp',
+                    badgeText: 'Sem WhatsApp',
+                    badgeClass: 'no-whatsapp',
+                    actionLabel: 'Sem numero',
+                    actionClass: 'disabled',
+                    disabled: true,
+                    showButton: true,
+                    retroInference,
+                    phoneNormalized: null,
+                };
+            }
+
+            if (isUrgentVenda(venda)) {
+                if (!record.secondReminderOpenedAt) {
+                    return {
+                        bucket: 'cobrar',
+                        badgeText: venda.provedor === 'asaas' ? 'Vencido' : 'Urgente 3d',
+                        badgeClass: 'urgent',
+                        actionLabel: 'Urgente',
+                        actionClass: 'urgent',
+                        reminderType: 'second',
+                        showButton: true,
+                        retroInference,
+                        phoneNormalized,
+                    };
+                }
+
+                return {
+                    bucket: 'tentado',
+                    badgeText: `Tentado em ${formatDayMonth(record.secondReminderOpenedAt)}`,
+                    badgeClass: 'attempted',
+                    actionLabel: 'Lembrar de novo',
+                    actionClass: 'secondary',
+                    reminderType: 'second',
+                    showButton: true,
+                    retroInference,
+                    phoneNormalized,
+                };
+            }
+
+            if (venda.status === 'Pendente') {
+                if (!record.firstReminderOpenedAt) {
+                    return {
+                        bucket: 'cobrar',
+                        badgeText: 'Novo',
+                        badgeClass: 'new',
+                        actionLabel: 'Cobrar agora',
+                        actionClass: 'primary',
+                        reminderType: 'first',
+                        showButton: true,
+                        retroInference,
+                        phoneNormalized,
+                    };
+                }
+
+                return {
+                    bucket: 'tentado',
+                    badgeText: `Tentado em ${formatDayMonth(record.firstReminderOpenedAt)}`,
+                    badgeClass: 'attempted',
+                    actionLabel: 'Lembrar',
+                    actionClass: 'secondary',
+                    reminderType: 'first',
+                    showButton: true,
+                    retroInference,
+                    phoneNormalized,
+                };
+            }
+
+            if (retroInference === 'provavel' && isPaidStatus(venda.status)) {
+                return {
+                    bucket: 'retro',
+                    badgeText: 'Abril: provavel',
+                    badgeClass: 'retro',
+                    retroInference,
+                    ...defaultAction,
+                };
+            }
+
+            return {
+                bucket: 'none',
+                badgeText: '',
+                badgeClass: '',
+                retroInference,
+                ...defaultAction,
+            };
+        }
+
+        function matchesFollowupFilter(state, filter) {
+            if (filter === 'todos') return true;
+            if (filter === 'cobrar') return state.bucket === 'cobrar';
+            if (filter === 'tentado') return state.bucket === 'tentado';
+            if (filter === 'sem-whatsapp') return state.bucket === 'sem-whatsapp';
+            if (filter === 'pagou-depois') return state.bucket === 'pagou-depois';
+            return true;
+        }
+
+        function summarizeFollowup(vendas) {
+            const summary = { cobrar: 0, tentado: 0, semWhatsapp: 0, pagouDepois: 0, retro: 0 };
+
+            vendas.forEach((venda) => {
+                const state = getFollowupState(venda);
+                if (state.bucket === 'cobrar') summary.cobrar += 1;
+                if (state.bucket === 'tentado') summary.tentado += 1;
+                if (state.bucket === 'sem-whatsapp') summary.semWhatsapp += 1;
+                if (state.bucket === 'pagou-depois') summary.pagouDepois += 1;
+                if (state.retroInference === 'provavel' && state.bucket !== 'pagou-depois') summary.retro += 1;
+            });
+
+            return summary;
+        }
+
+        function updateFollowupCards(prefix, summary) {
+            document.getElementById(`${prefix}FollowupCobrar`).textContent = summary.cobrar;
+            document.getElementById(`${prefix}FollowupCobrarSub`).textContent = summary.cobrar === 1 ? '1 linha sem contato' : `${summary.cobrar} linhas sem contato`;
+            document.getElementById(`${prefix}FollowupTentado`).textContent = summary.tentado;
+            document.getElementById(`${prefix}FollowupTentadoSub`).textContent = summary.tentado === 1 ? '1 linha com tentativa' : `${summary.tentado} linhas com tentativa`;
+            document.getElementById(`${prefix}FollowupSemWhatsapp`).textContent = summary.semWhatsapp;
+            document.getElementById(`${prefix}FollowupSemWhatsappSub`).textContent = summary.semWhatsapp === 1 ? '1 telefone invalido' : `${summary.semWhatsapp} telefones invalidos`;
+            document.getElementById(`${prefix}FollowupPagouDepois`).textContent = summary.pagouDepois;
+            document.getElementById(`${prefix}FollowupPagouDepoisSub`).textContent = summary.pagouDepois === 1 ? '1 pagamento detectado' : `${summary.pagouDepois} pagamentos detectados`;
+            document.getElementById(`${prefix}FollowupRetro`).textContent = summary.retro;
+            document.getElementById(`${prefix}FollowupRetroSub`).textContent = summary.retro === 1 ? '1 caso provavel' : `${summary.retro} casos provaveis`;
+        }
+
+        function renderFollowupAction(venda, state) {
+            const parts = [];
+
+            if (state.badgeText) {
+                parts.push(`<span class="followup-badge ${state.badgeClass}">${state.badgeText}</span>`);
+            }
+
+            if (state.showButton) {
+                const encodedRowKey = encodeURIComponent(venda.rowKey);
+                const disabledAttr = state.disabled ? ' disabled' : '';
+                const titleAttr = state.disabled ? ' title="Telefone indisponivel"' : '';
+                parts.push(`<button class="followup-action-btn ${state.actionClass}" onclick="handleFollowupAction('${encodedRowKey}')"${disabledAttr}${titleAttr}>${state.actionLabel}</button>`);
+            }
+
+            return `<div class="followup-cell">${parts.join('')}</div>`;
+        }
+
+        function getWhatsAppMessage(venda, state) {
+            return state.reminderType === 'second' ? TEMPLATE_VENCIDO(venda.nome) : TEMPLATE_PRIMEIRO(venda.nome);
+        }
+
+        function findVendaByRowKey(rowKey) {
+            return getAllCachedSales().find((venda) => venda.rowKey === rowKey) || null;
+        }
+
+        async function handleFollowupAction(encodedRowKey) {
+            const rowKey = decodeURIComponent(encodedRowKey);
+            const venda = findVendaByRowKey(rowKey);
+            if (!venda) {
+                showToast('&#9888;&#65039;', 'Linha nao encontrada no cache atual');
+                return;
+            }
+
+            const state = getFollowupState(venda);
+            if (!state.showButton || state.disabled || !state.phoneNormalized) return;
+
+            const message = state.reminderType ? getWhatsAppMessage(venda, state) : '';
+            const waUrl = message
+                ? `https://wa.me/${state.phoneNormalized}?text=${encodeURIComponent(message)}`
+                : `https://wa.me/${state.phoneNormalized}`;
+            const popup = window.open(waUrl, '_blank');
+            if (!popup) {
+                showToast('&#9888;&#65039;', 'O navegador bloqueou a abertura do WhatsApp');
+                return;
+            }
+            try {
+                popup.opener = null;
+            } catch (e) {}
+
+            if (!state.reminderType) return;
+
+            const nowIso = new Date().toISOString();
+            const patch = state.reminderType === 'second' ? { secondReminderOpenedAt: nowIso } : { firstReminderOpenedAt: nowIso };
+
+            try {
+                await saveFollowupPatch(
+                    rowKey,
+                    patch,
+                    { at: nowIso, type: state.reminderType, phoneNormalized: state.phoneNormalized },
+                    { optimistic: true, rollbackOnError: true }
+                );
+                showToast('&#9989;', 'Tentativa registrada no painel');
+            } catch (error) {}
+        }
 
         async function refreshAsaasData(forceRefresh) {
             const btn = document.getElementById('btnRefreshAsaas');
 
-            // Check cache
             if (!forceRefresh) {
-                const cached = localStorage.getItem(ASAAS_CACHE_KEY);
+                const cached = getCachedAsaasResult();
                 const cachedTime = localStorage.getItem(ASAAS_CACHE_TIME_KEY);
-                if (cached && cachedTime) {
-                    const age = Date.now() - parseInt(cachedTime);
+                if (cached && cachedTime && hasFollowupKeys(cached)) {
+                    const age = Date.now() - parseInt(cachedTime, 10);
                     if (age < ASAAS_CACHE_TTL) {
-                        try {
-                            const cachedData = JSON.parse(cached);
-                            renderAsaasData(cachedData);
-                            asaasDataLoaded = true;
-                            return;
-                        } catch(e) { /* cache corrupto, buscar novo */ }
+                        renderAsaasData(cached);
+                        asaasDataLoaded = true;
+                        return;
                     }
                 }
             }
 
-            // Show loading
             document.getElementById('asaasTableBody').innerHTML = `
                 <div class="asaas-loading">
                     <div class="spinner"></div>
@@ -2516,17 +3719,17 @@
 
                 if (result.error) throw new Error(result.error);
 
-                // Save to cache
                 localStorage.setItem(ASAAS_CACHE_KEY, JSON.stringify(result));
                 localStorage.setItem(ASAAS_CACHE_TIME_KEY, String(Date.now()));
 
                 renderAsaasData(result);
                 asaasDataLoaded = true;
-                showToast('\u2705', 'Dados do Asaas atualizados!');
+                if (kiwifyDataLoaded) rerenderSalesViews();
+                showToast('&#9989;', 'Dados do Asaas atualizados!');
             } catch (err) {
                 document.getElementById('asaasTableBody').innerHTML = `
                     <div class="asaas-loading">
-                        <p style="color: #ff4757;">\u26A0 Erro ao carregar: ${escapeHtml(err.message)}</p>
+                        <p style="color: #ff4757;">&#9888; Erro ao carregar: ${escapeHtml(err.message)}</p>
                         <p style="margin-top: 8px; font-size: 0.8rem;">Verifique se o ASAAS_API_KEY esta configurado no Netlify</p>
                     </div>
                 `;
@@ -2537,34 +3740,20 @@
 
         function renderAsaasData(result) {
             const { resumo, vendas } = result;
-
-            // Update cards
+            const displayVendas = buildDisplaySalesRows(vendas);
             const asaasLiquido = resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto;
             document.getElementById('asaasTotalRecebido').textContent = formatCurrency(asaasLiquido);
             document.getElementById('asaasTotalPagos').textContent = `${resumo.totalPagos} pagos (liquido)`;
             document.getElementById('asaasTotalAlunos').textContent = resumo.totalAlunos;
-
-            // Format periodo
-            const fmtPeriodo = (d) => {
-                if (!d || d.length < 10) return d;
-                const [y, m, day] = d.split('-');
-                return `${day}/${m}`;
-            };
-            document.getElementById('asaasPeriodo').textContent =
-                `${fmtPeriodo(resumo.periodo.inicio)} a ${fmtPeriodo(resumo.periodo.fim)}`;
-
+            document.getElementById('asaasPeriodo').textContent = `${formatDateCell(resumo.periodo.inicio)} a ${formatDateCell(resumo.periodo.fim)}`;
             document.getElementById('asaasTotalPendentes').textContent = formatCurrency(resumo.valorPendente);
             document.getElementById('asaasQtdPendentes').textContent = `${resumo.totalPendentes} pendentes`;
             document.getElementById('asaasTotalEstornos').textContent = formatCurrency(resumo.valorEstornado);
             document.getElementById('asaasQtdEstornos').textContent = `${resumo.totalEstornados} estornos`;
-
-            // Update badge
             document.getElementById('asaasBadge').textContent = resumo.totalAlunos;
-
-            // Update last update time
             const cachedTime = localStorage.getItem(ASAAS_CACHE_TIME_KEY);
             if (cachedTime) {
-                const date = new Date(parseInt(cachedTime));
+                const date = new Date(parseInt(cachedTime, 10));
                 const horas = String(date.getHours()).padStart(2, '0');
                 const mins = String(date.getMinutes()).padStart(2, '0');
                 const dia = String(date.getDate()).padStart(2, '0');
@@ -2573,21 +3762,23 @@
                     `Ultima atualizacao: ${dia}/${mes} as ${horas}:${mins} | Auto-refresh a cada 5h`;
             }
 
-            // Render table
-            renderAsaasTable(vendas, asaasCurrentFilter);
+            syncFollowupWithSales(vendas);
+            updateFollowupCards('asaas', summarizeFollowup(displayVendas));
+            renderAsaasTable(displayVendas, asaasCurrentFilter, asaasCurrentFollowupFilter);
+            maybeSeedRetroApril2026();
         }
 
-        function renderAsaasTable(vendas, filter) {
-            let filtered = vendas;
-            if (filter === 'pago') {
-                filtered = vendas.filter(v => v.status === 'Pago' || v.status === 'Confirmado');
-            } else if (filter === 'pendente') {
-                filtered = vendas.filter(v => v.status === 'Pendente');
-            } else if (filter === 'estornado') {
-                filtered = vendas.filter(v => v.status === 'Estornado');
-            } else if (filter === 'vencido') {
-                filtered = vendas.filter(v => v.status === 'Vencido');
-            }
+        function matchesAsaasStatus(venda, filter) {
+            if (filter === 'todos') return true;
+            if (filter === 'pago') return isPaidStatus(venda.status);
+            if (filter === 'pendente') return venda.status === 'Pendente';
+            if (filter === 'vencido') return venda.status === 'Vencido';
+            if (filter === 'estornado') return venda.status === 'Estornado';
+            return true;
+        }
+
+        function renderAsaasTable(vendas, statusFilter, followupFilter) {
+            const filtered = vendas.filter((venda) => matchesAsaasStatus(venda, statusFilter) && matchesFollowupFilter(getFollowupState(venda), followupFilter));
 
             if (filtered.length === 0) {
                 document.getElementById('asaasTableBody').innerHTML = `
@@ -2599,31 +3790,26 @@
             }
 
             let html = '<table class="asaas-table"><thead><tr>';
-            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Data</th>';
+            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Ult. pagamento</th><th>Valor pago</th><th class="action-head">Ação</th><th>Data</th>';
             html += '</tr></thead><tbody>';
 
             filtered.forEach(v => {
+                const state = getFollowupState(v);
                 const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                const telFormatted = v.telefone || '-';
                 const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
-
-                // Format date DD/MM
-                let dataFormatted = v.data;
-                if (v.data && v.data.length === 10) {
-                    const [y, m, d] = v.data.split('-');
-                    dataFormatted = `${d}/${m}`;
-                }
-
-                const isCancelado = v.status === 'Estornado' || v.status === 'Recusado';
-                const rowStyle = isCancelado ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
-
+                const lastPaidDate = v.lastPaidInfo?.date ? formatDayMonth(v.lastPaidInfo.date) : '-';
+                const lastPaidValue = v.lastPaidInfo?.value != null ? formatCurrency(v.lastPaidInfo.value) : '-';
+                const rowStyle = isClosedStatus(v.status) ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
                 html += `<tr${rowStyle}>
                     <td>${escapeHtml(v.nome)}</td>
-                    <td class="tel-cell">${escapeHtml(telFormatted)}</td>
+                    <td class="tel-cell">${escapeHtml(v.telefone || '-')}</td>
                     <td class="valor-cell">${formatCurrency(valorExibir)}</td>
                     <td><span class="status-pill ${statusClass}">${v.status}</span></td>
                     <td>${escapeHtml(v.forma)}</td>
-                    <td>${dataFormatted}</td>
+                    <td class="last-paid-cell">${lastPaidDate}</td>
+                    <td class="last-paid-cell">${lastPaidValue}</td>
+                    <td class="action-cell">${renderFollowupAction(v, state)}</td>
+                    <td>${formatDateCell(v.data)}</td>
                 </tr>`;
             });
 
@@ -2633,20 +3819,26 @@
 
         function setAsaasFilter(filter, btn) {
             asaasCurrentFilter = filter;
-            document.querySelectorAll('.asaas-filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#asaasStatusFilters .asaas-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // Re-render table from cache
-            const cached = localStorage.getItem(ASAAS_CACHE_KEY);
+            const cached = getCachedAsaasResult();
             if (cached) {
-                try {
-                    const result = JSON.parse(cached);
-                    renderAsaasTable(result.vendas, filter);
-                } catch(e) { /* ignore */ }
+                renderAsaasTable(buildDisplaySalesRows(cached.vendas), asaasCurrentFilter, asaasCurrentFollowupFilter);
             }
         }
 
-        // Auto-refresh Asaas data every 5 hours
+        function setAsaasFollowupFilter(filter, btn) {
+            asaasCurrentFollowupFilter = filter;
+            document.querySelectorAll('#asaasFollowupFilters .asaas-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cached = getCachedAsaasResult();
+            if (cached) {
+                renderAsaasTable(buildDisplaySalesRows(cached.vendas), asaasCurrentFilter, asaasCurrentFollowupFilter);
+            }
+        }
+
         setInterval(() => {
             refreshAsaasData(true);
         }, ASAAS_CACHE_TTL);
@@ -2656,32 +3848,28 @@
         // ============================================
         const KIWIFY_CACHE_KEY = 'kiwify_vendas_data';
         const KIWIFY_CACHE_TIME_KEY = 'kiwify_vendas_time';
-        const KIWIFY_CACHE_TTL = 5 * 60 * 60 * 1000; // 5 horas em ms
+        const KIWIFY_CACHE_TTL = 5 * 60 * 60 * 1000;
 
         let kiwifyCurrentFilter = 'todos';
+        let kiwifyCurrentFollowupFilter = 'todos';
         let kiwifyDataLoaded = false;
 
         async function refreshKiwifyData(forceRefresh) {
             const btn = document.getElementById('btnRefreshKiwify');
 
-            // Check cache
             if (!forceRefresh) {
-                const cached = localStorage.getItem(KIWIFY_CACHE_KEY);
+                const cached = getCachedKiwifyResult();
                 const cachedTime = localStorage.getItem(KIWIFY_CACHE_TIME_KEY);
-                if (cached && cachedTime) {
-                    const age = Date.now() - parseInt(cachedTime);
+                if (cached && cachedTime && hasFollowupKeys(cached)) {
+                    const age = Date.now() - parseInt(cachedTime, 10);
                     if (age < KIWIFY_CACHE_TTL) {
-                        try {
-                            const cachedData = JSON.parse(cached);
-                            renderKiwifyData(cachedData);
-                            kiwifyDataLoaded = true;
-                            return;
-                        } catch(e) { /* cache corrupto, buscar novo */ }
+                        renderKiwifyData(cached);
+                        kiwifyDataLoaded = true;
+                        return;
                     }
                 }
             }
 
-            // Show loading
             document.getElementById('kiwifyTableBody').innerHTML = `
                 <div class="asaas-loading kiwify-loading">
                     <div class="spinner"></div>
@@ -2694,8 +3882,6 @@
             try {
                 const hoje = new Date();
                 const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
-
-                // Buscar em pedacos de 5 dias SEQUENCIALMENTE para evitar timeout
                 const mesInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
                 const chunks = [];
                 let chunkStart = new Date(mesInicio);
@@ -2707,7 +3893,6 @@
                     chunkStart = new Date(chunkEnd);
                 }
 
-                // Buscar sequencialmente (um de cada vez) e mostrar progresso
                 const seen = new Set();
                 let todasVendas = [];
                 for (let i = 0; i < chunks.length; i++) {
@@ -2720,15 +3905,14 @@
                     `;
                     try {
                         const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${c.inicio}&fim=${c.fim}&_t=${Date.now()}`);
-                        if (resp.ok) {
-                            const data = await resp.json();
-                            if (data && data.vendas) {
-                                for (const v of data.vendas) {
-                                    const key = `${v.nome}|${v.data}|${v.valorLiquido}`;
-                                    if (!seen.has(key)) {
-                                        seen.add(key);
-                                        todasVendas.push(v);
-                                    }
+                        if (!resp.ok) continue;
+                        const data = await resp.json();
+                        if (data?.vendas) {
+                            for (const v of data.vendas) {
+                                const key = v.rowKey || `${v.nome}|${v.data}|${v.valorLiquido}`;
+                                if (!seen.has(key)) {
+                                    seen.add(key);
+                                    todasVendas.push(v);
                                 }
                             }
                         }
@@ -2737,7 +3921,6 @@
 
                 todasVendas.sort((a, b) => b.data.localeCompare(a.data));
 
-                // Recalcular resumo
                 const pagos = todasVendas.filter(v => v.status === 'Pago');
                 const pendentes = todasVendas.filter(v => v.status === 'Pendente');
                 const estornados = todasVendas.filter(v => v.status === 'Estornado');
@@ -2761,17 +3944,17 @@
                     vendas: todasVendas,
                 };
 
-                // Save to cache
                 localStorage.setItem(KIWIFY_CACHE_KEY, JSON.stringify(result));
                 localStorage.setItem(KIWIFY_CACHE_TIME_KEY, String(Date.now()));
 
                 renderKiwifyData(result);
                 kiwifyDataLoaded = true;
-                showToast('\u2705', 'Dados do Kiwify atualizados!');
+                if (asaasDataLoaded) rerenderSalesViews();
+                showToast('&#9989;', 'Dados do Kiwify atualizados!');
             } catch (err) {
                 document.getElementById('kiwifyTableBody').innerHTML = `
                     <div class="asaas-loading kiwify-loading">
-                        <p style="color: #ff4757;">\u26A0 Erro ao carregar: ${escapeHtml(err.message)}</p>
+                        <p style="color: #ff4757;">&#9888; Erro ao carregar: ${escapeHtml(err.message)}</p>
                         <p style="margin-top: 8px; font-size: 0.8rem;">Verifique se as credenciais KIWIFY estao configuradas no Netlify</p>
                     </div>
                 `;
@@ -2782,34 +3965,20 @@
 
         function renderKiwifyData(result) {
             const { resumo, vendas } = result;
-
-            // Update cards
+            const displayVendas = buildDisplaySalesRows(vendas);
             const kiwifyLiquido = resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto;
             document.getElementById('kiwifyTotalRecebido').textContent = formatCurrency(kiwifyLiquido);
             document.getElementById('kiwifyTotalPagos').textContent = `${resumo.totalPagos} pagos (liquido)`;
             document.getElementById('kiwifyTotalAlunos').textContent = resumo.totalAlunos;
-
-            // Format periodo
-            const fmtPeriodo = (d) => {
-                if (!d || d.length < 10) return d;
-                const [y, m, day] = d.split('-');
-                return `${day}/${m}`;
-            };
-            document.getElementById('kiwifyPeriodo').textContent =
-                `${fmtPeriodo(resumo.periodo.inicio)} a ${fmtPeriodo(resumo.periodo.fim)}`;
-
+            document.getElementById('kiwifyPeriodo').textContent = `${formatDateCell(resumo.periodo.inicio)} a ${formatDateCell(resumo.periodo.fim)}`;
             document.getElementById('kiwifyTotalPendentes').textContent = formatCurrency(resumo.valorPendente);
             document.getElementById('kiwifyQtdPendentes').textContent = `${resumo.totalPendentes} pendentes`;
             document.getElementById('kiwifyTotalEstornos').textContent = formatCurrency(resumo.valorEstornado);
             document.getElementById('kiwifyQtdEstornos').textContent = `${resumo.totalEstornados} estornos`;
-
-            // Update badge
             document.getElementById('kiwifyBadge').textContent = resumo.totalAlunos;
-
-            // Update last update time
             const cachedTime = localStorage.getItem(KIWIFY_CACHE_TIME_KEY);
             if (cachedTime) {
-                const date = new Date(parseInt(cachedTime));
+                const date = new Date(parseInt(cachedTime, 10));
                 const horas = String(date.getHours()).padStart(2, '0');
                 const mins = String(date.getMinutes()).padStart(2, '0');
                 const dia = String(date.getDate()).padStart(2, '0');
@@ -2818,21 +3987,23 @@
                     `Ultima atualizacao: ${dia}/${mes} as ${horas}:${mins} | Auto-refresh a cada 5h`;
             }
 
-            // Render table
-            renderKiwifyTable(vendas, kiwifyCurrentFilter);
+            syncFollowupWithSales(vendas);
+            updateFollowupCards('kiwify', summarizeFollowup(displayVendas));
+            renderKiwifyTable(displayVendas, kiwifyCurrentFilter, kiwifyCurrentFollowupFilter);
+            maybeSeedRetroApril2026();
         }
 
-        function renderKiwifyTable(vendas, filter) {
-            let filtered = vendas;
-            if (filter === 'pago') {
-                filtered = vendas.filter(v => v.status === 'Pago');
-            } else if (filter === 'pendente') {
-                filtered = vendas.filter(v => v.status === 'Pendente');
-            } else if (filter === 'estornado') {
-                filtered = vendas.filter(v => v.status === 'Estornado');
-            } else if (filter === 'recusado') {
-                filtered = vendas.filter(v => v.status === 'Recusado');
-            }
+        function matchesKiwifyStatus(venda, filter) {
+            if (filter === 'todos') return true;
+            if (filter === 'pago') return venda.status === 'Pago';
+            if (filter === 'pendente') return venda.status === 'Pendente';
+            if (filter === 'estornado') return venda.status === 'Estornado';
+            if (filter === 'recusado') return venda.status === 'Recusado';
+            return true;
+        }
+
+        function renderKiwifyTable(vendas, statusFilter, followupFilter) {
+            const filtered = vendas.filter((venda) => matchesKiwifyStatus(venda, statusFilter) && matchesFollowupFilter(getFollowupState(venda), followupFilter));
 
             if (filtered.length === 0) {
                 document.getElementById('kiwifyTableBody').innerHTML = `
@@ -2844,31 +4015,27 @@
             }
 
             let html = '<table class="asaas-table"><thead><tr>';
-            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Data</th>';
+            html += '<th>Nome</th><th>Telefone</th><th>Liquido</th><th>Status</th><th>Forma</th><th>Ult. pagamento</th><th>Valor pago</th><th class="action-head">Ação</th><th>Data</th>';
             html += '</tr></thead><tbody>';
 
             filtered.forEach(v => {
+                const state = getFollowupState(v);
                 const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                const telFormatted = v.telefone || '-';
                 const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
-
-                // Format date DD/MM
-                let dataFormatted = v.data;
-                if (v.data && v.data.length === 10) {
-                    const [y, m, d] = v.data.split('-');
-                    dataFormatted = `${d}/${m}`;
-                }
-
-                const isCancelado = v.status === 'Estornado' || v.status === 'Recusado';
-                const rowStyle = isCancelado ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
+                const lastPaidDate = v.lastPaidInfo?.date ? formatDayMonth(v.lastPaidInfo.date) : '-';
+                const lastPaidValue = v.lastPaidInfo?.value != null ? formatCurrency(v.lastPaidInfo.value) : '-';
+                const rowStyle = isClosedStatus(v.status) ? ' style="text-decoration: line-through; opacity: 0.5;"' : '';
 
                 html += `<tr${rowStyle}>
                     <td>${escapeHtml(v.nome)}</td>
-                    <td class="tel-cell">${escapeHtml(telFormatted)}</td>
+                    <td class="tel-cell">${escapeHtml(v.telefone || '-')}</td>
                     <td class="valor-cell">${formatCurrency(valorExibir)}</td>
                     <td><span class="status-pill ${statusClass}">${v.status}</span></td>
                     <td>${escapeHtml(v.forma)}</td>
-                    <td>${dataFormatted}</td>
+                    <td class="last-paid-cell">${lastPaidDate}</td>
+                    <td class="last-paid-cell">${lastPaidValue}</td>
+                    <td class="action-cell">${renderFollowupAction(v, state)}</td>
+                    <td>${formatDateCell(v.data)}</td>
                 </tr>`;
             });
 
@@ -2878,23 +4045,295 @@
 
         function setKiwifyFilter(filter, btn) {
             kiwifyCurrentFilter = filter;
-            document.querySelectorAll('.kiwify-filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#kiwifyStatusFilters .kiwify-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // Re-render table from cache
-            const cached = localStorage.getItem(KIWIFY_CACHE_KEY);
+            const cached = getCachedKiwifyResult();
             if (cached) {
-                try {
-                    const result = JSON.parse(cached);
-                    renderKiwifyTable(result.vendas, filter);
-                } catch(e) { /* ignore */ }
+                renderKiwifyTable(buildDisplaySalesRows(cached.vendas), kiwifyCurrentFilter, kiwifyCurrentFollowupFilter);
             }
         }
 
-        // Auto-refresh Kiwify data every 5 hours
+        function setKiwifyFollowupFilter(filter, btn) {
+            kiwifyCurrentFollowupFilter = filter;
+            document.querySelectorAll('#kiwifyFollowupFilters .kiwify-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cached = getCachedKiwifyResult();
+            if (cached) {
+                renderKiwifyTable(buildDisplaySalesRows(cached.vendas), kiwifyCurrentFilter, kiwifyCurrentFollowupFilter);
+            }
+        }
+
         setInterval(() => {
             refreshKiwifyData(true);
         }, KIWIFY_CACHE_TTL);
+
+        setInterval(() => {
+            if (currentPage === 'asaas' || currentPage === 'kiwify') {
+                loadFollowupData(true);
+            }
+        }, FOLLOWUP_POLL_TTL);
+
+        // ============================================
+        // NAO RENOVADOS - alunos com pagamento avulso vencido
+        // ============================================
+        const RENOVACAO_DIAS_KEY = 'renovacao_dias_limite';
+        const RENOVACAO_CONTATADOS_KEY = 'renovacao_contatados_v1';
+        let renovacaoCurrentFilter = 'pendente';
+
+        function getRenovacaoDiasLimite() {
+            const fromInput = parseInt(document.getElementById('renovacaoDiasInput')?.value, 10);
+            if (Number.isFinite(fromInput) && fromInput > 0) {
+                localStorage.setItem(RENOVACAO_DIAS_KEY, String(fromInput));
+                return fromInput;
+            }
+            const stored = parseInt(localStorage.getItem(RENOVACAO_DIAS_KEY), 10);
+            return Number.isFinite(stored) && stored > 0 ? stored : 30;
+        }
+
+        function getRenovacaoIncluirAtivos() {
+            return !!document.getElementById('renovacaoIncluirAtivosInput')?.checked;
+        }
+
+        function getRenovacaoContatados() {
+            try {
+                const raw = localStorage.getItem(RENOVACAO_CONTATADOS_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) { return {}; }
+        }
+
+        function setRenovacaoContatado(personKey, contatado, nome) {
+            const map = getRenovacaoContatados();
+            if (contatado) {
+                map[personKey] = { at: Date.now(), nome: nome || '' };
+            } else {
+                delete map[personKey];
+            }
+            localStorage.setItem(RENOVACAO_CONTATADOS_KEY, JSON.stringify(map));
+        }
+
+        // Constroi lista de "nao renovados":
+        // 1. Pega ultimo pagamento de cada pessoa do lastPaymentIndex (12 meses)
+        // 2. Filtra: ultimo pagamento > diasLimite atras
+        // 3. Filtra: pessoa NAO tem cobranca ativa nas listas atuais (a menos que incluirAtivos=true)
+        function getNaoRenovados(diasLimite, incluirAtivos) {
+            const agora = Date.now();
+            const limiteMs = diasLimite * 24 * 60 * 60 * 1000;
+
+            // Indice de pessoas com cobranca atual ativa (Pago/Pendente/Vencido) - para excluir
+            const ativosKeys = new Set();
+            const cacheAtivo = getAllCachedSales();
+            cacheAtivo.forEach(v => {
+                if (v.status === 'Pago' || v.status === 'Confirmado' || v.status === 'Pendente' || v.status === 'Vencido') {
+                    const k = getVendaPersonKeys(v);
+                    if (k.document) ativosKeys.add('D:' + k.document);
+                    if (k.email) ativosKeys.add('E:' + k.email);
+                    if (k.phone) ativosKeys.add('P:' + k.phone);
+                }
+            });
+
+            // Mapa de personKey unica para evitar duplicar (ex: mesma pessoa tem D:..., E:..., P:...)
+            // Vamos agrupar por todas as chaves de cada entrada de venda paga conhecida
+            const ultimoPagamentoPorPessoa = new Map();
+
+            // Re-construir a partir do lastPaymentIndex (que tem entries por chave individual)
+            // Para evitar duplicados, agrupa por rowKey (cada entry aponta para o rowKey original)
+            const porRowKey = new Map();
+            for (const [key, info] of Object.entries(lastPaymentIndex || {})) {
+                if (!info?.rowKey) continue;
+                const exist = porRowKey.get(info.rowKey);
+                if (!exist || safeDate(info.date)?.getTime() > safeDate(exist.date)?.getTime()) {
+                    porRowKey.set(info.rowKey, { ...info, indexKeys: [key] });
+                } else if (exist) {
+                    exist.indexKeys.push(key);
+                }
+            }
+
+            // Tentar enriquecer com vendas em cache (para nome, telefone, email)
+            const vendaPorRowKey = new Map();
+            cacheAtivo.forEach(v => {
+                if (v.rowKey) vendaPorRowKey.set(v.rowKey, v);
+            });
+
+            const naoRenovados = [];
+            const contatados = getRenovacaoContatados();
+
+            porRowKey.forEach((info, rowKey) => {
+                const ultimaData = safeDate(info.date);
+                if (!ultimaData) return;
+                const idade = agora - ultimaData.getTime();
+                if (idade < limiteMs) return; // pagou recente, ainda em dia
+
+                const venda = vendaPorRowKey.get(rowKey);
+                // Pegar dados de contato - prioriza venda em cache atual; depois info enriquecida do indice; depois extrai das chaves
+                let nome = venda?.nome || info.nome || 'Nome nao disponivel';
+                let telefone = venda?.telefone || info.telefone || '';
+                let email = venda?.email || info.email || '';
+                let document = venda?.document || info.document || '';
+                let provedor = venda?.provedor || info.provedor || (rowKey.startsWith('asaas:') ? 'asaas' : (rowKey.startsWith('kiwify:') ? 'kiwify' : ''));
+
+                // Ultimo recurso: extrai das chaves do indice (suporta legacy sem prefixo = CPF)
+                info.indexKeys.forEach(k => {
+                    if (k.startsWith('E:') && !email) email = k.slice(2);
+                    else if (k.startsWith('P:') && !telefone) telefone = k.slice(2);
+                    else if (k.startsWith('D:') && !document) document = k.slice(2);
+                    else if (!k.includes(':') && !document) document = k; // legacy v1: CPF puro
+                });
+
+                // Construir personKeys para verificar se ja esta ativo
+                const personKeys = [];
+                const docNorm = normalizeDocument(document);
+                const emailNorm = normalizeEmailKey(email);
+                const phoneNorm = normalizePhoneKey(telefone);
+                if (docNorm) personKeys.push('D:' + docNorm);
+                if (emailNorm) personKeys.push('E:' + emailNorm);
+                if (phoneNorm) personKeys.push('P:' + phoneNorm);
+                if (personKeys.length === 0) return; // sem como identificar
+
+                // Pessoa ativa em cobranca atual? pular (a menos que incluirAtivos)
+                const temAtivo = personKeys.some(k => ativosKeys.has(k));
+                if (temAtivo && !incluirAtivos) return;
+
+                const primaryKey = personKeys[0];
+                const contatado = !!contatados[primaryKey];
+
+                naoRenovados.push({
+                    primaryKey,
+                    rowKey,
+                    nome,
+                    telefone,
+                    email,
+                    document,
+                    provedor,
+                    ultimoPagamento: ultimaData,
+                    diasSemRenovar: Math.floor(idade / (24 * 60 * 60 * 1000)),
+                    valor: info.value || 0,
+                    contatado,
+                    temAtivo,
+                });
+            });
+
+            // Ordenar por dias sem renovar (decrescente)
+            naoRenovados.sort((a, b) => b.diasSemRenovar - a.diasSemRenovar);
+            return naoRenovados;
+        }
+
+        function setRenovacaoFilter(filter, btn) {
+            renovacaoCurrentFilter = filter;
+            document.querySelectorAll('#pageRenovacao .asaas-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderRenovacaoData();
+        }
+
+        async function refreshRenovacao(forceRefresh) {
+            const btn = document.getElementById('btnRefreshRenovacao');
+            if (btn) btn.disabled = true;
+            try {
+                // Garante historico atualizado e listas atuais
+                await Promise.all([
+                    loadLastPaymentHistory(forceRefresh),
+                    refreshAsaasData(false),
+                    refreshKiwifyData(false),
+                ]);
+                renderRenovacaoData();
+                if (forceRefresh) showToast('&#9989;', 'Lista de nao-renovados atualizada!');
+            } catch (e) {
+                showToast('&#9888;', 'Erro: ' + (e?.message || 'desconhecido'));
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function renderRenovacaoData() {
+            const dias = getRenovacaoDiasLimite();
+            const incluirAtivos = getRenovacaoIncluirAtivos();
+            const lista = getNaoRenovados(dias, incluirAtivos);
+
+            // Cards
+            const total = lista.length;
+            const valorPerdido = lista.reduce((s, x) => s + (x.valor || 0), 0);
+            const contatados = lista.filter(x => x.contatado).length;
+            document.getElementById('renovacaoTotalQtd').textContent = total;
+            document.getElementById('renovacaoTotalSub').textContent = total === 1 ? '1 aluno' : `${total} alunos`;
+            document.getElementById('renovacaoTotalValor').textContent = formatCurrency(valorPerdido);
+            document.getElementById('renovacaoContatadosQtd').textContent = contatados;
+            document.getElementById('renovacaoLookback').textContent = `${LAST_PAYMENT_LOOKBACK_MONTHS} meses`;
+            document.getElementById('renovacaoBadge').textContent = total - contatados;
+
+            // Filtro
+            let filtered = lista;
+            if (renovacaoCurrentFilter === 'pendente') filtered = lista.filter(x => !x.contatado);
+            else if (renovacaoCurrentFilter === 'contatado') filtered = lista.filter(x => x.contatado);
+
+            const tbody = document.getElementById('renovacaoTableBody');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <div class="asaas-loading">
+                        <p>Nenhum aluno encontrado neste filtro. ${total === 0 ? 'Aguarde o historico carregar (pode levar alguns segundos na primeira vez).' : ''}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const provLabel = (p) => p === 'asaas' ? 'Asaas' : (p === 'kiwify' ? 'Kiwify' : '-');
+
+            let html = '<table class="asaas-table"><thead><tr>';
+            html += '<th>Nome</th><th>Telefone</th><th>Email</th><th>Ultimo pagamento</th><th>Dias sem renovar</th><th>Plataforma</th><th>Valor pago</th><th class="action-head">Acao</th>';
+            html += '</tr></thead><tbody>';
+
+            filtered.forEach(item => {
+                const phoneNorm = normalizeWaPhone(item.telefone);
+                const rowStyle = item.contatado ? ' style="opacity: 0.6;"' : '';
+                const ativoBadge = item.temAtivo ? ` <span class="followup-badge new" title="Esta pessoa ja tem cobranca em aberto">Em cobranca</span>` : '';
+
+                let acaoBtns = '';
+                if (phoneNorm && !item.contatado) {
+                    const msg = `Oi ${getFirstName(item.nome)}, tudo bem? Aqui e o Prof. Whesley do Everyday Conversation. ` +
+                        `Vi que faz um tempo que voce esta com a gente e ja se passaram alguns dias desde sua ultima compra. ` +
+                        `Quer continuar com a gente? Posso te enviar o link para renovar agora mesmo.`;
+                    const url = `https://wa.me/${phoneNorm}?text=${encodeURIComponent(msg)}`;
+                    acaoBtns += `<a href="${url}" target="_blank" class="followup-action-btn whatsapp" onclick="marcarRenovacaoContatado('${encodeURIComponent(item.primaryKey)}', '${encodeURIComponent(item.nome || '')}')">WhatsApp</a>`;
+                } else if (!phoneNorm) {
+                    acaoBtns += `<button class="followup-action-btn disabled" disabled title="Telefone indisponivel">Sem numero</button>`;
+                }
+                if (item.contatado) {
+                    acaoBtns += `<button class="followup-action-btn secondary" onclick="desmarcarRenovacaoContatado('${encodeURIComponent(item.primaryKey)}')" style="margin-left: 6px;">Reabrir</button>`;
+                } else if (phoneNorm) {
+                    acaoBtns += `<button class="followup-action-btn secondary" onclick="marcarRenovacaoContatado('${encodeURIComponent(item.primaryKey)}', '${encodeURIComponent(item.nome || '')}')" style="margin-left: 6px;" title="Marcar como ja contatado">Feito</button>`;
+                }
+
+                const dataFmt = formatDayMonth(item.ultimoPagamento) + '/' + item.ultimoPagamento.getFullYear().toString().slice(-2);
+
+                html += `<tr${rowStyle}>
+                    <td>${escapeHtml(item.nome)}${ativoBadge}</td>
+                    <td class="tel-cell">${escapeHtml(item.telefone || '-')}</td>
+                    <td class="tel-cell">${escapeHtml(item.email || '-')}</td>
+                    <td>${dataFmt}</td>
+                    <td><span class="status-pill ${item.diasSemRenovar > 60 ? 'vencido' : 'pendente'}">${item.diasSemRenovar} dias</span></td>
+                    <td>${provLabel(item.provedor)}</td>
+                    <td class="valor-cell">${formatCurrency(item.valor)}</td>
+                    <td class="action-cell"><div class="followup-cell">${acaoBtns}</div></td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            tbody.innerHTML = html;
+        }
+
+        function marcarRenovacaoContatado(encodedKey, encodedNome) {
+            const key = decodeURIComponent(encodedKey);
+            const nome = decodeURIComponent(encodedNome || '');
+            setRenovacaoContatado(key, true, nome);
+            renderRenovacaoData();
+        }
+
+        function desmarcarRenovacaoContatado(encodedKey) {
+            const key = decodeURIComponent(encodedKey);
+            setRenovacaoContatado(key, false);
+            renderRenovacaoData();
+        }
 
         // ============================================
         // DESPESAS DO CURSO (detailed expenses tab)

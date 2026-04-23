@@ -109,6 +109,10 @@ export async function handler(event) {
       const taxas = valorBruto - valorLiquido;
 
       vendas.push({
+        provedor: "kiwify",
+        rowKey: `kiwify:${s.id}`,
+        saleId: s.id || "",
+        document: customer.cpf || customer.cpf_cnpj || customer.document || null,
         nome: customer.name || "N/A",
         telefone: customer.mobile || "",
         email: customer.email || "",
@@ -118,6 +122,9 @@ export async function handler(event) {
         status: statusPt[s._status] || s._status,
         forma: formas[s.payment_method] || s.payment_method || "",
         data: (s.created_at || "").substring(0, 10),
+        createdAt: s.created_at || null,
+        updatedAt: s.updated_at || null,
+        approvedAt: s.approved_date || null,
       });
     }
 

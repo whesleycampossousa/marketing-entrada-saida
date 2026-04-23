@@ -3,6 +3,19 @@
 
 import { getStore } from "@netlify/blobs";
 
+function getStoreInstance() {
+  const options = { name: "marketing-data" };
+  const siteID = process.env.NETLIFY_SITE_ID || process.env.SITE_ID;
+  const token = process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN;
+
+  if (siteID && token) {
+    options.siteID = siteID;
+    options.token = token;
+  }
+
+  return getStore(options);
+}
+
 export async function handler(event) {
   const corsHeaders = {
     "Content-Type": "application/json",
@@ -17,11 +30,7 @@ export async function handler(event) {
   }
 
   try {
-    const store = getStore({
-      name: "marketing-data",
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_TOKEN,
-    });
+    const store = getStoreInstance();
 
     if (event.httpMethod === "GET") {
       // Carregar dados

@@ -97,6 +97,7 @@ export async function handler(event) {
     const vendas = [];
     for (const [cid, p] of Object.entries(porCliente)) {
       const c = clientesCache[cid] || {};
+      const rowMonth = (p.dateCreated || dataInicio || "").substring(0, 7) || anoMes;
 
       // Calcular valor bruto e liquido (installments agrupados)
       let valor = p.value;
@@ -115,6 +116,11 @@ export async function handler(event) {
       const taxas = valor - valorLiquido;
 
       vendas.push({
+        provedor: "asaas",
+        rowKey: `asaas:${cid}:${rowMonth}`,
+        customerId: cid,
+        paymentId: p.id || "",
+        document: c.cpfCnpj || null,
         nome: c.name || "N/A",
         telefone: c.mobilePhone || c.phone || "",
         email: c.email || "",
@@ -124,6 +130,11 @@ export async function handler(event) {
         status: statusPt[p.status] || p.status,
         forma: formas[p.billingType] || p.billingType || "",
         data: (p.dateCreated || "").substring(0, 10),
+        createdAt: p.dateCreated || null,
+        dueDate: p.dueDate || null,
+        paymentDate: p.paymentDate || p.clientPaymentDate || null,
+        invoiceUrl: p.invoiceUrl || null,
+        bankSlipUrl: p.bankSlipUrl || null,
       });
     }
 
@@ -141,7 +152,7 @@ export async function handler(event) {
       totalPendentes: pendentes.length,
       totalEstornados: estornados.length,
       valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
-      valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
+      valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0) - estornados.reduce((s, v) => s + v.valor, 0),
       valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
       valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
       periodo: { inicio: dataInicio, fim: dataFim },
