@@ -22,6 +22,13 @@ export async function handler(event) {
   const hoje = new Date();
   const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
   const dataInicio = params.inicio || `${anoMes}-01`;
+  const hojeSpParts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(hoje);
+  const hojeSp = `${hojeSpParts.find((p) => p.type === "year").value}-${hojeSpParts.find((p) => p.type === "month").value}-${hojeSpParts.find((p) => p.type === "day").value}`;
 
   // Usar amanha como dataFim para incluir vendas de hoje (filtro [le] pode excluir por horario)
   const amanha = new Date(hoje);
@@ -35,8 +42,9 @@ export async function handler(event) {
       let offset = 0;
       while (true) {
         const url = new URL(`${BASE}/payments`);
-        url.searchParams.set("dateCreated[ge]", dataInicio);
-        url.searchParams.set("dateCreated[le]", dataFim);
+        const dateFilter = status === "PENDING" || status === "OVERDUE" ? "dueDate" : "dateCreated";
+        url.searchParams.set(`${dateFilter}[ge]`, dataInicio);
+        url.searchParams.set(`${dateFilter}[le]`, dataFim);
         url.searchParams.set("status", status);
         url.searchParams.set("limit", "100");
         url.searchParams.set("offset", String(offset));
@@ -94,6 +102,12 @@ export async function handler(event) {
       REFUNDED: "Estornado",
     };
 
+    const statusVisivel = (p) => {
+      const dueDate = String(p.dueDate || "").substring(0, 10);
+      if (p.status === "PENDING" && dueDate && dueDate > hojeSp) return "A vencer";
+      return statusPt[p.status] || p.status;
+    };
+
     const vendas = [];
     for (const [cid, p] of Object.entries(porCliente)) {
       const c = clientesCache[cid] || {};
@@ -115,11 +129,15 @@ export async function handler(event) {
 
       const taxas = valor - valorLiquido;
 
+      const status = statusVisivel(p);
+
       vendas.push({
         provedor: "asaas",
         rowKey: `asaas:${cid}:${rowMonth}`,
         customerId: cid,
         paymentId: p.id || "",
+        subscriptionId: p.subscription || null,
+        asaasStatus: p.status || null,
         document: c.cpfCnpj || null,
         nome: c.name || "N/A",
         telefone: c.mobilePhone || c.phone || "",
@@ -127,7 +145,7 @@ export async function handler(event) {
         valor,
         valorLiquido,
         taxas,
-        status: statusPt[p.status] || p.status,
+        status,
         forma: formas[p.billingType] || p.billingType || "",
         data: (p.dateCreated || "").substring(0, 10),
         createdAt: p.dateCreated || null,
@@ -144,16 +162,19 @@ export async function handler(event) {
     // 5. Calcular resumo
     const pagos = vendas.filter((v) => v.status === "Pago" || v.status === "Confirmado");
     const pendentes = vendas.filter((v) => v.status === "Pendente");
+    const aVencer = vendas.filter((v) => v.status === "A vencer");
     const estornados = vendas.filter((v) => v.status === "Estornado");
 
     const resumo = {
       totalAlunos: vendas.length,
       totalPagos: pagos.length,
       totalPendentes: pendentes.length,
+      totalAVencer: aVencer.length,
       totalEstornados: estornados.length,
       valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
       valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0) - estornados.reduce((s, v) => s + v.valor, 0),
       valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
+      valorAVencer: aVencer.reduce((s, v) => s + v.valor, 0),
       valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
       periodo: { inicio: dataInicio, fim: dataFim },
       atualizadoEm: new Date().toISOString(),

@@ -1124,7 +1124,9 @@
         .status-pill.pago { background: rgba(46,213,115,0.15); color: #2ed573; }
         .status-pill.confirmado { background: rgba(46,213,115,0.15); color: #2ed573; }
         .status-pill.pendente { background: rgba(255,165,2,0.15); color: #ffa502; }
+        .status-pill.a-vencer { background: rgba(112,161,255,0.16); color: #70a1ff; }
         .status-pill.vencido { background: rgba(255,71,87,0.15); color: #ff4757; }
+        .status-pill.cancelado { background: rgba(116,125,140,0.22); color: #dfe4ea; }
         .status-pill.estornado { background: rgba(255,71,87,0.25); color: #ff6b81; }
         .status-pill.recusado { background: rgba(165,94,234,0.25); color: #a55eea; }
 
@@ -1164,17 +1166,21 @@
         .followup-badge.no-whatsapp { background: rgba(116,125,140,0.22); color: #ced6e0; }
         .followup-badge.paid-after { background: rgba(46,213,115,0.18); color: #7bed9f; }
         .followup-badge.closed { background: rgba(255,71,87,0.18); color: #ff6b81; }
+        .followup-badge.cancelled { background: rgba(116,125,140,0.22); color: #dfe4ea; }
         .followup-badge.retro { background: rgba(116,125,140,0.22); color: #dfe4ea; }
         .followup-action-btn {
             border: 1px solid transparent;
             border-radius: 8px;
-            padding: 7px 12px;
+            padding: 7px 10px;
             font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
             white-space: nowrap;
+        }
+        .followup-action-btn.compact-action-btn {
+            padding: 7px 9px;
         }
         .followup-action-btn.primary {
             background: rgba(30,144,255,0.16);
@@ -1207,6 +1213,14 @@
         }
         .followup-action-btn.urgent:hover {
             background: rgba(255,71,87,0.22);
+        }
+        .followup-action-btn.cancel {
+            background: rgba(255,71,87,0.10);
+            color: #ff6b81;
+            border-color: rgba(255,71,87,0.24);
+        }
+        .followup-action-btn.cancel:hover {
+            background: rgba(255,71,87,0.18);
         }
         .followup-action-btn.disabled,
         .followup-action-btn:disabled {
@@ -1707,6 +1721,7 @@
                     <button class="asaas-filter-btn active" onclick="setAsaasFilter('todos', this)">Todos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('pago', this)">Pagos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('pendente', this)">Pendentes</button>
+                    <button class="asaas-filter-btn" onclick="setAsaasFilter('a-vencer', this)">A vencer</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('vencido', this)">Vencidos</button>
                     <button class="asaas-filter-btn" onclick="setAsaasFilter('estornado', this)">Estornados</button>
                 </div>
@@ -1806,6 +1821,8 @@
                     <button class="asaas-filter-btn kiwify-filter-btn active" onclick="setKiwifyFilter('todos', this)">Todos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pago', this)">Pagos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('pendente', this)">Pendentes</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('a-vencer', this)">A vencer</button>
+                    <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('vencido', this)">Vencidos</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('estornado', this)">Estornados</button>
                     <button class="asaas-filter-btn kiwify-filter-btn" onclick="setKiwifyFilter('recusado', this)">Recusados</button>
                 </div>
@@ -2045,14 +2062,12 @@
         let currentPage = 'marketing';
 
         const TEMPLATE_PRIMEIRO = (nome) =>
-            `Oi ${getFirstName(nome)}! Aqui é o Prof. Whesley do Everyday Conversation. ` +
-            `Vi que sua matricula ficou pendente de pagamento - quer que eu te ajude ` +
-            `a finalizar? Qualquer duvida e so me chamar por aqui.`;
+            `Ola ${getFirstName(nome)}, tudo bem? Professor Whesley aqui! ` +
+            `Estamos revisando as matriculas do curso e o sistema mostrou uma pendencia na sua assinatura. ` +
+            `Voce pode me ajudar a conferir? Caso ainda queira continuar conosco, posso te enviar o link para regularizar.`;
 
         const TEMPLATE_VENCIDO = (nome) =>
-            `Oi ${getFirstName(nome)}, tudo bem? Passando pra lembrar que sua cobranca ` +
-            `ficou em aberto. Se precisar de um novo link ou quiser trocar a forma de ` +
-            `pagamento, me avisa que te envio agora.`;
+            TEMPLATE_PRIMEIRO(nome);
 
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -2775,6 +2790,16 @@
             return safeDate(venda?.createdAt || venda?.data);
         }
 
+        function getVendaCollectionReferenceDate(venda) {
+            return safeDate(venda?.dueDate || venda?.currentPeriodEnd || venda?.createdAt || venda?.data);
+        }
+
+        function isPaidAfterCollectionReference(paidDate, venda) {
+            const referenceDate = getVendaCollectionReferenceDate(venda);
+            if (!paidDate || !referenceDate) return false;
+            return paidDate.getTime() > referenceDate.getTime();
+        }
+
         function getVendaActivityDate(venda) {
             return safeDate(venda?.updatedAt || venda?.paymentDate || venda?.approvedAt || venda?.createdAt || venda?.data);
         }
@@ -2835,6 +2860,7 @@
                     date: safeDate(bestFromIndex.date),
                     value: bestFromIndex.value,
                     rowKey: bestFromIndex.rowKey,
+                    provedor: bestFromIndex.provedor,
                 };
             }
 
@@ -2861,6 +2887,7 @@
                 date: latestPaidDate,
                 value: latestPaidVenda.valorLiquido != null ? latestPaidVenda.valorLiquido : latestPaidVenda.valor,
                 rowKey: latestPaidVenda.rowKey,
+                provedor: latestPaidVenda.provedor,
             };
         }
 
@@ -3029,31 +3056,56 @@
                 return (b.data || '').localeCompare(a.data || '');
             });
 
-            return displayRows.map((venda) => ({
+            return displayRows.map((venda) => applyLocalCancellationState({
                 ...venda,
                 lastPaidInfo: getLatestPaidInfo(venda),
             }));
         }
 
+        function applyLocalCancellationState(venda) {
+            const record = getFollowupRecord(venda.rowKey);
+            if (!record?.studentCancelledAt) return venda;
+
+            return {
+                ...venda,
+                originalStatus: venda.status,
+                status: 'Cancelado',
+                localCancellation: record,
+            };
+        }
+
         function getCrossPaidMatch(venda) {
             if (!venda || isPaidStatus(venda.status) || isClosedStatus(venda.status)) return null;
+            if (venda.status !== 'Pendente' && venda.status !== 'Vencido') return null;
 
             const currentKeys = getVendaPersonKeys(venda);
             const hasAnyKey = currentKeys.document || currentKeys.email || currentKeys.phone;
-            const currentOpenDate = getVendaOpenDate(venda);
-            if (!hasAnyKey || !currentOpenDate) return null;
+            const collectionReferenceDate = getVendaCollectionReferenceDate(venda);
+            if (!hasAnyKey || !collectionReferenceDate) return null;
 
             let latestMatch = null;
+            const latestPaidInfo = getLatestPaidInfo(venda);
+            if (isPaidAfterCollectionReference(latestPaidInfo?.date, venda)) {
+                latestMatch = {
+                    venda: {
+                        rowKey: latestPaidInfo.rowKey,
+                        valor: latestPaidInfo.value,
+                        provedor: latestPaidInfo.provedor || '',
+                    },
+                    paidDate: latestPaidInfo.date,
+                    fromHistory: true,
+                };
+            }
 
             getAllCachedSales().forEach((otherVenda) => {
                 if (!otherVenda || otherVenda.rowKey === venda.rowKey || !isPaidStatus(otherVenda.status)) return;
                 if (!vendasMatchSamePerson(venda, otherVenda)) return;
 
                 const paidDate = getVendaPaidDate(otherVenda);
-                if (!paidDate || paidDate.getTime() < currentOpenDate.getTime()) return;
+                if (!isPaidAfterCollectionReference(paidDate, venda)) return;
 
                 if (!latestMatch || paidDate.getTime() > latestMatch.paidDate.getTime()) {
-                    latestMatch = { venda: otherVenda, paidDate };
+                    latestMatch = { venda: otherVenda, paidDate, fromHistory: false };
                 }
             });
 
@@ -3085,7 +3137,16 @@
         }
 
         function isClosedStatus(status) {
-            return status === 'Estornado' || status === 'Recusado';
+            return status === 'Estornado' || status === 'Recusado' || status === 'Cancelado';
+        }
+
+        function statusClassName(status) {
+            return String(status || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
         }
 
         function getCachedSalesResult(key) {
@@ -3310,8 +3371,8 @@
         // ============================================
         // ASAAS DATA (cache 5 horas)
         // ============================================
-        const ASAAS_CACHE_KEY = 'asaas_vendas_data';
-        const ASAAS_CACHE_TIME_KEY = 'asaas_vendas_time';
+        const ASAAS_CACHE_KEY = 'asaas_vendas_data_v2';
+        const ASAAS_CACHE_TIME_KEY = 'asaas_vendas_time_v2';
         const ASAAS_CACHE_TTL = 5 * 60 * 60 * 1000;
         let asaasCurrentFilter = 'todos';
         let asaasCurrentFollowupFilter = 'todos';
@@ -3322,7 +3383,9 @@
         }
 
         function isKiwifyUrgent(venda) {
-            if (venda.provedor !== 'kiwify' || venda.status !== 'Pendente') return false;
+            if (venda.provedor !== 'kiwify') return false;
+            if (venda.status === 'Vencido') return true;
+            if (venda.status !== 'Pendente') return false;
             const createdAt = safeDate(venda.createdAt || venda.data);
             if (!createdAt) return false;
             return (Date.now() - createdAt.getTime()) >= (3 * 24 * 60 * 60 * 1000);
@@ -3358,6 +3421,17 @@
                 if (!venda?.rowKey) return;
                 const record = getFollowupRecord(venda.rowKey);
                 const patch = {};
+                if (record?.studentCancelledAt) {
+                    if (record?.lastSeenStatus !== venda.status) {
+                        patch.lastSeenStatus = venda.status;
+                        patch.lastSeenAt = nowIso;
+                    } else if (!record?.lastSeenAt) {
+                        patch.lastSeenAt = nowIso;
+                    }
+                    maybeQueueFollowupSync(venda.rowKey, patch);
+                    return;
+                }
+
                 const hadPendingHistory = !!record?.firstPendingSeenAt || record?.lastSeenStatus === 'Pendente' || record?.lastSeenStatus === 'Vencido';
                 const isOpen = venda.status === 'Pendente' || venda.status === 'Vencido';
 
@@ -3472,7 +3546,7 @@
             if (crossPaidMatch) {
                 return {
                     bucket: 'pagou-depois',
-                    badgeText: `Pago em outra cobranca (${formatDayMonth(crossPaidMatch.paidDate)})`,
+                    badgeText: `Pagamento apos venc. (${formatDayMonth(crossPaidMatch.paidDate)})`,
                     badgeClass: 'paid-after',
                     retroInference,
                     matchedByDocument: true,
@@ -3483,8 +3557,8 @@
             if (isClosedStatus(venda.status)) {
                 return {
                     bucket: 'encerrado',
-                    badgeText: 'Encerrado',
-                    badgeClass: 'closed',
+                    badgeText: venda.status === 'Cancelado' ? 'Cancelou' : 'Encerrado',
+                    badgeClass: venda.status === 'Cancelado' ? 'cancelled' : 'closed',
                     retroInference,
                     ...defaultAction,
                 };
@@ -3508,7 +3582,7 @@
                 if (!record.secondReminderOpenedAt) {
                     return {
                         bucket: 'cobrar',
-                        badgeText: venda.provedor === 'asaas' ? 'Vencido' : 'Urgente 3d',
+                        badgeText: venda.status === 'Vencido' ? 'Vencido' : 'Urgente 3d',
                         badgeClass: 'urgent',
                         actionLabel: 'Urgente',
                         actionClass: 'urgent',
@@ -3523,8 +3597,8 @@
                     bucket: 'tentado',
                     badgeText: `Tentado em ${formatDayMonth(record.secondReminderOpenedAt)}`,
                     badgeClass: 'attempted',
-                    actionLabel: 'Lembrar de novo',
-                    actionClass: 'secondary',
+                    actionLabel: 'WhatsApp',
+                    actionClass: 'whatsapp',
                     reminderType: 'second',
                     showButton: true,
                     retroInference,
@@ -3551,8 +3625,8 @@
                     bucket: 'tentado',
                     badgeText: `Tentado em ${formatDayMonth(record.firstReminderOpenedAt)}`,
                     badgeClass: 'attempted',
-                    actionLabel: 'Lembrar',
-                    actionClass: 'secondary',
+                    actionLabel: 'WhatsApp',
+                    actionClass: 'whatsapp',
                     reminderType: 'first',
                     showButton: true,
                     retroInference,
@@ -3627,10 +3701,25 @@
                 const encodedRowKey = encodeURIComponent(venda.rowKey);
                 const disabledAttr = state.disabled ? ' disabled' : '';
                 const titleAttr = state.disabled ? ' title="Telefone indisponivel"' : '';
-                parts.push(`<button class="followup-action-btn ${state.actionClass}" onclick="handleFollowupAction('${encodedRowKey}')"${disabledAttr}${titleAttr}>${state.actionLabel}</button>`);
+                const extraClass = state.reminderType && state.actionClass !== 'whatsapp' ? ' compact-action-btn' : '';
+                parts.push(`<button class="followup-action-btn ${state.actionClass}${extraClass}" onclick="handleFollowupAction('${encodedRowKey}')"${disabledAttr}${titleAttr}>${state.actionLabel}</button>`);
+                if (state.reminderType && state.actionClass !== 'whatsapp' && state.phoneNormalized && !state.disabled) {
+                    parts.push(`<button class="followup-action-btn whatsapp compact-action-btn" onclick="handleFollowupAction('${encodedRowKey}')" title="Abrir WhatsApp com mensagem pronta">WhatsApp</button>`);
+                }
+            }
+
+            if (canCancelStudentBilling(venda)) {
+                const encodedRowKey = encodeURIComponent(venda.rowKey);
+                parts.push(`<button class="followup-action-btn cancel" onclick="handleCancelStudentBilling('${encodedRowKey}')" title="Marcar cancelamento e cancelar cobrancas abertas no Asaas">Cancelar</button>`);
             }
 
             return `<div class="followup-cell">${parts.join('')}</div>`;
+        }
+
+        function canCancelStudentBilling(venda) {
+            if (!venda?.rowKey || venda.provedor !== 'asaas') return false;
+            if (venda.localCancellation || getFollowupRecord(venda.rowKey)?.studentCancelledAt) return false;
+            return venda.status === 'Pendente' || venda.status === 'Vencido' || venda.status === 'A vencer';
         }
 
         function getWhatsAppMessage(venda, state) {
@@ -3679,6 +3768,84 @@
                 );
                 showToast('&#9989;', 'Tentativa registrada no painel');
             } catch (error) {}
+        }
+
+        async function handleCancelStudentBilling(encodedRowKey) {
+            const rowKey = decodeURIComponent(encodedRowKey);
+            const venda = findVendaByRowKey(rowKey);
+            if (!venda) {
+                showToast('&#9888;&#65039;', 'Linha nao encontrada no cache atual');
+                return;
+            }
+
+            if (!canCancelStudentBilling(venda)) {
+                showToast('&#9888;&#65039;', 'Esta linha nao permite cancelamento automatico');
+                return;
+            }
+
+            const confirmText =
+                `Confirmar cancelamento de ${venda.nome}?\n\n` +
+                `Isso vai marcar que o aluno cancelou no painel, remover esta linha da fila de cobranca ` +
+                `e chamar o Asaas para cancelar cobrancas abertas e assinatura futura quando houver assinatura vinculada.\n\n` +
+                `O painel nao remove a pessoa do grupo do WhatsApp automaticamente.`;
+
+            if (!window.confirm(confirmText)) return;
+
+            const nowIso = new Date().toISOString();
+            showToast('&#9203;', 'Cancelando cobrancas no Asaas...');
+
+            try {
+                const resp = await fetch('/.netlify/functions/cancel-student-billing', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        provider: venda.provedor,
+                        rowKey: venda.rowKey,
+                        customerId: venda.customerId || null,
+                        paymentId: venda.paymentId || null,
+                        subscriptionId: venda.subscriptionId || null,
+                        studentName: venda.nome || '',
+                        reason: 'Aluno solicitou cancelamento e saida do grupo',
+                    }),
+                });
+
+                const result = await resp.json().catch(() => ({}));
+                if (!resp.ok || !result.ok) {
+                    const detail = result?.errors?.[0]?.message || result?.error || 'Erro ao cancelar no Asaas';
+                    throw new Error(detail);
+                }
+
+                await saveFollowupPatch(
+                    rowKey,
+                    {
+                        studentCancelledAt: nowIso,
+                        studentCancelledReason: 'Aluno solicitou cancelamento e saida do grupo',
+                        billingCancelledAt: result.cancelledAt || nowIso,
+                        billingCancellation: result,
+                        resolvedAt: nowIso,
+                        resolvedAs: 'Cancelado',
+                        paidAfterPending: false,
+                    },
+                    {
+                        at: nowIso,
+                        type: 'student-cancelled',
+                        provider: venda.provedor,
+                        paymentId: venda.paymentId || null,
+                        subscriptionId: venda.subscriptionId || null,
+                    },
+                    { optimistic: true, rollbackOnError: true }
+                );
+
+                localStorage.removeItem(ASAAS_CACHE_KEY);
+                localStorage.removeItem(ASAAS_CACHE_TIME_KEY);
+                await refreshAsaasData(true);
+
+                const deletedCount = Array.isArray(result.deletedPayments) ? result.deletedPayments.length : 0;
+                const partialMsg = result.partial ? ' Algumas acoes tiveram aviso; confira no Asaas.' : '';
+                showToast('&#9989;', `Cancelamento registrado (${deletedCount} cobranca(s) removida(s)).${partialMsg}`);
+            } catch (error) {
+                showToast('&#9888;&#65039;', error.message || 'Erro ao cancelar cobrancas');
+            }
         }
 
         async function refreshAsaasData(forceRefresh) {
@@ -3772,6 +3939,7 @@
             if (filter === 'todos') return true;
             if (filter === 'pago') return isPaidStatus(venda.status);
             if (filter === 'pendente') return venda.status === 'Pendente';
+            if (filter === 'a-vencer') return venda.status === 'A vencer';
             if (filter === 'vencido') return venda.status === 'Vencido';
             if (filter === 'estornado') return venda.status === 'Estornado';
             return true;
@@ -3795,7 +3963,7 @@
 
             filtered.forEach(v => {
                 const state = getFollowupState(v);
-                const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                const statusClass = statusClassName(v.status);
                 const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
                 const lastPaidDate = v.lastPaidInfo?.date ? formatDayMonth(v.lastPaidInfo.date) : '-';
                 const lastPaidValue = v.lastPaidInfo?.value != null ? formatCurrency(v.lastPaidInfo.value) : '-';
@@ -3846,8 +4014,8 @@
         // ============================================
         // KIWIFY DATA (cache 5 horas)
         // ============================================
-        const KIWIFY_CACHE_KEY = 'kiwify_vendas_data';
-        const KIWIFY_CACHE_TIME_KEY = 'kiwify_vendas_time';
+        const KIWIFY_CACHE_KEY = 'kiwify_vendas_data_v3';
+        const KIWIFY_CACHE_TIME_KEY = 'kiwify_vendas_time_v3';
         const KIWIFY_CACHE_TTL = 5 * 60 * 60 * 1000;
 
         let kiwifyCurrentFilter = 'todos';
@@ -3923,19 +4091,25 @@
 
                 const pagos = todasVendas.filter(v => v.status === 'Pago');
                 const pendentes = todasVendas.filter(v => v.status === 'Pendente');
+                const vencidos = todasVendas.filter(v => v.status === 'Vencido');
+                const aVencer = todasVendas.filter(v => v.status === 'A vencer');
                 const estornados = todasVendas.filter(v => v.status === 'Estornado');
                 const recusados = todasVendas.filter(v => v.status === 'Recusado');
 
                 const result = {
                     resumo: {
-                        totalAlunos: pagos.length + pendentes.length + estornados.length,
+                        totalAlunos: pagos.length + pendentes.length + vencidos.length + aVencer.length + estornados.length,
                         totalPagos: pagos.length,
                         totalPendentes: pendentes.length,
+                        totalVencidos: vencidos.length,
+                        totalAVencer: aVencer.length,
                         totalEstornados: estornados.length,
                         totalRecusados: recusados.length,
                         valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
                         valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
                         valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
+                        valorVencido: vencidos.reduce((s, v) => s + v.valor, 0),
+                        valorAVencer: aVencer.reduce((s, v) => s + v.valor, 0),
                         valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
                         valorRecusado: recusados.reduce((s, v) => s + v.valor, 0),
                         periodo: { inicio: `${anoMes}-01`, fim: chunks[chunks.length-1].fim },
@@ -3997,6 +4171,8 @@
             if (filter === 'todos') return true;
             if (filter === 'pago') return venda.status === 'Pago';
             if (filter === 'pendente') return venda.status === 'Pendente';
+            if (filter === 'a-vencer') return venda.status === 'A vencer';
+            if (filter === 'vencido') return venda.status === 'Vencido';
             if (filter === 'estornado') return venda.status === 'Estornado';
             if (filter === 'recusado') return venda.status === 'Recusado';
             return true;
@@ -4020,7 +4196,7 @@
 
             filtered.forEach(v => {
                 const state = getFollowupState(v);
-                const statusClass = v.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                const statusClass = statusClassName(v.status);
                 const valorExibir = v.valorLiquido != null ? v.valorLiquido : v.valor;
                 const lastPaidDate = v.lastPaidInfo?.date ? formatDayMonth(v.lastPaidInfo.date) : '-';
                 const lastPaidValue = v.lastPaidInfo?.value != null ? formatCurrency(v.lastPaidInfo.value) : '-';
