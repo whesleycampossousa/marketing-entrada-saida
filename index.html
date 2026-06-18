@@ -5120,7 +5120,7 @@
         }
 
         // ============================================
-        // COMPARACAO (total liquido acumulado por dia)
+        // COMPARACAO (lucro liquido das vendas acumulado por dia)
         // ============================================
         const COMPARACAO_PREVIOUS_MONTHS = 5;
 
@@ -5483,7 +5483,7 @@
                 if (status) {
                     status.textContent = warnings.length
                         ? `Dados parciais: ${warnings.length} aviso(s). Confira credenciais/cache se algum mes ficou zerado.`
-                        : `Comparando ${series.length} meses de total liquido acumulado.`;
+                        : `Comparando ${series.length} meses de lucro liquido das vendas acumulado.`;
                 }
                 if (note) {
                     note.textContent = `Mes atual: ${formatComparacaoMonthLabel(monthKeys[0])} ate ${formatDateCell(formatIsoDateLocal(today))}. A linha atual continua nos proximos dias.`;
