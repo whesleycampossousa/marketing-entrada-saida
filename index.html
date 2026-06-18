@@ -762,6 +762,7 @@
         .page-tabs {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 30px;
         }
@@ -829,6 +830,13 @@
             box-shadow: 0 4px 20px rgba(243, 156, 18, 0.3);
         }
 
+        .page-tab.active-comparacao {
+            background: linear-gradient(135deg, #0984e3, #00cec9);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(0, 206, 201, 0.24);
+        }
+
         /* ===== DESPESAS SECTION ===== */
         .despesas-total-card {
             background: var(--bg-card);
@@ -863,6 +871,37 @@
             color: var(--text-secondary);
             font-size: 0.8rem;
             margin-top: 4px;
+        }
+        .despesas-auto-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: -10px 0 22px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 71, 87, 0.25);
+            border-radius: 14px;
+            background: rgba(255, 71, 87, 0.08);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .despesas-auto-info strong {
+            color: #ff6b81;
+        }
+        .despesas-auto-info button {
+            border: 1px solid rgba(255, 71, 87, 0.35);
+            border-radius: 10px;
+            background: rgba(255, 71, 87, 0.14);
+            color: #ff6b81;
+            padding: 8px 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .despesas-auto-info button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
         }
 
         .despesas-form {
@@ -927,16 +966,50 @@
         .despesas-table tr:hover td {
             background: rgba(255, 71, 87, 0.05);
         }
+        .despesas-source {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: rgba(112, 161, 255, 0.14);
+            color: #70a1ff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .despesas-desc-sub {
+            margin-top: 4px;
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+        }
+        .despesas-credit {
+            color: #2ed573 !important;
+        }
+        .despesas-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+        .despesas-table .btn-copy,
         .despesas-table .btn-delete {
             background: none;
             border: none;
-            color: #ff4757;
             cursor: pointer;
             font-size: 1.1rem;
             padding: 4px 8px;
             border-radius: 6px;
             opacity: 0.6;
         }
+        .despesas-table .btn-copy {
+            color: #70a1ff;
+        }
+        .despesas-table .btn-delete {
+            color: #ff4757;
+        }
+        .despesas-table .btn-copy:hover,
         .despesas-table .btn-delete:hover { opacity: 1; }
 
         .page-tab .tab-badge {
@@ -1133,6 +1206,66 @@
         .asaas-table .valor-cell { font-weight: 700; color: #2ed573; }
         .asaas-table .tel-cell { color: var(--text-secondary); font-size: 0.82rem; }
         .asaas-table .last-paid-cell { color: var(--text-secondary); font-size: 0.82rem; white-space: nowrap; }
+        .asaas-table .cash-in-cell { color: #2ed573; font-weight: 700; }
+        .asaas-table .cash-out-cell { color: #ff6b81; font-weight: 700; }
+        .asaas-table .cash-neutral-cell { color: var(--text-secondary); font-size: 0.82rem; }
+        .asaas-table .cash-details {
+            min-width: 170px;
+        }
+        .asaas-table .cash-details summary {
+            cursor: pointer;
+            list-style: none;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        .asaas-table .cash-details summary::-webkit-details-marker {
+            display: none;
+        }
+        .asaas-table .cash-details summary::after {
+            content: ' +';
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+        .asaas-table .cash-details[open] summary::after {
+            content: ' -';
+        }
+        .asaas-table .cash-details-list {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+            max-width: 260px;
+        }
+        .asaas-table .cash-details-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.25;
+        }
+        .asaas-table .cash-details-name {
+            min-width: 0;
+        }
+        .asaas-table .cash-details-value {
+            color: var(--text-primary);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .asaas-table .cash-details-item.detail-pix .cash-details-name,
+        .asaas-table .cash-details-item.detail-pix .cash-details-value {
+            color: #2ed573;
+        }
+        .asaas-table .cash-details-item.detail-card .cash-details-name,
+        .asaas-table .cash-details-item.detail-card .cash-details-value {
+            color: #f1c40f;
+        }
+        .asaas-table .cash-details-method {
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
         .asaas-table .action-head,
         .asaas-table .action-cell {
             width: 220px;
@@ -1499,9 +1632,56 @@
         .dist-card.amanda .dist-percent { color: #00b894; }
         .dist-card.amanda .dist-valor { color: #55efc4; }
 
+        /* ===== COMPARACAO SECTION ===== */
+        .comparacao-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0984e3, #00cec9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .comparacao-header .btn-refresh {
+            border-color: rgba(0, 206, 201, 0.3);
+            background: rgba(0, 206, 201, 0.1);
+            color: #00cec9;
+        }
+
+        .comparacao-header .btn-refresh:hover {
+            background: rgba(0, 206, 201, 0.18);
+            box-shadow: 0 4px 15px rgba(0, 206, 201, 0.18);
+        }
+
+        .comparacao-cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .resumo-card.card-comparacao-atual::before { background: linear-gradient(90deg, #00cec9, #55efc4); }
+        .resumo-card.card-comparacao-media::before { background: linear-gradient(90deg, #f39c12, #eccc68); }
+        .resumo-card.card-comparacao-melhor::before { background: linear-gradient(90deg, #0984e3, #74b9ff); }
+
+        .comparacao-chart-section {
+            margin-bottom: 30px;
+        }
+
+        .comparacao-chart-container {
+            position: relative;
+            height: 440px;
+            min-height: 320px;
+        }
+
+        .comparacao-note {
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            margin: -10px 0 18px;
+        }
+
         @media (max-width: 640px) {
             .resumo-grid { grid-template-columns: 1fr; }
             .dist-values { grid-template-columns: 1fr; }
+            .comparacao-cards { grid-template-columns: 1fr; }
+            .comparacao-chart-container { height: 360px; }
         }
 
         @media (max-width: 1024px) {
@@ -1512,6 +1692,7 @@
             .asaas-cards { grid-template-columns: 1fr; }
             .page-tabs { flex-direction: column; align-items: stretch; }
             .asaas-table th, .asaas-table td { padding: 10px 12px; font-size: 0.8rem; }
+            .despesas-auto-info { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -1539,6 +1720,9 @@
             </button>
             <button class="page-tab" id="tabPageDespesas" onclick="switchPage('despesas')">
                 &#128184; Despesas <span class="tab-badge" id="despesasBadge">0</span>
+            </button>
+            <button class="page-tab" id="tabPageComparacao" onclick="switchPage('comparacao')">
+                &#128202; Comparacao
             </button>
             <button class="page-tab" id="tabPageResumo" onclick="switchPage('resumo')">
                 &#128200; Resumo
@@ -1626,6 +1810,12 @@
                 <div class="dt-sub" id="despesasTotalSub">0 despesas cadastradas</div>
             </div>
 
+            <div class="despesas-auto-info">
+                <span id="despesasAutoInfo">Saidas do extrato Asaas: aguardando atualizacao...</span>
+                <button id="btnCopyPreviousDespesas" onclick="copyDespesasFromPreviousMonth()" title="Copiar despesas manuais do mes anterior para o mes aberto">Copiar mes anterior</button>
+                <button id="btnRefreshDescontos" onclick="refreshAsaasDescontos(true)">Atualizar extrato</button>
+            </div>
+
             <!-- Add Form -->
             <div class="despesas-form">
                 <input type="text" id="inputDespesaNome" placeholder="Descricao (ex: Salario professor)">
@@ -1636,7 +1826,7 @@
             <!-- Table -->
             <div id="despesasTableContainer">
                 <table class="despesas-table">
-                    <thead><tr><th>Descricao</th><th>Valor</th><th>Data</th><th></th></tr></thead>
+                    <thead><tr><th>Descricao</th><th>Valor</th><th>Data</th><th>Acoes</th></tr></thead>
                     <tbody id="despesasTableBody"></tbody>
                 </table>
             </div>
@@ -1655,13 +1845,13 @@
             <div class="asaas-cards">
                 <div class="asaas-card card-recebido">
                     <div class="ac-icon">&#128176;</div>
-                    <div class="ac-label">Total Liquido</div>
+                    <div class="ac-label">Vendas aprovadas</div>
                     <div class="ac-value" id="asaasTotalRecebido" style="color: #2ed573;">R$ 0,00</div>
                     <div class="ac-sub" id="asaasTotalPagos">0 pagos</div>
                 </div>
                 <div class="asaas-card card-alunos">
                     <div class="ac-icon">&#128100;</div>
-                    <div class="ac-label">Total Alunos</div>
+                    <div class="ac-label">Total movimentacoes</div>
                     <div class="ac-value" id="asaasTotalAlunos" style="color: #70a1ff;">0</div>
                     <div class="ac-sub" id="asaasPeriodo">Marco 2026</div>
                 </div>
@@ -1709,6 +1899,18 @@
                     <div class="ac-label">Inferencia Abril</div>
                     <div class="ac-value" id="asaasFollowupRetro" style="color: #dfe4ea;">0</div>
                     <div class="ac-sub" id="asaasFollowupRetroSub">Retroativo nao confiavel</div>
+                </div>
+            </div>
+
+            <div class="asaas-table-wrap" style="margin-bottom: 30px;">
+                <div class="asaas-table-title">
+                    Caixa diario Asaas
+                    <span style="color: var(--text-secondary); font-size: 0.78rem; font-weight: 500;">entradas e saidas reais, sem baixas de antecipacao</span>
+                </div>
+                <div id="asaasDailyCashBody">
+                    <div class="asaas-loading">
+                        <p>Aguardando dados do caixa...</p>
+                    </div>
                 </div>
             </div>
 
@@ -1854,7 +2056,7 @@
             <div class="resumo-grid">
                 <div class="resumo-card card-asaas">
                     <div class="rc-icon">&#128176;</div>
-                    <div class="rc-label">Receita Liquida Asaas</div>
+                    <div class="rc-label">Caixa Asaas</div>
                     <div class="rc-value" id="resumoAsaasValor" style="color: #f39c12;">R$ 0,00</div>
                     <div class="rc-sub" id="resumoAsaasSub">0 pagos</div>
                 </div>
@@ -1915,6 +2117,48 @@
                         <div class="dist-percent" id="distAmandaPercent">50%</div>
                         <div class="dist-valor" id="distAmandaValor">R$ 0,00</div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== PAGE: COMPARACAO ====== -->
+        <div class="page-content" id="pageComparacao">
+            <div class="asaas-header comparacao-header">
+                <div>
+                    <h2>Comparacao Mensal</h2>
+                    <div class="last-update" id="comparacaoStatus">Total liquido acumulado por dia, comparando os meses anteriores com o mes atual.</div>
+                </div>
+                <button class="btn-refresh" id="btnRefreshComparacao" onclick="refreshComparacaoData(true)">&#128260; Atualizar</button>
+            </div>
+
+            <div class="resumo-grid comparacao-cards">
+                <div class="resumo-card card-comparacao-atual">
+                    <div class="rc-icon">&#128200;</div>
+                    <div class="rc-label">Mes atual ate hoje</div>
+                    <div class="rc-value" id="comparacaoAtualValor" style="color: #00cec9;">R$ 0,00</div>
+                    <div class="rc-sub" id="comparacaoAtualSub">Aguardando dados</div>
+                </div>
+                <div class="resumo-card card-comparacao-media">
+                    <div class="rc-icon">&#128202;</div>
+                    <div class="rc-label">Media anterior no mesmo dia</div>
+                    <div class="rc-value" id="comparacaoMediaValor" style="color: #f39c12;">R$ 0,00</div>
+                    <div class="rc-sub" id="comparacaoMediaSub">Meses anteriores</div>
+                </div>
+                <div class="resumo-card card-comparacao-melhor">
+                    <div class="rc-icon">&#127942;</div>
+                    <div class="rc-label">Melhor mes anterior</div>
+                    <div class="rc-value" id="comparacaoMelhorValor" style="color: #74b9ff;">R$ 0,00</div>
+                    <div class="rc-sub" id="comparacaoMelhorSub">Total liquido do mes</div>
+                </div>
+            </div>
+
+            <div class="chart-section comparacao-chart-section">
+                <div class="section-title">
+                    <span>&#128200;</span> Total liquido acumulado por dia
+                </div>
+                <div class="comparacao-note" id="comparacaoNote">A linha do mes atual para no dia de hoje e continua crescendo conforme os proximos dias entram.</div>
+                <div class="chart-container comparacao-chart-container">
+                    <canvas id="comparacaoChart"></canvas>
                 </div>
             </div>
         </div>
@@ -2058,6 +2302,7 @@
         let currentYear = new Date().getFullYear();
         let currentMonthIndex = new Date().getMonth();
         let chart = null;
+        let comparacaoChart = null;
         let moveEntryInfo = null;
         let currentPage = 'marketing';
 
@@ -2166,6 +2411,35 @@
             const meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
                            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             return `${meses[month]} ${year}`;
+        }
+
+        function formatIsoDateLocal(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function getSelectedMonthKey() {
+            return `${currentYear}-${String(currentMonthIndex + 1).padStart(2, '0')}`;
+        }
+
+        function getSelectedMonthPeriod() {
+            const inicio = `${getSelectedMonthKey()}-01`;
+            const today = new Date();
+            const selectedIsCurrent =
+                currentYear === today.getFullYear() &&
+                currentMonthIndex === today.getMonth();
+            const fimDate = selectedIsCurrent
+                ? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+                : new Date(currentYear, currentMonthIndex + 1, 0);
+
+            return { key: getSelectedMonthKey(), inicio, fim: formatIsoDateLocal(fimDate) };
+        }
+
+        function scopedMonthKey(baseKey) {
+            return `${baseKey}:${getSelectedMonthKey()}`;
+        }
+
+        function isInSelectedMonth(dateStr) {
+            return String(dateStr || '').startsWith(getSelectedMonthKey());
         }
 
         // ============================================
@@ -2326,6 +2600,17 @@
             if (currentMonthIndex > 11) { currentMonthIndex = 0; currentYear++; }
             if (currentMonthIndex < 0) { currentMonthIndex = 11; currentYear--; }
             render();
+            renderDespesas();
+            renderResumo();
+
+            if (currentPage === 'asaas') refreshAsaasData(false);
+            if (currentPage === 'kiwify') refreshKiwifyData(false);
+            if (currentPage === 'despesas') refreshAsaasDescontos(false, true);
+            if (currentPage === 'resumo') {
+                refreshAsaasData(false);
+                refreshKiwifyData(false);
+                refreshAsaasDescontos(false, true);
+            }
         }
 
         // ============================================
@@ -2695,8 +2980,8 @@
         const FOLLOWUP_API = '/.netlify/functions/followup-data';
         const FOLLOWUP_POLL_TTL = 30 * 1000;
         const FOLLOWUP_RETRO_VERSION = 'apr-2026-v1';
-        const LAST_PAYMENT_CACHE_KEY = 'sales_last_payment_history_v2';
-        const LAST_PAYMENT_CACHE_TIME_KEY = 'sales_last_payment_history_time_v2';
+        const LAST_PAYMENT_CACHE_KEY = 'sales_last_payment_history_v3';
+        const LAST_PAYMENT_CACHE_TIME_KEY = 'sales_last_payment_history_time_v3';
         const LAST_PAYMENT_CACHE_TTL = 24 * 60 * 60 * 1000;
         const LAST_PAYMENT_LOOKBACK_MONTHS = 12;
         let followupRows = {};
@@ -2855,16 +3140,8 @@
                     }
                 }
             }
-            if (bestFromIndex) {
-                return {
-                    date: safeDate(bestFromIndex.date),
-                    value: bestFromIndex.value,
-                    rowKey: bestFromIndex.rowKey,
-                    provedor: bestFromIndex.provedor,
-                };
-            }
-
-            // Fallback: varrer cache atual procurando matches por qualquer chave de pessoa
+            // Varrer cache atual tambem. O indice historico fica em localStorage e pode
+            // estar algumas horas atrasado; venda atual mais recente deve prevalecer.
             let latestPaidVenda = null;
             let latestPaidDate = null;
 
@@ -2880,6 +3157,16 @@
                     latestPaidDate = paidDate;
                 }
             });
+
+            const bestIndexDate = bestFromIndex?.date ? safeDate(bestFromIndex.date) : null;
+            if (bestIndexDate && (!latestPaidDate || bestIndexDate.getTime() >= latestPaidDate.getTime())) {
+                return {
+                    date: bestIndexDate,
+                    value: bestFromIndex.value,
+                    rowKey: bestFromIndex.rowKey,
+                    provedor: bestFromIndex.provedor,
+                };
+            }
 
             if (!latestPaidVenda || !latestPaidDate) return null;
 
@@ -3168,11 +3455,11 @@
         }
 
         function getCachedAsaasResult() {
-            return getCachedSalesResult(ASAAS_CACHE_KEY);
+            return getCachedSalesResult(getAsaasCacheKey());
         }
 
         function getCachedKiwifyResult() {
-            return getCachedSalesResult(KIWIFY_CACHE_KEY);
+            return getCachedSalesResult(getKiwifyCacheKey());
         }
 
         function getAllCachedSales() {
@@ -3309,13 +3596,10 @@
             await loadFollowupData(true);
             await refreshAsaasData(false);
             await refreshKiwifyData(false);
+            await refreshAsaasDescontos(false, true);
             loadLastPaymentHistory(false);
 
-            const oldDespesas = parseFloat(localStorage.getItem('resumo_despesas')) || 0;
-            const despList = getDespesasList();
-            if (oldDespesas > 0 && despList.length === 0) {
-                saveDespesasList([{ id: Date.now(), nome: 'Despesas do curso (migrado)', valor: oldDespesas, data: todayStr }]);
-            }
+            await syncDespesasFromCloud(true);
 
             renderDespesas();
         }
@@ -3325,7 +3609,7 @@
         // ============================================
         function switchPage(page) {
             currentPage = page;
-            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Renovacao', 'Despesas', 'Resumo'];
+            const pages = ['Marketing', 'Asaas', 'Kiwify', 'Renovacao', 'Despesas', 'Comparacao', 'Resumo'];
             pages.forEach(p => {
                 const el = document.getElementById('page' + p);
                 if (el) el.classList.remove('active');
@@ -3361,9 +3645,19 @@
                 document.getElementById('pageDespesas').classList.add('active');
                 document.getElementById('tabPageDespesas').className = 'page-tab active-despesas';
                 renderDespesas();
+                syncDespesasFromCloud(true);
+                refreshAsaasDescontos(false, true);
+            } else if (page === 'comparacao') {
+                document.getElementById('pageComparacao').classList.add('active');
+                document.getElementById('tabPageComparacao').className = 'page-tab active-comparacao';
+                refreshComparacaoData(false);
             } else if (page === 'resumo') {
                 document.getElementById('pageResumo').classList.add('active');
                 document.getElementById('tabPageResumo').className = 'page-tab active-resumo';
+                syncDespesasFromCloud(true);
+                refreshAsaasData(false);
+                refreshKiwifyData(false);
+                refreshAsaasDescontos(false, true);
                 renderResumo();
             }
         }
@@ -3371,12 +3665,20 @@
         // ============================================
         // ASAAS DATA (cache 5 horas)
         // ============================================
-        const ASAAS_CACHE_KEY = 'asaas_vendas_data_v2';
-        const ASAAS_CACHE_TIME_KEY = 'asaas_vendas_time_v2';
+        const ASAAS_CACHE_KEY = 'asaas_vendas_data_v11';
+        const ASAAS_CACHE_TIME_KEY = 'asaas_vendas_time_v11';
         const ASAAS_CACHE_TTL = 5 * 60 * 60 * 1000;
         let asaasCurrentFilter = 'todos';
         let asaasCurrentFollowupFilter = 'todos';
         let asaasDataLoaded = false;
+
+        function getAsaasCacheKey() {
+            return scopedMonthKey(ASAAS_CACHE_KEY);
+        }
+
+        function getAsaasCacheTimeKey() {
+            return scopedMonthKey(ASAAS_CACHE_TIME_KEY);
+        }
 
         function isAsaasUrgent(venda) {
             return venda.provedor === 'asaas' && venda.status === 'Vencido';
@@ -3836,8 +4138,8 @@
                     { optimistic: true, rollbackOnError: true }
                 );
 
-                localStorage.removeItem(ASAAS_CACHE_KEY);
-                localStorage.removeItem(ASAAS_CACHE_TIME_KEY);
+                localStorage.removeItem(getAsaasCacheKey());
+                localStorage.removeItem(getAsaasCacheTimeKey());
                 await refreshAsaasData(true);
 
                 const deletedCount = Array.isArray(result.deletedPayments) ? result.deletedPayments.length : 0;
@@ -3853,7 +4155,7 @@
 
             if (!forceRefresh) {
                 const cached = getCachedAsaasResult();
-                const cachedTime = localStorage.getItem(ASAAS_CACHE_TIME_KEY);
+                const cachedTime = localStorage.getItem(getAsaasCacheTimeKey());
                 if (cached && cachedTime && hasFollowupKeys(cached)) {
                     const age = Date.now() - parseInt(cachedTime, 10);
                     if (age < ASAAS_CACHE_TTL) {
@@ -3874,23 +4176,20 @@
             if (btn) btn.disabled = true;
 
             try {
-                const hojeAsaas = new Date();
-                const asaasAnoMes = `${hojeAsaas.getFullYear()}-${String(hojeAsaas.getMonth() + 1).padStart(2, '0')}`;
-                const asaasInicio = `${asaasAnoMes}-01`;
-                const asaasAmanha = new Date(hojeAsaas);
-                asaasAmanha.setDate(asaasAmanha.getDate() + 2);
-                const asaasFim = `${asaasAmanha.getFullYear()}-${String(asaasAmanha.getMonth() + 1).padStart(2, '0')}-${String(asaasAmanha.getDate()).padStart(2, '0')}`;
+                const { inicio: asaasInicio, fim: asaasFim } = getSelectedMonthPeriod();
                 const resp = await fetch(`/.netlify/functions/asaas-vendas?inicio=${asaasInicio}&fim=${asaasFim}&_t=${Date.now()}`);
                 if (!resp.ok) throw new Error('Erro ao buscar dados');
                 const result = await resp.json();
 
                 if (result.error) throw new Error(result.error);
 
-                localStorage.setItem(ASAAS_CACHE_KEY, JSON.stringify(result));
-                localStorage.setItem(ASAAS_CACHE_TIME_KEY, String(Date.now()));
+                localStorage.setItem(getAsaasCacheKey(), JSON.stringify(result));
+                localStorage.setItem(getAsaasCacheTimeKey(), String(Date.now()));
 
                 renderAsaasData(result);
                 asaasDataLoaded = true;
+                await refreshAsaasDescontos(true, true);
+                renderResumo();
                 if (kiwifyDataLoaded) rerenderSalesViews();
                 showToast('&#9989;', 'Dados do Asaas atualizados!');
             } catch (err) {
@@ -3908,17 +4207,22 @@
         function renderAsaasData(result) {
             const { resumo, vendas } = result;
             const displayVendas = buildDisplaySalesRows(vendas);
-            const asaasLiquido = resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto;
-            document.getElementById('asaasTotalRecebido').textContent = formatCurrency(asaasLiquido);
-            document.getElementById('asaasTotalPagos').textContent = `${resumo.totalPagos} pagos (liquido)`;
+            const vendasAprovadas = resumo.valorVendasLiquido != null
+                ? resumo.valorVendasLiquido
+                : (resumo.valorLiquido != null ? resumo.valorLiquido : resumo.valorBruto);
+            const caixaAsaas = resumo.valorFinanceiro != null ? resumo.valorFinanceiro : vendasAprovadas;
+            document.getElementById('asaasTotalRecebido').textContent = formatCurrency(vendasAprovadas);
+            document.getElementById('asaasTotalPagos').textContent = resumo.totalEntradasFinanceiras != null
+                ? `${resumo.totalPagos} pagos/confirmados | caixa ${formatCurrency(caixaAsaas)}`
+                : `${resumo.totalPagos} pagos (liquido)`;
             document.getElementById('asaasTotalAlunos').textContent = resumo.totalAlunos;
-            document.getElementById('asaasPeriodo').textContent = `${formatDateCell(resumo.periodo.inicio)} a ${formatDateCell(resumo.periodo.fim)}`;
+            document.getElementById('asaasPeriodo').textContent = `${resumo.totalPagos} pagas/confirmadas | ${formatDateCell(resumo.periodo.inicio)} a ${formatDateCell(resumo.periodo.fim)}`;
             document.getElementById('asaasTotalPendentes').textContent = formatCurrency(resumo.valorPendente);
             document.getElementById('asaasQtdPendentes').textContent = `${resumo.totalPendentes} pendentes`;
             document.getElementById('asaasTotalEstornos').textContent = formatCurrency(resumo.valorEstornado);
             document.getElementById('asaasQtdEstornos').textContent = `${resumo.totalEstornados} estornos`;
-            document.getElementById('asaasBadge').textContent = resumo.totalAlunos;
-            const cachedTime = localStorage.getItem(ASAAS_CACHE_TIME_KEY);
+            document.getElementById('asaasBadge').textContent = resumo.totalPagos;
+            const cachedTime = localStorage.getItem(getAsaasCacheTimeKey());
             if (cachedTime) {
                 const date = new Date(parseInt(cachedTime, 10));
                 const horas = String(date.getHours()).padStart(2, '0');
@@ -3931,8 +4235,108 @@
 
             syncFollowupWithSales(vendas);
             updateFollowupCards('asaas', summarizeFollowup(displayVendas));
+            renderAsaasDailyCash(resumo.caixaDiario || []);
             renderAsaasTable(displayVendas, asaasCurrentFilter, asaasCurrentFollowupFilter);
             maybeSeedRetroApril2026();
+        }
+
+        function renderAsaasDailyCash(rows) {
+            const target = document.getElementById('asaasDailyCashBody');
+            if (!target) return;
+
+            if (!Array.isArray(rows) || rows.length === 0) {
+                target.innerHTML = `
+                    <div class="asaas-loading">
+                        <p>Nenhum movimento de caixa encontrado no periodo.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const limitedRows = rows.slice(0, 12);
+            let html = '<table class="asaas-table"><thead><tr>';
+            html += '<th>Dia</th><th>Saldo inicio</th><th>Entrou no caixa</th><th>Cartao antecipado entrou</th><th>Saiu real</th><th>Transfer. empresa</th><th>Liquido do dia</th><th>Vendas aprovadas</th><th>Renov. cartao</th><th>Baixa ignorada</th><th>Saldo fim</th>';
+            html += '</tr></thead><tbody>';
+
+            limitedRows.forEach((row) => {
+                const netClass = Number(row.liquidoCaixa || 0) >= 0 ? 'cash-in-cell' : 'cash-out-cell';
+                const saldoInicial = row.saldoInicialAsaas == null ? '-' : formatCurrency(row.saldoInicialAsaas);
+                const saldoFinal = row.saldoFinalAsaas == null ? '-' : formatCurrency(row.saldoFinalAsaas);
+                const antecipadoSub = Number(row.liquidacoesJaAntecipadas || 0) > 0
+                    ? `${formatCurrency(row.liquidacoesJaAntecipadas)} ignorado`
+                    : '-';
+                html += `<tr>
+                    <td>${formatDateCell(row.data)}</td>
+                    <td>${saldoInicial}</td>
+                    <td class="cash-in-cell">${renderDailyCashDetails(row.entrouCaixa, row.entrouCaixaQtd, row.entrouCaixaDetalhes)}</td>
+                    <td>${formatCurrency(row.antecipacoesRecebidas || 0)} <span class="cash-neutral-cell">(${row.antecipacoesRecebidasQtd || 0})</span></td>
+                    <td class="cash-out-cell">${formatCurrency(row.saiuCaixa || 0)}</td>
+                    <td>${formatCurrency(row.transferenciasEveryday || 0)} <span class="cash-neutral-cell">(${row.transferenciasEverydayQtd || 0})</span></td>
+                    <td class="${netClass}">${formatCurrency(row.liquidoCaixa || 0)}</td>
+                    <td>${renderDailyCashDetails(row.vendasAprovadas, row.vendasAprovadasQtd, row.vendasAprovadasDetalhes)}</td>
+                    <td>${renderDailyCashDetails(row.renovacoesCartaoAprovadas, row.renovacoesCartaoAprovadasQtd, row.renovacoesCartaoDetalhes)}</td>
+                    <td class="cash-neutral-cell">${antecipadoSub}</td>
+                    <td>${saldoFinal}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            target.innerHTML = html;
+        }
+
+        function renderDailyCashDetails(total, count, detalhes) {
+            const rawItems = Array.isArray(detalhes) ? detalhes : [];
+            const summary = `${formatCurrency(total || 0)} <span class="cash-neutral-cell">(${count || 0})</span>`;
+            if (rawItems.length === 0) return summary;
+
+            const grouped = new Map();
+            rawItems.forEach((item) => {
+                const method = normalizePaymentMethod(item.forma || item.nome);
+                const key = `${item.nome || 'N/A'}|${method}`;
+                const current = grouped.get(key) || { nome: item.nome || 'N/A', forma: method, valor: 0, count: 0 };
+                current.valor = roundLocalMoney(current.valor + (Number(item.valor) || 0));
+                current.count += 1;
+                grouped.set(key, current);
+            });
+
+            const items = [...grouped.values()].sort((a, b) =>
+                b.valor - a.valor || String(a.nome).localeCompare(String(b.nome))
+            );
+
+            const detailRows = items.map((item) => `
+                <div class="cash-details-item ${paymentMethodClass(item.forma)}">
+                    <span class="cash-details-name">${escapeHtml(item.nome || 'N/A')}${item.count > 1 ? ` <span class="cash-neutral-cell">(${item.count})</span>` : ''}${renderPaymentMethodBadge(item.forma)}</span>
+                    <span class="cash-details-value">${formatCurrency(item.valor || 0)}</span>
+                </div>
+            `).join('');
+
+            return `
+                <details class="cash-details">
+                    <summary>${summary}</summary>
+                    <div class="cash-details-list">${detailRows}</div>
+                </details>
+            `;
+        }
+
+        function normalizePaymentMethod(value) {
+            const normalized = String(value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+            if (normalized.includes('pix') || normalized.includes('cobrancas recebidas')) return 'PIX';
+            if (normalized.includes('cartao') || normalized.includes('credit')) return 'Cartao';
+            return '';
+        }
+
+        function paymentMethodClass(method) {
+            if (method === 'PIX') return 'detail-pix';
+            if (method === 'Cartao') return 'detail-card';
+            return '';
+        }
+
+        function renderPaymentMethodBadge(method) {
+            if (method !== 'PIX' && method !== 'Cartao') return '';
+            return ` <span class="cash-details-method">${method}</span>`;
         }
 
         function matchesAsaasStatus(venda, filter) {
@@ -4012,22 +4416,30 @@
         }, ASAAS_CACHE_TTL);
 
         // ============================================
-        // KIWIFY DATA (cache 5 horas)
+        // KIWIFY DATA (cache 5 minutos)
         // ============================================
-        const KIWIFY_CACHE_KEY = 'kiwify_vendas_data_v3';
-        const KIWIFY_CACHE_TIME_KEY = 'kiwify_vendas_time_v3';
-        const KIWIFY_CACHE_TTL = 5 * 60 * 60 * 1000;
+        const KIWIFY_CACHE_KEY = 'kiwify_vendas_data_v5';
+        const KIWIFY_CACHE_TIME_KEY = 'kiwify_vendas_time_v5';
+        const KIWIFY_CACHE_TTL = 5 * 60 * 1000;
 
         let kiwifyCurrentFilter = 'todos';
         let kiwifyCurrentFollowupFilter = 'todos';
         let kiwifyDataLoaded = false;
+
+        function getKiwifyCacheKey() {
+            return scopedMonthKey(KIWIFY_CACHE_KEY);
+        }
+
+        function getKiwifyCacheTimeKey() {
+            return scopedMonthKey(KIWIFY_CACHE_TIME_KEY);
+        }
 
         async function refreshKiwifyData(forceRefresh) {
             const btn = document.getElementById('btnRefreshKiwify');
 
             if (!forceRefresh) {
                 const cached = getCachedKiwifyResult();
-                const cachedTime = localStorage.getItem(KIWIFY_CACHE_TIME_KEY);
+                const cachedTime = localStorage.getItem(getKiwifyCacheTimeKey());
                 if (cached && cachedTime && hasFollowupKeys(cached)) {
                     const age = Date.now() - parseInt(cachedTime, 10);
                     if (age < KIWIFY_CACHE_TTL) {
@@ -4048,81 +4460,17 @@
             if (btn) btn.disabled = true;
 
             try {
-                const hoje = new Date();
-                const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
-                const mesInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-                const chunks = [];
-                let chunkStart = new Date(mesInicio);
-                const fmtD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-                while (chunkStart <= hoje) {
-                    const chunkEnd = new Date(chunkStart);
-                    chunkEnd.setDate(chunkEnd.getDate() + 5);
-                    chunks.push({ inicio: fmtD(chunkStart), fim: fmtD(chunkEnd) });
-                    chunkStart = new Date(chunkEnd);
-                }
+                const { inicio, fim } = getSelectedMonthPeriod();
+                const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${inicio}&fim=${fim}&_t=${Date.now()}`);
+                const result = await resp.json().catch(() => ({}));
+                if (!resp.ok || result.error) throw new Error(result.error || 'Erro ao buscar dados Kiwify');
 
-                const seen = new Set();
-                let todasVendas = [];
-                for (let i = 0; i < chunks.length; i++) {
-                    const c = chunks[i];
-                    document.getElementById('kiwifyTableBody').innerHTML = `
-                        <div class="asaas-loading kiwify-loading">
-                            <div class="spinner"></div>
-                            <p>Carregando Kiwify... (${i + 1}/${chunks.length})</p>
-                        </div>
-                    `;
-                    try {
-                        const resp = await fetch(`/.netlify/functions/kiwify-vendas?inicio=${c.inicio}&fim=${c.fim}&_t=${Date.now()}`);
-                        if (!resp.ok) continue;
-                        const data = await resp.json();
-                        if (data?.vendas) {
-                            for (const v of data.vendas) {
-                                const key = v.rowKey || `${v.nome}|${v.data}|${v.valorLiquido}`;
-                                if (!seen.has(key)) {
-                                    seen.add(key);
-                                    todasVendas.push(v);
-                                }
-                            }
-                        }
-                    } catch (e) { /* skip chunk */ }
-                }
-
-                todasVendas.sort((a, b) => b.data.localeCompare(a.data));
-
-                const pagos = todasVendas.filter(v => v.status === 'Pago');
-                const pendentes = todasVendas.filter(v => v.status === 'Pendente');
-                const vencidos = todasVendas.filter(v => v.status === 'Vencido');
-                const aVencer = todasVendas.filter(v => v.status === 'A vencer');
-                const estornados = todasVendas.filter(v => v.status === 'Estornado');
-                const recusados = todasVendas.filter(v => v.status === 'Recusado');
-
-                const result = {
-                    resumo: {
-                        totalAlunos: pagos.length + pendentes.length + vencidos.length + aVencer.length + estornados.length,
-                        totalPagos: pagos.length,
-                        totalPendentes: pendentes.length,
-                        totalVencidos: vencidos.length,
-                        totalAVencer: aVencer.length,
-                        totalEstornados: estornados.length,
-                        totalRecusados: recusados.length,
-                        valorBruto: pagos.reduce((s, v) => s + v.valor, 0),
-                        valorLiquido: pagos.reduce((s, v) => s + v.valorLiquido, 0),
-                        valorPendente: pendentes.reduce((s, v) => s + v.valor, 0),
-                        valorVencido: vencidos.reduce((s, v) => s + v.valor, 0),
-                        valorAVencer: aVencer.reduce((s, v) => s + v.valor, 0),
-                        valorEstornado: estornados.reduce((s, v) => s + v.valor, 0),
-                        valorRecusado: recusados.reduce((s, v) => s + v.valor, 0),
-                        periodo: { inicio: `${anoMes}-01`, fim: chunks[chunks.length-1].fim },
-                        atualizadoEm: new Date().toISOString(),
-                    },
-                    vendas: todasVendas,
-                };
-
-                localStorage.setItem(KIWIFY_CACHE_KEY, JSON.stringify(result));
-                localStorage.setItem(KIWIFY_CACHE_TIME_KEY, String(Date.now()));
+                localStorage.setItem(getKiwifyCacheKey(), JSON.stringify(result));
+                localStorage.setItem(getKiwifyCacheTimeKey(), String(Date.now()));
 
                 renderKiwifyData(result);
                 kiwifyDataLoaded = true;
+                renderResumo();
                 if (asaasDataLoaded) rerenderSalesViews();
                 showToast('&#9989;', 'Dados do Kiwify atualizados!');
             } catch (err) {
@@ -4150,7 +4498,7 @@
             document.getElementById('kiwifyTotalEstornos').textContent = formatCurrency(resumo.valorEstornado);
             document.getElementById('kiwifyQtdEstornos').textContent = `${resumo.totalEstornados} estornos`;
             document.getElementById('kiwifyBadge').textContent = resumo.totalAlunos;
-            const cachedTime = localStorage.getItem(KIWIFY_CACHE_TIME_KEY);
+            const cachedTime = localStorage.getItem(getKiwifyCacheTimeKey());
             if (cachedTime) {
                 const date = new Date(parseInt(cachedTime, 10));
                 const horas = String(date.getHours()).padStart(2, '0');
@@ -4158,7 +4506,7 @@
                 const dia = String(date.getDate()).padStart(2, '0');
                 const mes = String(date.getMonth() + 1).padStart(2, '0');
                 document.getElementById('kiwifyLastUpdate').textContent =
-                    `Ultima atualizacao: ${dia}/${mes} as ${horas}:${mins} | Auto-refresh a cada 5h`;
+                    `Ultima atualizacao: ${dia}/${mes} as ${horas}:${mins} | Auto-refresh a cada 5 min`;
             }
 
             syncFollowupWithSales(vendas);
@@ -4515,17 +4863,734 @@
         // DESPESAS DO CURSO (detailed expenses tab)
         // ============================================
         const DESPESAS_LIST_KEY = 'despesas_curso_lista';
+        const DEFAULT_DESPESAS_LIST = [
+            { id: 2026043001, nome: 'Marketing', valor: 5378.00, data: '2026-04-30' },
+            { id: 2026043002, nome: 'Netlify', valor: 369.26, data: '2026-04-30' },
+            { id: 2026043003, nome: 'Claud + Chat GPT', valor: 650.00, data: '2026-04-30' },
+            { id: 2026043004, nome: 'Carlos', valor: 2820.00, data: '2026-04-30' },
+            { id: 2026043005, nome: 'Contabilidade', valor: 3200.00, data: '2026-04-30' },
+            { id: 2026043006, nome: 'Alisson (400) + Felipe (495) + Lays (630) + Alberto (250) + Terceirizados (500) + Estorno 200', valor: 2500.00, data: '2026-04-30' },
+            { id: 2026043007, nome: 'IA para correcoes das atividades dos alunos + Chat gpt para atendimento', valor: 237.00, data: '2026-04-30' },
+            { id: 2026043008, nome: 'Alberto', valor: 250.00, data: '2026-04-30' },
+        ];
+        const DESPESAS_CLOUD_SYNCED_KEY = 'despesas_curso_cloud_synced_v1';
+        const DESPESAS_DELETED_KEYS_KEY = 'despesas_curso_deleted_keys_v1';
+        const ASAAS_DESCONTOS_CACHE_KEY = 'asaas_descontos_data_v3';
+        const ASAAS_DESCONTOS_CACHE_TIME_KEY = 'asaas_descontos_time_v3';
+        const ASAAS_DESCONTOS_CACHE_TTL = 5 * 60 * 60 * 1000;
+        let despesasCloudSaveTimeout = null;
 
-        function getDespesasList() {
-            try {
-                const raw = localStorage.getItem(DESPESAS_LIST_KEY);
-                if (raw) return JSON.parse(raw);
-            } catch(e) {}
-            return [];
+        function getAsaasDescontosCacheKey() {
+            return scopedMonthKey(ASAAS_DESCONTOS_CACHE_KEY);
         }
 
-        function saveDespesasList(list) {
-            localStorage.setItem(DESPESAS_LIST_KEY, JSON.stringify(list));
+        function getAsaasDescontosCacheTimeKey() {
+            return scopedMonthKey(ASAAS_DESCONTOS_CACHE_TIME_KEY);
+        }
+
+        function getDespesasList() {
+            let savedList = [];
+            try {
+                const raw = localStorage.getItem(DESPESAS_LIST_KEY);
+                if (raw) savedList = sanitizeDespesasList(JSON.parse(raw));
+            } catch(e) {}
+            const deletedKeys = getDeletedDespesaKeys();
+            return mergeDespesasLists(DEFAULT_DESPESAS_LIST, savedList)
+                .filter((item) => !deletedKeys.has(getDespesaDedupeKey(item)));
+        }
+
+        function getSelectedDespesasList() {
+            return getDespesasList().filter((item) => isInSelectedMonth(item.data));
+        }
+
+        function getDeletedDespesaKeys() {
+            try {
+                const raw = localStorage.getItem(DESPESAS_DELETED_KEYS_KEY);
+                return new Set(raw ? JSON.parse(raw) : []);
+            } catch(e) {
+                return new Set();
+            }
+        }
+
+        function saveDeletedDespesaKeys(keys) {
+            localStorage.setItem(DESPESAS_DELETED_KEYS_KEY, JSON.stringify([...keys]));
+        }
+
+        function getMonthKeyOffset(delta) {
+            const target = new Date(currentYear, currentMonthIndex + delta, 1);
+            return `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function moveIsoDateToMonth(dateStr, monthKey) {
+            const [, , dayRaw] = String(dateStr || '').split('-').map(Number);
+            const [year, month] = monthKey.split('-').map(Number);
+            const lastDay = new Date(year, month, 0).getDate();
+            const day = Math.min(Math.max(dayRaw || 1, 1), lastDay);
+            return `${monthKey}-${String(day).padStart(2, '0')}`;
+        }
+
+        function addMonthsToIsoDate(dateStr, delta) {
+            const [yearRaw, monthRaw] = String(dateStr || '').split('-').map(Number);
+            if (!yearRaw || !monthRaw) return getDefaultDespesaDate();
+            const target = new Date(yearRaw, monthRaw - 1 + delta, 1);
+            const monthKey = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+            return moveIsoDateToMonth(dateStr, monthKey);
+        }
+
+        function restoreDeletedDespesaIfNeeded(item) {
+            const deletedKeys = getDeletedDespesaKeys();
+            const key = getDespesaDedupeKey(item);
+            if (deletedKeys.delete(key)) {
+                saveDeletedDespesaKeys(deletedKeys);
+            }
+        }
+
+        function sanitizeDespesasList(list) {
+            if (!Array.isArray(list)) return [];
+            return list
+                .map((item) => ({
+                    id: item.id || Date.now() + Math.random(),
+                    nome: String(item.nome || '').trim(),
+                    valor: roundLocalMoney(Number(item.valor) || 0),
+                    data: String(item.data || '').slice(0, 10),
+                }))
+                .filter((item) => item.nome && item.valor > 0)
+                .filter((item) => item.nome !== 'Despesas do curso (migrado)');
+        }
+
+        function getDespesaDedupeKey(item) {
+            return `${String(item.nome || '').trim().toLowerCase()}|${Math.round((Number(item.valor) || 0) * 100)}|${item.data || ''}`;
+        }
+
+        function mergeDespesasLists(...lists) {
+            const map = new Map();
+            lists.flat().forEach((item) => {
+                const clean = sanitizeDespesasList([item])[0];
+                if (!clean) return;
+                map.set(getDespesaDedupeKey(clean), clean);
+            });
+            return [...map.values()].sort((a, b) => String(a.data).localeCompare(String(b.data)) || String(a.nome).localeCompare(String(b.nome)));
+        }
+
+        function despesasListsEqual(a, b) {
+            return JSON.stringify(sanitizeDespesasList(a)) === JSON.stringify(sanitizeDespesasList(b));
+        }
+
+        function setLocalDespesasList(list) {
+            localStorage.setItem(DESPESAS_LIST_KEY, JSON.stringify(sanitizeDespesasList(list)));
+        }
+
+        function saveDespesasList(list, options = {}) {
+            const cleanList = sanitizeDespesasList(list);
+            setLocalDespesasList(cleanList);
+            if (!options.skipCloud) {
+                localStorage.setItem(DESPESAS_CLOUD_SYNCED_KEY, 'true');
+                queueSaveDespesasToCloud(cleanList);
+            }
+        }
+
+        function queueSaveDespesasToCloud(list) {
+            clearTimeout(despesasCloudSaveTimeout);
+            despesasCloudSaveTimeout = setTimeout(() => {
+                saveDespesasToCloud(list, true);
+            }, 800);
+        }
+
+        async function saveDespesasToCloud(list, silent = false) {
+            try {
+                const resp = await fetch(CLOUD_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ despesas: sanitizeDespesasList(list) }),
+                });
+                if (!resp.ok) throw new Error('Erro ao salvar despesas na nuvem');
+                localStorage.setItem(DESPESAS_CLOUD_SYNCED_KEY, 'true');
+            } catch (error) {
+                if (!silent) showToast('&#9888;&#65039;', error.message);
+            }
+        }
+
+        async function syncDespesasFromCloud(silent = true) {
+            try {
+                const resp = await fetch(CLOUD_API, { cache: 'no-store' });
+                if (!resp.ok) throw new Error('Erro ao carregar despesas da nuvem');
+                const result = await resp.json();
+                const deletedKeys = getDeletedDespesaKeys();
+                const cloudList = sanitizeDespesasList(result.despesas || [])
+                    .filter((item) => !deletedKeys.has(getDespesaDedupeKey(item)));
+                const localList = getDespesasList();
+                const nextList = mergeDespesasLists(cloudList, localList);
+
+                if (!despesasListsEqual(localList, nextList)) {
+                    saveDespesasList(nextList, { skipCloud: true });
+                }
+
+                localStorage.setItem(DESPESAS_CLOUD_SYNCED_KEY, 'true');
+                if (!despesasListsEqual(cloudList, nextList)) {
+                    await saveDespesasToCloud(nextList, true);
+                }
+
+                renderDespesas();
+                renderResumo();
+            } catch (error) {
+                if (!silent) showToast('&#9888;&#65039;', error.message || 'Erro ao sincronizar despesas');
+            }
+        }
+
+        function getCachedAsaasDescontosResult() {
+            try {
+                const raw = localStorage.getItem(getAsaasDescontosCacheKey());
+                return raw ? JSON.parse(raw) : null;
+            } catch(e) {
+                return null;
+            }
+        }
+
+        function getAsaasDescontosRows() {
+            const cached = getCachedAsaasDescontosResult();
+            return Array.isArray(cached?.descontos) ? cached.descontos : [];
+        }
+
+        function getAsaasDescontosResumo() {
+            const cached = getCachedAsaasDescontosResult();
+            return cached?.resumo || null;
+        }
+
+        function getAsaasDescontosDisplayRows(autoRows) {
+            const groups = new Map();
+            (autoRows || []).forEach((row) => {
+                const key = `${row.data || ''}|${row.categoria || row.tipo || ''}`;
+                const current = groups.get(key) || {
+                    data: row.data || '',
+                    categoria: row.categoria || '',
+                    categoriaLabel: row.categoriaLabel || 'Desconto Asaas',
+                    valor: 0,
+                    count: 0,
+                };
+                current.valor = roundLocalMoney(current.valor + (Number(row.valor) || 0));
+                current.count += 1;
+                groups.set(key, current);
+            });
+
+            return [...groups.values()]
+                .filter((row) => row.valor !== 0)
+                .sort((a, b) => String(a.data).localeCompare(String(b.data)) || String(a.categoria).localeCompare(String(b.categoria)))
+                .map((row) => ({
+                    ...row,
+                    descricao: `${row.count} lancamento${row.count !== 1 ? 's' : ''} do extrato financeiro Asaas`,
+                }));
+        }
+
+        function roundLocalMoney(value) {
+            return Math.round((Number(value) || 0) * 100) / 100;
+        }
+
+        function getManualDespesasTotal() {
+            return roundLocalMoney(getSelectedDespesasList().reduce((s, d) => s + (Number(d.valor) || 0), 0));
+        }
+
+        function getAutomaticDespesasTotal() {
+            return roundLocalMoney(getAsaasDescontosRows().reduce((s, d) => s + (Number(d.valor) || 0), 0));
+        }
+
+        function getDespesasBreakdown() {
+            const manualList = getSelectedDespesasList();
+            const autoRows = getAsaasDescontosRows();
+            const manualTotal = roundLocalMoney(manualList.reduce((s, d) => s + (Number(d.valor) || 0), 0));
+            const autoTotal = roundLocalMoney(autoRows.reduce((s, d) => s + (Number(d.valor) || 0), 0));
+            const autoExternalTotal = roundLocalMoney(
+                autoRows
+                    .filter((d) => (d.categoria || d.tipo) === 'transferencia')
+                    .reduce((s, d) => s + (Number(d.valor) || 0), 0)
+            );
+            const autoAlreadyInCashTotal = roundLocalMoney(autoTotal - autoExternalTotal);
+            const autoCategoryCount = new Set(autoRows.filter((d) => (Number(d.valor) || 0) !== 0).map((d) => d.categoria || d.tipo)).size;
+            return {
+                manualList,
+                autoRows,
+                manualTotal,
+                autoTotal,
+                autoExternalTotal,
+                autoAlreadyInCashTotal,
+                autoCategoryCount,
+                total: roundLocalMoney(manualTotal + autoTotal),
+                deductibleTotal: roundLocalMoney(manualTotal + autoExternalTotal),
+                autoLoaded: !!getCachedAsaasDescontosResult(),
+            };
+        }
+
+        // ============================================
+        // COMPARACAO (total liquido acumulado por dia)
+        // ============================================
+        const COMPARACAO_PREVIOUS_MONTHS = 5;
+
+        function getTodayLocalDate() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        function getMonthKeyFromDate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function parseMonthKey(monthKey) {
+            const [yearRaw, monthRaw] = String(monthKey || '').split('-').map(Number);
+            return { year: yearRaw, monthIndex: monthRaw - 1 };
+        }
+
+        function getComparacaoMonthKeys() {
+            const today = getTodayLocalDate();
+            const keys = [];
+            for (let offset = 0; offset <= COMPARACAO_PREVIOUS_MONTHS; offset += 1) {
+                keys.push(getMonthKeyFromDate(new Date(today.getFullYear(), today.getMonth() - offset, 1)));
+            }
+            return keys;
+        }
+
+        function getMonthPeriodByKey(monthKey) {
+            const { year, monthIndex } = parseMonthKey(monthKey);
+            const monthEnd = new Date(year, monthIndex + 1, 0);
+            const today = getTodayLocalDate();
+            const isCurrent = year === today.getFullYear() && monthIndex === today.getMonth();
+            const fimDate = isCurrent ? today : monthEnd;
+            return {
+                key: monthKey,
+                inicio: `${monthKey}-01`,
+                fim: formatIsoDateLocal(fimDate),
+                daysInMonth: monthEnd.getDate(),
+                limitDay: fimDate.getDate(),
+                isCurrent,
+            };
+        }
+
+        function formatComparacaoMonthLabel(monthKey) {
+            const { year, monthIndex } = parseMonthKey(monthKey);
+            return formatMonthYear(monthIndex, year);
+        }
+
+        function scopedMonthKeyFor(baseKey, monthKey) {
+            return `${baseKey}:${monthKey}`;
+        }
+
+        function getCachedMonthlyResult(baseKey, monthKey) {
+            try {
+                const raw = localStorage.getItem(scopedMonthKeyFor(baseKey, monthKey));
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function getCachedMonthlyAge(timeBaseKey, monthKey) {
+            const raw = localStorage.getItem(scopedMonthKeyFor(timeBaseKey, monthKey));
+            const time = raw ? parseInt(raw, 10) : 0;
+            return Number.isFinite(time) && time > 0 ? Date.now() - time : Infinity;
+        }
+
+        async function getComparacaoMonthlyResult(config, monthKey, forceRefresh) {
+            const period = getMonthPeriodByKey(monthKey);
+            const cached = getCachedMonthlyResult(config.cacheKey, monthKey);
+            const age = getCachedMonthlyAge(config.timeKey, monthKey);
+
+            if (!forceRefresh && cached && age < config.ttl) {
+                return { result: cached, warning: null };
+            }
+
+            try {
+                const resp = await fetch(`${config.endpoint}?inicio=${period.inicio}&fim=${period.fim}&_cmp=${Date.now()}`, { cache: 'no-store' });
+                const result = await resp.json().catch(() => ({}));
+                if (!resp.ok || result.error) throw new Error(result.error || `Erro ${resp.status}`);
+
+                localStorage.setItem(scopedMonthKeyFor(config.cacheKey, monthKey), JSON.stringify(result));
+                localStorage.setItem(scopedMonthKeyFor(config.timeKey, monthKey), String(Date.now()));
+                return { result, warning: null };
+            } catch (error) {
+                if (cached) {
+                    return {
+                        result: cached,
+                        warning: `${config.label} ${formatComparacaoMonthLabel(monthKey)}: usando cache (${error.message})`,
+                    };
+                }
+                return {
+                    result: null,
+                    warning: `${config.label} ${formatComparacaoMonthLabel(monthKey)}: ${error.message}`,
+                };
+            }
+        }
+
+        function getComparacaoAsaasValue(asaasResult) {
+            const resumo = asaasResult?.resumo || {};
+            if (resumo.valorFinanceiro != null) return roundLocalMoney(resumo.valorFinanceiro);
+            if (resumo.valorLiquido != null) return roundLocalMoney(resumo.valorLiquido);
+            return roundLocalMoney(resumo.valorBruto || 0);
+        }
+
+        function getComparacaoKiwifyValue(kiwifyResult) {
+            const resumo = kiwifyResult?.resumo || {};
+            if (resumo.valorLiquido != null) return roundLocalMoney(resumo.valorLiquido);
+            return roundLocalMoney(resumo.valorBruto || 0);
+        }
+
+        function addComparacaoDailyValue(valuesByDate, monthKey, period, dateStr, value) {
+            const date = String(dateStr || '').slice(0, 10);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+            if (!date.startsWith(monthKey) || date > period.fim) return;
+            valuesByDate[date] = roundLocalMoney((valuesByDate[date] || 0) + (Number(value) || 0));
+        }
+
+        function addScaledComparacaoDailyValues(valuesByDate, monthKey, period, rawValuesByDate, targetTotal) {
+            const entries = Object.entries(rawValuesByDate)
+                .filter(([, value]) => (Number(value) || 0) !== 0)
+                .sort(([dateA], [dateB]) => dateA.localeCompare(dateB));
+            const rawTotal = roundLocalMoney(entries.reduce((sum, [, value]) => sum + (Number(value) || 0), 0));
+            const total = roundLocalMoney(targetTotal);
+
+            if (entries.length === 0 || rawTotal === 0) {
+                if (total !== 0) addComparacaoDailyValue(valuesByDate, monthKey, period, period.fim, total);
+                return;
+            }
+
+            const ratio = total / rawTotal;
+            let scaledTotal = 0;
+            entries.forEach(([date, rawValue], index) => {
+                const isLast = index === entries.length - 1;
+                const value = isLast
+                    ? roundLocalMoney(total - scaledTotal)
+                    : roundLocalMoney((Number(rawValue) || 0) * ratio);
+                scaledTotal = roundLocalMoney(scaledTotal + value);
+                addComparacaoDailyValue(valuesByDate, monthKey, period, date, value);
+            });
+        }
+
+        function buildComparacaoMonthSeries(monthKey, asaasResult, kiwifyResult, referenceDay) {
+            const period = getMonthPeriodByKey(monthKey);
+            const valuesByDate = {};
+            const asaasDailyValues = {};
+            const kiwifyDailyValues = {};
+
+            (asaasResult?.vendas || [])
+                .filter((venda) => isPaidStatus(venda.status))
+                .forEach((venda) => {
+                    addComparacaoDailyValue(asaasDailyValues, monthKey, period, venda.paymentDate || venda.data, venda.valorLiquido != null ? venda.valorLiquido : venda.valor);
+                });
+            (kiwifyResult?.vendas || [])
+                .filter((venda) => venda.status === 'Pago')
+                .forEach((venda) => {
+                    addComparacaoDailyValue(kiwifyDailyValues, monthKey, period, venda.data || venda.approvedAt || venda.createdAt, venda.valorLiquido != null ? venda.valorLiquido : venda.valor);
+                });
+
+            addScaledComparacaoDailyValues(valuesByDate, monthKey, period, asaasDailyValues, getComparacaoAsaasValue(asaasResult));
+            addScaledComparacaoDailyValues(valuesByDate, monthKey, period, kiwifyDailyValues, getComparacaoKiwifyValue(kiwifyResult));
+
+            const data = [];
+            let running = 0;
+            let finalValue = 0;
+            for (let day = 1; day <= 31; day += 1) {
+                if (day > period.daysInMonth || day > period.limitDay) {
+                    data.push(null);
+                    continue;
+                }
+                const date = `${monthKey}-${String(day).padStart(2, '0')}`;
+                running = roundLocalMoney(running + (valuesByDate[date] || 0));
+                finalValue = running;
+                data.push(running);
+            }
+
+            const sameDayIndex = Math.min(referenceDay, period.limitDay, period.daysInMonth) - 1;
+            return {
+                monthKey,
+                label: formatComparacaoMonthLabel(monthKey),
+                isCurrent: period.isCurrent,
+                data,
+                finalValue,
+                sameDayValue: data[Math.max(sameDayIndex, 0)] || 0,
+                limitDay: period.limitDay,
+            };
+        }
+
+        async function loadComparacaoMonth(monthKey, forceRefresh) {
+            const configs = [
+                {
+                    label: 'Asaas',
+                    endpoint: '/.netlify/functions/asaas-vendas',
+                    cacheKey: ASAAS_CACHE_KEY,
+                    timeKey: ASAAS_CACHE_TIME_KEY,
+                    ttl: ASAAS_CACHE_TTL,
+                },
+                {
+                    label: 'Kiwify',
+                    endpoint: '/.netlify/functions/kiwify-vendas',
+                    cacheKey: KIWIFY_CACHE_KEY,
+                    timeKey: KIWIFY_CACHE_TIME_KEY,
+                    ttl: KIWIFY_CACHE_TTL,
+                },
+            ];
+
+            const [asaas, kiwify] = await Promise.all(
+                configs.map((config) => getComparacaoMonthlyResult(config, monthKey, forceRefresh))
+            );
+
+            return {
+                monthKey,
+                asaas: asaas.result,
+                kiwify: kiwify.result,
+                warnings: [asaas.warning, kiwify.warning].filter(Boolean),
+            };
+        }
+
+        function setComparacaoText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function setComparacaoValue(id, value) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = formatCurrency(value);
+            el.style.color = value >= 0 ? (id === 'comparacaoMediaValor' ? '#f39c12' : '#00cec9') : '#ff4757';
+        }
+
+        function renderComparacaoCards(series) {
+            const today = getTodayLocalDate();
+            const current = series[0];
+            const previous = series.slice(1);
+            const average = previous.length
+                ? previous.reduce((sum, item) => sum + (Number(item.sameDayValue) || 0), 0) / previous.length
+                : 0;
+            const best = previous.reduce((winner, item) => (!winner || item.finalValue > winner.finalValue ? item : winner), null);
+
+            setComparacaoValue('comparacaoAtualValor', current?.finalValue || 0);
+            setComparacaoText('comparacaoAtualSub', `${current?.label || ''} ate ${formatDateCell(formatIsoDateLocal(today))}`);
+            setComparacaoValue('comparacaoMediaValor', average);
+            setComparacaoText('comparacaoMediaSub', `${previous.length} meses anteriores ate o dia ${today.getDate()}`);
+
+            const bestValueEl = document.getElementById('comparacaoMelhorValor');
+            if (bestValueEl) {
+                bestValueEl.textContent = formatCurrency(best?.finalValue || 0);
+                bestValueEl.style.color = (best?.finalValue || 0) >= 0 ? '#74b9ff' : '#ff4757';
+            }
+            setComparacaoText('comparacaoMelhorSub', best ? `${best.label} fechado` : 'Sem meses anteriores');
+        }
+
+        function renderComparacaoChart(series) {
+            if (comparacaoChart) comparacaoChart.destroy();
+
+            const ctx = document.getElementById('comparacaoChart')?.getContext('2d');
+            if (!ctx) return;
+
+            const labels = Array.from({ length: 31 }, (_, index) => index + 1);
+            const colors = [
+                'rgba(0, 206, 201, 1)',
+                'rgba(243, 156, 18, 1)',
+                'rgba(116, 185, 255, 1)',
+                'rgba(232, 67, 147, 1)',
+                'rgba(46, 213, 115, 1)',
+                'rgba(168, 85, 247, 1)',
+            ];
+
+            comparacaoChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: series.map((item, index) => ({
+                        label: item.isCurrent ? `${item.label} (atual)` : item.label,
+                        data: item.data,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length].replace('1)', item.isCurrent ? '0.16)' : '0.08)'),
+                        borderWidth: item.isCurrent ? 3 : 2,
+                        borderDash: item.isCurrent ? [] : [6, 5],
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        tension: 0.3,
+                        spanGaps: false,
+                        fill: false,
+                    })),
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#a0a0b0',
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                                padding: 18,
+                                font: { family: 'Inter', size: 12 },
+                            },
+                        },
+                        tooltip: {
+                            backgroundColor: '#1a1a2e',
+                            titleColor: '#e8e8e8',
+                            bodyColor: '#a0a0b0',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 10,
+                            padding: 14,
+                            titleFont: { family: 'Inter', size: 13, weight: '600' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            callbacks: {
+                                title: (items) => `Dia ${items[0].label}`,
+                                label: (context) => {
+                                    if (context.parsed.y == null) return null;
+                                    return ` ${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                                },
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.03)' },
+                            ticks: {
+                                color: '#a0a0b0',
+                                font: { family: 'Inter', size: 11 },
+                            },
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.03)' },
+                            ticks: {
+                                color: '#a0a0b0',
+                                font: { family: 'Inter', size: 11 },
+                                callback: (value) => 'R$ ' + value.toLocaleString('pt-BR'),
+                            },
+                        },
+                    },
+                },
+            });
+        }
+
+        async function refreshComparacaoData(forceRefresh = false) {
+            const btn = document.getElementById('btnRefreshComparacao');
+            const status = document.getElementById('comparacaoStatus');
+            const note = document.getElementById('comparacaoNote');
+            if (btn) btn.disabled = true;
+            if (status) status.textContent = 'Atualizando comparacao mensal...';
+
+            try {
+                const today = getTodayLocalDate();
+                const monthKeys = getComparacaoMonthKeys();
+                const monthResults = await Promise.all(monthKeys.map((monthKey) => loadComparacaoMonth(monthKey, forceRefresh)));
+                const warnings = monthResults.flatMap((item) => item.warnings);
+                const series = monthResults.map((item) =>
+                    buildComparacaoMonthSeries(item.monthKey, item.asaas, item.kiwify, today.getDate())
+                );
+
+                renderComparacaoCards(series);
+                renderComparacaoChart(series);
+
+                if (status) {
+                    status.textContent = warnings.length
+                        ? `Dados parciais: ${warnings.length} aviso(s). Confira credenciais/cache se algum mes ficou zerado.`
+                        : `Comparando ${series.length} meses de total liquido acumulado.`;
+                }
+                if (note) {
+                    note.textContent = `Mes atual: ${formatComparacaoMonthLabel(monthKeys[0])} ate ${formatDateCell(formatIsoDateLocal(today))}. A linha atual continua nos proximos dias.`;
+                }
+                if (forceRefresh && warnings.length === 0) showToast('&#9989;', 'Comparacao atualizada');
+            } catch (error) {
+                if (status) status.textContent = `Erro ao carregar comparacao: ${error.message}`;
+                if (forceRefresh) showToast('&#9888;&#65039;', error.message || 'Erro ao carregar comparacao');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function getAsaasDescontosPeriodo() {
+            const { inicio, fim } = getSelectedMonthPeriod();
+            return { inicio, fim };
+        }
+
+        function renderAsaasDescontosInfo() {
+            const info = document.getElementById('despesasAutoInfo');
+            if (!info) return;
+
+            const cached = getCachedAsaasDescontosResult();
+            const resumo = cached?.resumo;
+            const cachedTime = localStorage.getItem(getAsaasDescontosCacheTimeKey());
+
+            if (!cached || !resumo) {
+                info.textContent = 'Saidas do extrato Asaas: aguardando atualizacao...';
+                return;
+            }
+
+            const taxaCartao = Number(resumo.taxaCartao) || 0;
+            const taxaPix = Number(resumo.taxaPix) || 0;
+            const taxaPagamento = Number(resumo.taxaPagamento) || 0;
+            const antecipacao = Number(resumo.antecipacao) || 0;
+            const baixaAntecipacao = Number(resumo.baixaAntecipacao) || 0;
+            const estornos = Number(resumo.estornos) || 0;
+            const mensagens = Number(resumo.mensagens) || 0;
+            const transferencias = Number(resumo.transferencias) || 0;
+            const outrasSaidas = Number(resumo.outrasSaidas) || 0;
+            const ignoredEveryday = Number(resumo.ignoredEverydayTransferTotal) || 0;
+            const ignoredBaixa = Number(resumo.ignoredAnticipationDebitTotal) || 0;
+            const periodo = resumo.periodo ? `${formatDateCell(resumo.periodo.inicio)} a ${formatDateCell(resumo.periodo.fim)}` : 'periodo atual';
+            let updatedText = '';
+            if (cachedTime) {
+                const date = new Date(parseInt(cachedTime, 10));
+                updatedText = ` | ${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            }
+
+            info.innerHTML =
+                `Saidas do extrato Asaas: <strong>${formatCurrency(resumo.total || 0)}</strong> ` +
+                `(${periodo}) | cartao ${formatCurrency(taxaCartao)}, pix ${formatCurrency(taxaPix)}, ` +
+                `antecipacao ${formatCurrency(antecipacao)}, baixa ${formatCurrency(baixaAntecipacao)}, ` +
+                `estornos ${formatCurrency(estornos)}, mensagens ${formatCurrency(mensagens)}` +
+                `${taxaPagamento ? `, outras taxas ${formatCurrency(taxaPagamento)}` : ''}` +
+                `${transferencias ? `, outras transferencias ${formatCurrency(transferencias)}` : ''}` +
+                `${outrasSaidas ? `, outras saidas ${formatCurrency(outrasSaidas)}` : ''}` +
+                `${ignoredEveryday ? ` | Pix Everyday ignorado ${formatCurrency(ignoredEveryday)}` : ''}` +
+                `${ignoredBaixa ? ` | baixas neutralizadas ${formatCurrency(ignoredBaixa)}` : ''}${updatedText}`;
+        }
+
+        async function refreshAsaasDescontos(forceRefresh, silent = false) {
+            const btn = document.getElementById('btnRefreshDescontos');
+
+            if (!forceRefresh) {
+                const cached = getCachedAsaasDescontosResult();
+                const cachedTime = localStorage.getItem(getAsaasDescontosCacheTimeKey());
+                if (cached && cachedTime) {
+                    const age = Date.now() - parseInt(cachedTime, 10);
+                    if (age < ASAAS_DESCONTOS_CACHE_TTL) {
+                        renderDespesas();
+                        renderResumo();
+                        return;
+                    }
+                }
+            }
+
+            if (btn) btn.disabled = true;
+            const info = document.getElementById('despesasAutoInfo');
+            if (info) info.textContent = 'Atualizando saidas reais do extrato Asaas...';
+
+            try {
+                const { inicio, fim } = getAsaasDescontosPeriodo();
+                const resp = await fetch(`/.netlify/functions/asaas-descontos?inicio=${inicio}&fim=${fim}&_t=${Date.now()}`);
+                const result = await resp.json().catch(() => ({}));
+                if (!resp.ok || result.error) throw new Error(result.error || 'Erro ao buscar saidas Asaas');
+
+                localStorage.setItem(getAsaasDescontosCacheKey(), JSON.stringify(result));
+                localStorage.setItem(getAsaasDescontosCacheTimeKey(), String(Date.now()));
+
+                renderDespesas();
+                renderResumo();
+                if (!silent) showToast('&#9989;', 'Saidas do extrato Asaas atualizadas');
+            } catch (error) {
+                renderAsaasDescontosInfo();
+                if (!silent) showToast('&#9888;&#65039;', error.message || 'Erro ao atualizar saidas do extrato');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function getDefaultDespesaDate() {
+            const today = new Date();
+            const selectedIsCurrent =
+                currentYear === today.getFullYear() &&
+                currentMonthIndex === today.getMonth();
+            return selectedIsCurrent ? formatIsoDateLocal(today) : getSelectedMonthPeriod().fim;
         }
 
         function addDespesa() {
@@ -4546,9 +5611,10 @@
             }
 
             const list = getDespesasList();
-            const hoje = new Date();
-            const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
-            list.push({ id: Date.now(), nome, valor, data: dataStr });
+            const dataStr = getDefaultDespesaDate();
+            const newDespesa = { id: Date.now(), nome, valor, data: dataStr };
+            restoreDeletedDespesaIfNeeded(newDespesa);
+            list.push(newDespesa);
             saveDespesasList(list);
 
             nomeInput.value = '';
@@ -4557,8 +5623,81 @@
             showToast('\u2705', `Despesa "${nome}" adicionada!`);
         }
 
+        function copyDespesaToNextMonth(id) {
+            const list = getDespesasList();
+            const original = list.find(d => d.id === id);
+            if (!original) return;
+
+            const target = {
+                id: Date.now(),
+                nome: original.nome,
+                valor: original.valor,
+                data: addMonthsToIsoDate(original.data, 1),
+            };
+            const targetKey = getDespesaDedupeKey(target);
+            if (list.some(item => getDespesaDedupeKey(item) === targetKey)) {
+                showToast('\u26A0\uFE0F', 'Essa despesa ja existe no proximo mes');
+                return;
+            }
+
+            restoreDeletedDespesaIfNeeded(target);
+            list.push(target);
+            saveDespesasList(list);
+            renderDespesas();
+            renderResumo();
+            showToast('\u2705', `"${target.nome}" copiada para ${formatDateCell(target.data)}`);
+        }
+
+        function copyDespesasFromPreviousMonth() {
+            const list = getDespesasList();
+            const previousMonthKey = getMonthKeyOffset(-1);
+            const targetMonthKey = getSelectedMonthKey();
+            const sourceItems = list.filter(item => String(item.data || '').startsWith(previousMonthKey));
+
+            if (sourceItems.length === 0) {
+                showToast('\u26A0\uFE0F', 'Nao ha despesas manuais no mes anterior');
+                return;
+            }
+
+            const existingKeys = new Set(list.map(getDespesaDedupeKey));
+            const deletedKeys = getDeletedDespesaKeys();
+            const now = Date.now();
+            const copies = [];
+
+            sourceItems.forEach((item, index) => {
+                const target = {
+                    id: now + index,
+                    nome: item.nome,
+                    valor: item.valor,
+                    data: moveIsoDateToMonth(item.data, targetMonthKey),
+                };
+                const targetKey = getDespesaDedupeKey(target);
+                if (existingKeys.has(targetKey)) return;
+                deletedKeys.delete(targetKey);
+                existingKeys.add(targetKey);
+                copies.push(target);
+            });
+
+            if (copies.length === 0) {
+                showToast('\u26A0\uFE0F', 'As despesas do mes anterior ja estao neste mes');
+                return;
+            }
+
+            saveDeletedDespesaKeys(deletedKeys);
+            saveDespesasList([...list, ...copies]);
+            renderDespesas();
+            renderResumo();
+            showToast('\u2705', `${copies.length} despesa${copies.length !== 1 ? 's' : ''} copiada${copies.length !== 1 ? 's' : ''} para este mes`);
+        }
+
         function removeDespesa(id) {
             let list = getDespesasList();
+            const removed = list.find(d => d.id === id);
+            if (removed) {
+                const deletedKeys = getDeletedDespesaKeys();
+                deletedKeys.add(getDespesaDedupeKey(removed));
+                saveDeletedDespesaKeys(deletedKeys);
+            }
             list = list.filter(d => d.id !== id);
             saveDespesasList(list);
             renderDespesas();
@@ -4566,38 +5705,70 @@
         }
 
         function renderDespesas() {
-            const list = getDespesasList();
-            const total = list.reduce((s, d) => s + d.valor, 0);
+            const { manualList, autoRows, manualTotal, autoTotal, autoCategoryCount, total } = getDespesasBreakdown();
+            const autoDisplayRows = getAsaasDescontosDisplayRows(autoRows);
+            const totalRows = manualList.length + autoDisplayRows.length;
+            const badgeCount = manualList.length + autoCategoryCount;
 
             document.getElementById('despesasTotalValor').textContent = formatCurrency(total);
-            document.getElementById('despesasTotalSub').textContent = `${list.length} despesa${list.length !== 1 ? 's' : ''} cadastrada${list.length !== 1 ? 's' : ''}`;
-            document.getElementById('despesasBadge').textContent = list.length;
+            document.getElementById('despesasTotalSub').textContent =
+                `${manualList.length} manual${manualList.length !== 1 ? 'is' : ''} (${formatCurrency(manualTotal)}) + ` +
+                `${autoCategoryCount} categoria${autoCategoryCount !== 1 ? 's' : ''} Asaas (${formatCurrency(autoTotal)})`;
+            document.getElementById('despesasBadge').textContent = badgeCount;
+            renderAsaasDescontosInfo();
 
             // Also update the old single-value despesas key so Resumo keeps working
             localStorage.setItem('resumo_despesas', String(total));
 
             const tbody = document.getElementById('despesasTableBody');
-            if (list.length === 0) {
+            if (totalRows === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-secondary); padding: 32px;">Nenhuma despesa cadastrada ainda</td></tr>';
                 return;
             }
 
             let html = '';
-            list.forEach(d => {
+            manualList.forEach(d => {
                 let dataFormatted = d.data;
                 if (d.data && d.data.length === 10) {
                     const [y, m, day] = d.data.split('-');
                     dataFormatted = `${day}/${m}/${y}`;
                 }
                 html += `<tr>
-                    <td>${escapeHtml(d.nome)}</td>
+                    <td>${escapeHtml(d.nome)}<span class="despesas-source">Manual</span></td>
                     <td style="color: #ff4757; font-weight: 600;">${formatCurrency(d.valor)}</td>
                     <td style="color: var(--text-secondary);">${dataFormatted}</td>
-                    <td><button class="btn-delete" onclick="removeDespesa(${d.id})" title="Remover">\u2716</button></td>
+                    <td>
+                        <div class="despesas-actions">
+                            <button class="btn-copy" onclick="copyDespesaToNextMonth(${d.id})" title="Copiar para o proximo mes">&#128203;</button>
+                            <button class="btn-delete" onclick="removeDespesa(${d.id})" title="Remover">\u2716</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+            autoDisplayRows.forEach(d => {
+                const valor = Number(d.valor) || 0;
+                const valueClass = valor < 0 ? 'despesas-credit' : '';
+                const valueText = valor < 0 ? `-${formatCurrency(Math.abs(valor))}` : formatCurrency(valor);
+                html += `<tr>
+                    <td>
+                        ${escapeHtml(d.categoriaLabel || 'Desconto Asaas')}<span class="despesas-source">Auto Asaas</span>
+                        <div class="despesas-desc-sub">${escapeHtml(d.descricao || d.tipo || '')}</div>
+                    </td>
+                    <td class="${valueClass}" style="color: #ff4757; font-weight: 600;">${valueText}</td>
+                    <td style="color: var(--text-secondary);">${formatDateCell(d.data)}</td>
+                    <td></td>
                 </tr>`;
             });
             tbody.innerHTML = html;
         }
+
+        setInterval(() => {
+            refreshAsaasDescontos(true, true);
+        }, ASAAS_DESCONTOS_CACHE_TTL);
+
+        setInterval(() => {
+            syncDespesasFromCloud(true);
+        }, 5 * 60 * 1000);
 
         // ============================================
         // RESUMO (Summary tab)
@@ -4607,11 +5778,18 @@
 
         function getResumoAsaas() {
             try {
-                const cached = localStorage.getItem(ASAAS_CACHE_KEY);
+                const cached = localStorage.getItem(getAsaasCacheKey());
                 if (cached) {
                     const result = JSON.parse(cached);
-                    const valor = result.resumo.valorLiquido != null ? result.resumo.valorLiquido : result.resumo.valorBruto;
-                    return { valor, pagos: result.resumo.totalPagos };
+                    const valor = result.resumo.valorFinanceiro != null
+                        ? result.resumo.valorFinanceiro
+                        : (result.resumo.valorLiquido != null ? result.resumo.valorLiquido : result.resumo.valorBruto);
+                    const sub = result.resumo.entradasBrutasExtrato != null
+                        ? `caiu liquido na conta (${formatCurrency(result.resumo.entradasBrutasExtrato)} bruto ${formatCurrency(result.resumo.descontosExtrato || 0)} taxas/ajustes) | ${result.resumo.totalPagos} vendas aprovadas`
+                        : (result.resumo.totalEntradasFinanceiras != null
+                            ? `${result.resumo.totalEntradasFinanceiras} entradas no extrato | ${result.resumo.totalPagos} vendas aprovadas`
+                            : `${result.resumo.totalPagos} pagos`);
+                    return { valor, pagos: result.resumo.totalPagos, sub };
                 }
             } catch(e) {}
             return { valor: 0, pagos: 0 };
@@ -4619,7 +5797,7 @@
 
         function getResumoKiwify() {
             try {
-                const cached = localStorage.getItem(KIWIFY_CACHE_KEY);
+                const cached = localStorage.getItem(getKiwifyCacheKey());
                 if (cached) {
                     const result = JSON.parse(cached);
                     const valor = result.resumo.valorLiquido != null ? result.resumo.valorLiquido : result.resumo.valorBruto;
@@ -4629,11 +5807,21 @@
             return { valor: 0, pagos: 0 };
         }
 
+        function isAsaasCaixaLiquido() {
+            const result = getCachedAsaasResult();
+            const resumo = result?.resumo || {};
+            return resumo.criterioValor === 'extrato_liquido_exceto_transferencias' ||
+                (resumo.valorFinanceiro != null && resumo.descontosExtrato != null);
+        }
+
         function getDespesas() {
-            // Puxar da lista detalhada (aba Despesas)
-            const list = getDespesasList();
-            if (list.length > 0) {
-                return list.reduce((s, d) => s + d.valor, 0);
+            // Puxar da lista detalhada + descontos automaticos do Asaas
+            const breakdown = getDespesasBreakdown();
+            if (breakdown.manualList.length > 0 || breakdown.autoLoaded) {
+                if (isAsaasCaixaLiquido()) {
+                    return breakdown.deductibleTotal;
+                }
+                return breakdown.total;
             }
             // Fallback: valor antigo simples
             return parseFloat(localStorage.getItem(DESPESAS_KEY)) || 0;
@@ -4688,18 +5876,21 @@
             const lucroFinal = totalBruto - despesas;
 
             document.getElementById('resumoAsaasValor').textContent = formatCurrency(asaas.valor);
-            document.getElementById('resumoAsaasSub').textContent = `${asaas.pagos} pagos`;
+            document.getElementById('resumoAsaasSub').textContent = asaas.sub || `${asaas.pagos} pagos`;
             document.getElementById('resumoKiwifyValor').textContent = formatCurrency(kiwify.valor);
             document.getElementById('resumoKiwifySub').textContent = `${kiwify.pagos} pagos`;
             document.getElementById('resumoTotalBruto').textContent = formatCurrency(totalBruto);
             document.getElementById('resumoTotalSub').textContent = `Asaas (${formatCurrency(asaas.valor)}) + Kiwify (${formatCurrency(kiwify.valor)})`;
             document.getElementById('resumoDespesasValor').textContent = formatCurrency(despesas);
-            const despList = getDespesasList();
-            document.getElementById('resumoDespesasSub').textContent = despList.length > 0 ? `${despList.length} despesa${despList.length !== 1 ? 's' : ''} - clique para detalhar` : 'Clique para detalhar';
+            const despBreakdown = getDespesasBreakdown();
+            const asaasCaixaLiquido = isAsaasCaixaLiquido();
+            document.getElementById('resumoDespesasSub').textContent = asaasCaixaLiquido
+                ? `${despBreakdown.manualList.length} manuais no lucro | ${formatCurrency(despBreakdown.autoAlreadyInCashTotal)} Asaas ja descontado no caixa`
+                : `${despBreakdown.manualList.length} manuais + ${despBreakdown.autoCategoryCount} categorias Asaas - clique para detalhar`;
 
             document.getElementById('resumoLucroFinal').textContent = formatCurrency(lucroFinal);
             document.getElementById('resumoLucroFinal').style.color = lucroFinal >= 0 ? '#2ed573' : '#ff4757';
-            document.getElementById('resumoLucroFinalSub').textContent = `${formatCurrency(totalBruto)} - ${formatCurrency(despesas)} de despesas`;
+            document.getElementById('resumoLucroFinalSub').textContent = `${formatCurrency(totalBruto)} - ${formatCurrency(despesas)} de despesas usadas no lucro`;
 
             // Distribuicao
             const percent = getDistPercent();

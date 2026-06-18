@@ -21,10 +21,28 @@ export async function handler(event) {
     };
   }
 
+  const formatDateInSaoPaulo = (value) => {
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Sao_Paulo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(date);
+    const get = (type) => parts.find((p) => p.type === type)?.value;
+    return `${get("year")}-${get("month")}-${get("day")}`;
+  };
+
+  const addDaysIso = (dateStr, days) => {
+    const [year, month, day] = String(dateStr).split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    date.setUTCDate(date.getUTCDate() + days);
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+  };
+
   const params = event.queryStringParameters || {};
   const hoje = new Date();
-  const anoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
-  const dataInicio = params.inicio || `${anoMes}-01`;
   const hojeSpParts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
     year: "numeric",
@@ -32,9 +50,9 @@ export async function handler(event) {
     day: "2-digit",
   }).formatToParts(hoje);
   const hojeSp = `${hojeSpParts.find((p) => p.type === "year").value}-${hojeSpParts.find((p) => p.type === "month").value}-${hojeSpParts.find((p) => p.type === "day").value}`;
-  const amanha = new Date(hoje);
-  amanha.setDate(amanha.getDate() + 2);
-  const dataFim = params.fim || `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
+  const dataInicio = params.inicio || `${String(hojeSp).slice(0, 7)}-01`;
+  const dataFim = params.fim || addDaysIso(hojeSp, 2);
+  const apiFim = addDaysIso(dataFim, 2);
 
   try {
     // 1. Autenticar via OAuth2
@@ -62,34 +80,26 @@ export async function handler(event) {
       "x-kiwify-account-id": ACCOUNT_ID,
     };
 
-    // 2. Buscar vendas - uma unica request, sem paginacao extra, sem detalhes individuais
-    const url = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${dataFim}&page_size=100`;
-    const resp = await fetch(url, { headers: HEADERS });
-
+    // 2. Buscar vendas com paginacao completa
+    let nextUrl = `${BASE}/v1/sales?start_date=${dataInicio}&end_date=${apiFim}&page_size=100`;
     let todasVendas = [];
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data.data) {
-        todasVendas = data.data.map((s) => ({ ...s, _status: s.status || "paid" }));
+    const ids = new Set();
+
+    while (nextUrl) {
+      const resp = await fetch(nextUrl, { headers: HEADERS });
+      if (!resp.ok) {
+        const err = await resp.text();
+        throw new Error(`Erro ao buscar vendas Kiwify: ${err}`);
       }
 
-      // Apenas 1 pagina extra se necessario (evitar timeout)
-      if (data.next_page_url) {
-        try {
-          const page2 = await fetch(data.next_page_url, { headers: HEADERS });
-          if (page2.ok) {
-            const p2 = await page2.json();
-            if (p2.data) {
-              const ids = new Set(todasVendas.map((s) => s.id));
-              for (const s of p2.data) {
-                if (!ids.has(s.id)) {
-                  todasVendas.push({ ...s, _status: s.status || "paid" });
-                }
-              }
-            }
-          }
-        } catch (e) { /* skip */ }
+      const data = await resp.json();
+      for (const s of data.data || []) {
+        if (ids.has(s.id)) continue;
+        ids.add(s.id);
+        todasVendas.push({ ...s, _status: s.status || "paid" });
       }
+
+      nextUrl = data.next_page_url || null;
     }
 
     // 3. Montar lista final direto dos dados da listagem (sem fetch individual)
@@ -117,13 +127,11 @@ export async function handler(event) {
     const asIsoDate = (value) => {
       if (!value) return null;
       if (typeof value === "number") {
-        const date = new Date(value);
-        return Number.isNaN(date.getTime()) ? null : date.toISOString().substring(0, 10);
+        return formatDateInSaoPaulo(value);
       }
       const text = String(value).trim();
-      if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.substring(0, 10);
-      const parsed = new Date(text);
-      return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString().substring(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text.substring(0, 10);
+      return formatDateInSaoPaulo(text);
     };
 
     const getCurrentPeriodEnd = (s) => {
@@ -188,7 +196,7 @@ export async function handler(event) {
         taxas,
         status,
         forma: formas[s.payment_method] || s.payment_method || "",
-        data: (s.created_at || "").substring(0, 10),
+        data: asIsoDate(s.created_at) || "",
         createdAt: s.created_at || null,
         updatedAt: s.updated_at || null,
         approvedAt: s.approved_date || null,
@@ -197,17 +205,22 @@ export async function handler(event) {
       });
     }
 
-    vendas.sort((a, b) => b.data.localeCompare(a.data));
+    const vendasNoPeriodo = vendas.filter((v) => {
+      const data = v.data || "";
+      return data >= dataInicio && data <= dataFim;
+    });
 
-    const pagos = vendas.filter((v) => v.status === "Pago");
-    const pendentes = vendas.filter((v) => v.status === "Pendente");
-    const vencidos = vendas.filter((v) => v.status === "Vencido");
-    const aVencer = vendas.filter((v) => v.status === "A vencer");
-    const estornados = vendas.filter((v) => v.status === "Estornado");
-    const recusados = vendas.filter((v) => v.status === "Recusado");
+    vendasNoPeriodo.sort((a, b) => b.data.localeCompare(a.data));
+
+    const pagos = vendasNoPeriodo.filter((v) => v.status === "Pago");
+    const pendentes = vendasNoPeriodo.filter((v) => v.status === "Pendente");
+    const vencidos = vendasNoPeriodo.filter((v) => v.status === "Vencido");
+    const aVencer = vendasNoPeriodo.filter((v) => v.status === "A vencer");
+    const estornados = vendasNoPeriodo.filter((v) => v.status === "Estornado");
+    const recusados = vendasNoPeriodo.filter((v) => v.status === "Recusado");
 
     const resumo = {
-      totalAlunos: pagos.length + pendentes.length + vencidos.length + aVencer.length + estornados.length,
+      totalAlunos: pagos.length,
       totalPagos: pagos.length,
       totalPendentes: pendentes.length,
       totalVencidos: vencidos.length,
@@ -228,7 +241,7 @@ export async function handler(event) {
     return {
       statusCode: 200,
       headers: { ...corsHeaders, "Cache-Control": "no-store" },
-      body: JSON.stringify({ resumo, vendas }),
+      body: JSON.stringify({ resumo, vendas: vendasNoPeriodo }),
     };
   } catch (error) {
     return {

@@ -35,24 +35,31 @@ export async function handler(event) {
     if (event.httpMethod === "GET") {
       // Carregar dados
       const data = await store.get("tracker", { type: "json" });
+      const despesas = await store.get("despesas", { type: "json" });
       return {
         statusCode: 200,
         headers: corsHeaders,
-        body: JSON.stringify({ data: data || {} }),
+        body: JSON.stringify({ data: data || {}, despesas: Array.isArray(despesas) ? despesas : [] }),
       };
     }
 
     if (event.httpMethod === "POST") {
       // Salvar dados
       const body = JSON.parse(event.body);
-      if (!body || typeof body.data !== "object") {
+      const hasData = body && typeof body.data === "object" && !Array.isArray(body.data);
+      const hasDespesas = body && Array.isArray(body.despesas);
+
+      if (!hasData && !hasDespesas) {
         return {
           statusCode: 400,
           headers: corsHeaders,
-          body: JSON.stringify({ error: "Campo 'data' obrigatorio" }),
+          body: JSON.stringify({ error: "Campo 'data' ou 'despesas' obrigatorio" }),
         };
       }
-      await store.setJSON("tracker", body.data);
+
+      if (hasData) await store.setJSON("tracker", body.data);
+      if (hasDespesas) await store.setJSON("despesas", body.despesas);
+
       return {
         statusCode: 200,
         headers: corsHeaders,
