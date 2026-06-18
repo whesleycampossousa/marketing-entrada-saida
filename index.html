@@ -2126,7 +2126,7 @@
             <div class="asaas-header comparacao-header">
                 <div>
                     <h2>Comparacao Mensal</h2>
-                    <div class="last-update" id="comparacaoStatus">Total liquido acumulado por dia, comparando os meses anteriores com o mes atual.</div>
+                    <div class="last-update" id="comparacaoStatus">Lucro liquido das vendas acumulado por dia, comparando os meses anteriores com o mes atual.</div>
                 </div>
                 <button class="btn-refresh" id="btnRefreshComparacao" onclick="refreshComparacaoData(true)">&#128260; Atualizar</button>
             </div>
@@ -2148,13 +2148,13 @@
                     <div class="rc-icon">&#127942;</div>
                     <div class="rc-label">Melhor mes anterior</div>
                     <div class="rc-value" id="comparacaoMelhorValor" style="color: #74b9ff;">R$ 0,00</div>
-                    <div class="rc-sub" id="comparacaoMelhorSub">Total liquido do mes</div>
+                    <div class="rc-sub" id="comparacaoMelhorSub">Lucro liquido das vendas no mes</div>
                 </div>
             </div>
 
             <div class="chart-section comparacao-chart-section">
                 <div class="section-title">
-                    <span>&#128200;</span> Total liquido acumulado por dia
+                    <span>&#128200;</span> Lucro liquido das vendas acumulado por dia
                 </div>
                 <div class="comparacao-note" id="comparacaoNote">A linha do mes atual para no dia de hoje e continua crescendo conforme os proximos dias entram.</div>
                 <div class="chart-container comparacao-chart-container">
@@ -5220,7 +5220,7 @@
 
         function getComparacaoAsaasValue(asaasResult) {
             const resumo = asaasResult?.resumo || {};
-            if (resumo.valorFinanceiro != null) return roundLocalMoney(resumo.valorFinanceiro);
+            if (resumo.valorVendasLiquido != null) return roundLocalMoney(resumo.valorVendasLiquido);
             if (resumo.valorLiquido != null) return roundLocalMoney(resumo.valorLiquido);
             return roundLocalMoney(resumo.valorBruto || 0);
         }
