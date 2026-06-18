@@ -2146,7 +2146,7 @@
                 </div>
                 <div class="resumo-card card-comparacao-melhor">
                     <div class="rc-icon">&#127942;</div>
-                    <div class="rc-label">Melhor mes anterior</div>
+                    <div class="rc-label">Melhor anterior ate o mesmo dia</div>
                     <div class="rc-value" id="comparacaoMelhorValor" style="color: #74b9ff;">R$ 0,00</div>
                     <div class="rc-sub" id="comparacaoMelhorSub">Lucro liquido das vendas no mes</div>
                 </div>
@@ -2156,7 +2156,7 @@
                 <div class="section-title">
                     <span>&#128200;</span> Lucro liquido das vendas acumulado por dia
                 </div>
-                <div class="comparacao-note" id="comparacaoNote">A linha do mes atual para no dia de hoje e continua crescendo conforme os proximos dias entram.</div>
+                <div class="comparacao-note" id="comparacaoNote">Todos os meses param no mesmo dia do mes atual para comparacao justa.</div>
                 <div class="chart-container comparacao-chart-container">
                     <canvas id="comparacaoChart"></canvas>
                 </div>
@@ -5123,6 +5123,7 @@
         // COMPARACAO (lucro liquido das vendas acumulado por dia)
         // ============================================
         const COMPARACAO_PREVIOUS_MONTHS = 5;
+        const COMPARACAO_CACHE_SUFFIX = ':comparacao_same_day_v2';
 
         function getTodayLocalDate() {
             const now = new Date();
@@ -5152,13 +5153,14 @@
             const monthEnd = new Date(year, monthIndex + 1, 0);
             const today = getTodayLocalDate();
             const isCurrent = year === today.getFullYear() && monthIndex === today.getMonth();
-            const fimDate = isCurrent ? today : monthEnd;
+            const limitDay = isCurrent ? today.getDate() : Math.min(today.getDate(), monthEnd.getDate());
+            const fimDate = isCurrent ? today : new Date(year, monthIndex, limitDay);
             return {
                 key: monthKey,
                 inicio: `${monthKey}-01`,
                 fim: formatIsoDateLocal(fimDate),
                 daysInMonth: monthEnd.getDate(),
-                limitDay: fimDate.getDate(),
+                limitDay,
                 isCurrent,
             };
         }
@@ -5313,15 +5315,15 @@
                 {
                     label: 'Asaas',
                     endpoint: '/.netlify/functions/asaas-vendas',
-                    cacheKey: ASAAS_CACHE_KEY,
-                    timeKey: ASAAS_CACHE_TIME_KEY,
+                    cacheKey: `${ASAAS_CACHE_KEY}${COMPARACAO_CACHE_SUFFIX}`,
+                    timeKey: `${ASAAS_CACHE_TIME_KEY}${COMPARACAO_CACHE_SUFFIX}`,
                     ttl: ASAAS_CACHE_TTL,
                 },
                 {
                     label: 'Kiwify',
                     endpoint: '/.netlify/functions/kiwify-vendas',
-                    cacheKey: KIWIFY_CACHE_KEY,
-                    timeKey: KIWIFY_CACHE_TIME_KEY,
+                    cacheKey: `${KIWIFY_CACHE_KEY}${COMPARACAO_CACHE_SUFFIX}`,
+                    timeKey: `${KIWIFY_CACHE_TIME_KEY}${COMPARACAO_CACHE_SUFFIX}`,
                     ttl: KIWIFY_CACHE_TTL,
                 },
             ];
@@ -5357,7 +5359,7 @@
             const average = previous.length
                 ? previous.reduce((sum, item) => sum + (Number(item.sameDayValue) || 0), 0) / previous.length
                 : 0;
-            const best = previous.reduce((winner, item) => (!winner || item.finalValue > winner.finalValue ? item : winner), null);
+            const best = previous.reduce((winner, item) => (!winner || item.sameDayValue > winner.sameDayValue ? item : winner), null);
 
             setComparacaoValue('comparacaoAtualValor', current?.finalValue || 0);
             setComparacaoText('comparacaoAtualSub', `${current?.label || ''} ate ${formatDateCell(formatIsoDateLocal(today))}`);
@@ -5366,10 +5368,10 @@
 
             const bestValueEl = document.getElementById('comparacaoMelhorValor');
             if (bestValueEl) {
-                bestValueEl.textContent = formatCurrency(best?.finalValue || 0);
-                bestValueEl.style.color = (best?.finalValue || 0) >= 0 ? '#74b9ff' : '#ff4757';
+                bestValueEl.textContent = formatCurrency(best?.sameDayValue || 0);
+                bestValueEl.style.color = (best?.sameDayValue || 0) >= 0 ? '#74b9ff' : '#ff4757';
             }
-            setComparacaoText('comparacaoMelhorSub', best ? `${best.label} fechado` : 'Sem meses anteriores');
+            setComparacaoText('comparacaoMelhorSub', best ? `${best.label} ate dia ${best.limitDay}` : 'Sem meses anteriores');
         }
 
         function renderComparacaoChart(series) {
@@ -5483,10 +5485,10 @@
                 if (status) {
                     status.textContent = warnings.length
                         ? `Dados parciais: ${warnings.length} aviso(s). Confira credenciais/cache se algum mes ficou zerado.`
-                        : `Comparando ${series.length} meses de lucro liquido das vendas acumulado.`;
+                        : `Comparando ${series.length} meses de lucro liquido das vendas ate o dia ${today.getDate()}.`;
                 }
                 if (note) {
-                    note.textContent = `Mes atual: ${formatComparacaoMonthLabel(monthKeys[0])} ate ${formatDateCell(formatIsoDateLocal(today))}. A linha atual continua nos proximos dias.`;
+                    note.textContent = `Todos os meses param no mesmo dia do mes atual: ${formatDateCell(formatIsoDateLocal(today))}.`;
                 }
                 if (forceRefresh && warnings.length === 0) showToast('&#9989;', 'Comparacao atualizada');
             } catch (error) {
