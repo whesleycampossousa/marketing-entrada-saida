@@ -5066,9 +5066,11 @@
                     categoriaLabel: row.categoriaLabel || 'Desconto Asaas',
                     valor: 0,
                     count: 0,
+                    descriptions: [],
                 };
                 current.valor = roundLocalMoney(current.valor + (Number(row.valor) || 0));
                 current.count += 1;
+                if (row.descricao) current.descriptions.push(row.descricao);
                 groups.set(key, current);
             });
 
@@ -5077,7 +5079,9 @@
                 .sort((a, b) => String(a.data).localeCompare(String(b.data)) || String(a.categoria).localeCompare(String(b.categoria)))
                 .map((row) => ({
                     ...row,
-                    descricao: `${row.count} lancamento${row.count !== 1 ? 's' : ''} do extrato financeiro Asaas`,
+                    descricao: row.count === 1 && row.descriptions?.[0]
+                        ? row.descriptions[0]
+                        : `${row.count} lancamento${row.count !== 1 ? 's' : ''} do extrato financeiro Asaas`,
                 }));
         }
 

@@ -42,9 +42,10 @@ function roundMoney(value) {
   return Math.round((Number(value) || 0) * 100) / 100;
 }
 
-function classifyTransaction(transaction) {
+function classifyTransaction(transaction, refundedInvoiceNumbers = new Set()) {
   const type = transaction.type || "";
   const description = normalizeText(transaction.description);
+  const invoice = extractInvoiceNumber(transaction.description);
 
   if (type === "PAYMENT_FEE" || type === "PAYMENT_FEE_REVERSAL") {
     if (description.includes("cartao")) {
@@ -73,6 +74,10 @@ function classifyTransaction(transaction) {
 
   if (type === "RECEIVABLE_ANTICIPATION_FEE") {
     return { key: "antecipacao", label: "Taxa de antecipacao" };
+  }
+
+  if (type === "RECEIVABLE_ANTICIPATION_DEBIT" && invoice && refundedInvoiceNumbers.has(invoice)) {
+    return { key: "estorno", label: "Estorno de pagamento antecipado" };
   }
 
   if (type === "RECEIVABLE_ANTICIPATION_DEBIT") {
@@ -160,6 +165,34 @@ async function fetchTransactions({ startDate, finishDate, headers }) {
   });
 }
 
+async function fetchRefundedInvoiceNumbers({ headers }) {
+  const invoiceNumbers = new Set();
+  let offset = 0;
+
+  while (true) {
+    const url = new URL(`${BASE}/payments`);
+    url.searchParams.set("status", "REFUNDED");
+    url.searchParams.set("limit", "100");
+    url.searchParams.set("offset", String(offset));
+
+    const resp = await fetch(url.toString(), { headers });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      throw new Error(data?.errors?.[0]?.description || data?.error || `Erro Asaas ${resp.status}`);
+    }
+
+    for (const payment of data.data || []) {
+      const invoiceNumber = String(payment.invoiceNumber || "").trim();
+      if (invoiceNumber) invoiceNumbers.add(invoiceNumber);
+    }
+
+    if (!data.hasMore) break;
+    offset += 100;
+  }
+
+  return invoiceNumbers;
+}
+
 export async function handler(event) {
   const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
   if (!ASAAS_API_KEY) {
@@ -176,7 +209,10 @@ export async function handler(event) {
   };
 
   try {
-    const transactions = await fetchTransactions({ startDate, finishDate, headers });
+    const [transactions, refundedInvoiceNumbers] = await Promise.all([
+      fetchTransactions({ startDate, finishDate, headers }),
+      fetchRefundedInvoiceNumbers({ headers }),
+    ]);
     const pairedAnticipationInvoices = getPairedAnticipationInvoices(transactions);
     const descontos = [];
     let ignoredEverydayTransferTotal = 0;
@@ -208,7 +244,7 @@ export async function handler(event) {
 
       if (!shouldIncludeTransaction(transaction)) continue;
 
-      const category = classifyTransaction(transaction);
+      const category = classifyTransaction(transaction, refundedInvoiceNumbers);
       const valor = roundMoney(rawValue < 0 ? Math.abs(rawValue) : -rawValue);
       descontos.push({
         id: transaction.id || `${transaction.date}-${transaction.type}-${descontos.length}`,
